@@ -1,0 +1,72 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "imgui", "External\imgui\imgui.vcxproj", "{16935E4C-1E43-4BF7-B492-9046C84E0051}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{320A2EDB-FB50-4FA4-8783-24A5491B1F8D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "raylib", "External\raylib\raylib.vcxproj", "{694BAA77-1818-40C8-A18B-C5F9C23833C1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{C0CC240D-DDF1-4024-B0CB-F115A6306ABD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "REng", "Framework\REng\REng.vcxproj", "{4AE43EF3-C7AC-4C36-8ECB-36E394711BDB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VGP332", "VGP332", "{3064C18D-24A1-4D70-A6D7-F6F2CEBFAAFF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PathFinding", "PathFinding\PathFinding.vcxproj", "{D58B9B35-C835-4423-AB00-782E0C1BEACF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{16935E4C-1E43-4BF7-B492-9046C84E0051}.Debug|x64.ActiveCfg = Debug|x64
+		{16935E4C-1E43-4BF7-B492-9046C84E0051}.Debug|x64.Build.0 = Debug|x64
+		{16935E4C-1E43-4BF7-B492-9046C84E0051}.Debug|x86.ActiveCfg = Debug|Win32
+		{16935E4C-1E43-4BF7-B492-9046C84E0051}.Debug|x86.Build.0 = Debug|Win32
+		{16935E4C-1E43-4BF7-B492-9046C84E0051}.Release|x64.ActiveCfg = Release|x64
+		{16935E4C-1E43-4BF7-B492-9046C84E0051}.Release|x64.Build.0 = Release|x64
+		{16935E4C-1E43-4BF7-B492-9046C84E0051}.Release|x86.ActiveCfg = Release|Win32
+		{16935E4C-1E43-4BF7-B492-9046C84E0051}.Release|x86.Build.0 = Release|Win32
+		{694BAA77-1818-40C8-A18B-C5F9C23833C1}.Debug|x64.ActiveCfg = Debug|x64
+		{694BAA77-1818-40C8-A18B-C5F9C23833C1}.Debug|x64.Build.0 = Debug|x64
+		{694BAA77-1818-40C8-A18B-C5F9C23833C1}.Debug|x86.ActiveCfg = Debug|Win32
+		{694BAA77-1818-40C8-A18B-C5F9C23833C1}.Debug|x86.Build.0 = Debug|Win32
+		{694BAA77-1818-40C8-A18B-C5F9C23833C1}.Release|x64.ActiveCfg = Release|x64
+		{694BAA77-1818-40C8-A18B-C5F9C23833C1}.Release|x64.Build.0 = Release|x64
+		{694BAA77-1818-40C8-A18B-C5F9C23833C1}.Release|x86.ActiveCfg = Release|Win32
+		{694BAA77-1818-40C8-A18B-C5F9C23833C1}.Release|x86.Build.0 = Release|Win32
+		{4AE43EF3-C7AC-4C36-8ECB-36E394711BDB}.Debug|x64.ActiveCfg = Debug|x64
+		{4AE43EF3-C7AC-4C36-8ECB-36E394711BDB}.Debug|x64.Build.0 = Debug|x64
+		{4AE43EF3-C7AC-4C36-8ECB-36E394711BDB}.Debug|x86.ActiveCfg = Debug|Win32
+		{4AE43EF3-C7AC-4C36-8ECB-36E394711BDB}.Debug|x86.Build.0 = Debug|Win32
+		{4AE43EF3-C7AC-4C36-8ECB-36E394711BDB}.Release|x64.ActiveCfg = Release|x64
+		{4AE43EF3-C7AC-4C36-8ECB-36E394711BDB}.Release|x64.Build.0 = Release|x64
+		{4AE43EF3-C7AC-4C36-8ECB-36E394711BDB}.Release|x86.ActiveCfg = Release|Win32
+		{4AE43EF3-C7AC-4C36-8ECB-36E394711BDB}.Release|x86.Build.0 = Release|Win32
+		{D58B9B35-C835-4423-AB00-782E0C1BEACF}.Debug|x64.ActiveCfg = Debug|x64
+		{D58B9B35-C835-4423-AB00-782E0C1BEACF}.Debug|x64.Build.0 = Debug|x64
+		{D58B9B35-C835-4423-AB00-782E0C1BEACF}.Debug|x86.ActiveCfg = Debug|Win32
+		{D58B9B35-C835-4423-AB00-782E0C1BEACF}.Debug|x86.Build.0 = Debug|Win32
+		{D58B9B35-C835-4423-AB00-782E0C1BEACF}.Release|x64.ActiveCfg = Release|x64
+		{D58B9B35-C835-4423-AB00-782E0C1BEACF}.Release|x64.Build.0 = Release|x64
+		{D58B9B35-C835-4423-AB00-782E0C1BEACF}.Release|x86.ActiveCfg = Release|Win32
+		{D58B9B35-C835-4423-AB00-782E0C1BEACF}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{16935E4C-1E43-4BF7-B492-9046C84E0051} = {320A2EDB-FB50-4FA4-8783-24A5491B1F8D}
+		{694BAA77-1818-40C8-A18B-C5F9C23833C1} = {320A2EDB-FB50-4FA4-8783-24A5491B1F8D}
+		{4AE43EF3-C7AC-4C36-8ECB-36E394711BDB} = {C0CC240D-DDF1-4024-B0CB-F115A6306ABD}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C4FB3008-B2EC-47AA-BFEF-79C4A67CE230}
+	EndGlobalSection
+EndGlobal

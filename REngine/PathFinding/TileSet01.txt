@@ -1,0 +1,4 @@
+Count:2
+wall.png
+grass_middle.png
+
