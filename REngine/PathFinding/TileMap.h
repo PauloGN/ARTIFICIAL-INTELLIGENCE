@@ -30,6 +30,7 @@ public:
 
 private:
 
+	//litle math to get index simulating bidimentional array
 	int GetIndex(int column, int row) const;
 
 private:

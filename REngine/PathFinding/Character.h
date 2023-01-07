@@ -7,6 +7,13 @@ class Character
 {
 
 public:
+
+	//Singleton Functions
+	static void StaticInitialize();
+	static void StaticTerminate();
+	static Character& Get();
+
+
 	void Load(const float initialSpeed);
 	void Unload();
 	void Update(float deltaTime);
@@ -17,13 +24,15 @@ public:
 
 private:
 
+	//Sprites
 	Rectangle mRecSprite;
-	float mMoveSpeed = 0.0f;
 	Texture2D mCharTexture;
+	
+	float mMoveSpeed = 0.0f;
 	REng::Math::Vector2 mPlayerPos;
-	bool bIsMoving;
 
 	//Animation
+	bool bIsMoving;
 	float currentTime;
 	int currentSprite;
 

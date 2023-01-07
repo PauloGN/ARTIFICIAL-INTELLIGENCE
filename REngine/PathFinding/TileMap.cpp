@@ -46,7 +46,7 @@ void TileMap::Unload()
 
 void TileMap::Update(float DeltaTime)
 {
-	//1h.2
+	//1h.2 empty for now
 }
 
 void TileMap::Render()
@@ -80,23 +80,27 @@ void TileMap::LoadTileMap(const char* mapName)
 
 	fopen_s(&file, mapName, "r");
 
-	fscanf_s(file, "Columns: %d\n", &mColumns);
-	fscanf_s(file, "Rows: %d\n", &mRows);
-
-	mMap = std::make_unique<int[]>(mColumns * mRows);
-
-	//Loop throug rows and Columns
-	for (int y = 0; y < mRows; y++)
+	if (file != 0)
 	{
-		for (int x = 0; x < mColumns; x++)
-		{
-			const int index = GetIndex(x, y);
-			mMap[index] = fgetc(file) - '0';
-		}
-		fgetc(file);
-	}
+		fscanf_s(file, "Columns: %d\n", &mColumns);
+		fscanf_s(file, "Rows: %d\n", &mRows);
 
-	fclose(file);
+		//Create a smartpointer dimention Columns * Rows
+		mMap = std::make_unique<int[]>(mColumns * mRows);
+
+		//Loop through rows and Columns
+		for (int y = 0; y < mRows; y++)
+		{
+			for (int x = 0; x < mColumns; x++)
+			{
+				const int index = GetIndex(x, y);
+				mMap[index] = fgetc(file) - '0';
+			}
+			fgetc(file);
+		}
+
+		fclose(file);
+	}
 
 }
 
@@ -107,25 +111,30 @@ void TileMap::LoadTilesTexture(const char* TileCollectionName)
 	FILE* file = nullptr;
 	fopen_s(&file, TileCollectionName, "r");
 
-	int count = 0;// range of the loop
-	fscanf_s(file, "Count: %d\n", &count);
-
-	for (int i = 0; i < count; i++)
+	if (file != 0)
 	{
-		std::string fullpath;
-		char buffer[256];
-		fscanf_s(file, "%s\n", buffer, static_cast<int>(std::size(buffer)));
-		REng::ResourcesFullPath(buffer, fullpath);
-		mTiles.push_back(LoadTexture(fullpath.c_str()));
+		int count = 0;// range of the loop
+		fscanf_s(file, "Count: %d\n", &count);
 
-		//Load Tiles textures Exemple
+		for (int i = 0; i < count; i++)
+		{
+			std::string fullpath;
+			char buffer[256];
+			fscanf_s(file, "%s\n", buffer, static_cast<int>(std::size(buffer)));
+			REng::ResourcesFullPath(buffer, fullpath);
 
-		//std::string fullpath;
-		//REng::ResourcesFullPath("wall.png", fullpath);
-		//mTiles.push_back(LoadTexture(fullpath.c_str()));
+			mTiles.push_back(LoadTexture(fullpath.c_str()));
+
+			//Load Tiles textures Exemple
+
+			//std::string fullpath;
+			//REng::ResourcesFullPath("wall.png", fullpath);
+			//mTiles.push_back(LoadTexture(fullpath.c_str()));
+		}
+
+		fclose(file);
 	}
 
-	fclose(file);
 }
 
 bool TileMap::IsCollisdingWith(REng::Math::LineSegment & lineSegment) const

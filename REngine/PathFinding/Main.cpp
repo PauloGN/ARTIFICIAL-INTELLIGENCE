@@ -3,7 +3,6 @@
 #include "TileMap.h"
 #include "Character.h"
 
-Character mainChar;
 
 
 void GameInit()
@@ -11,7 +10,10 @@ void GameInit()
 	//01 Map
 	TileMap::StaticInitialize();
 	TileMap::Get().Load("Level01.txt", "TileSet01.txt");
-	mainChar.Load(100.f);
+	
+	//Main Character
+	Character::StaticInitialize();
+	Character::Get().Load(100.f);
 }
 
 
@@ -21,9 +23,9 @@ bool GameLoop()
 	TileMap::Get().Update(GetFrameTime());
 	TileMap::Get().Render();
 
-	mainChar.Update(GetFrameTime());
-	mainChar.Render();
-
+	//Character
+	Character::Get().Update(GetFrameTime());
+	Character::Get().Render();
 
 	bool bIsStopped = IsKeyPressed(KeyboardKey::KEY_ESCAPE) || WindowShouldClose();
 	return bIsStopped;
@@ -35,6 +37,10 @@ void GameCleanUp()
 	//Map
 	TileMap::Get().Unload();
 	TileMap::Get().StaticTerminate();
+
+	//Char...
+	Character::Get().Unload();
+	Character::Get().StaticTerminate();
 }
 
 

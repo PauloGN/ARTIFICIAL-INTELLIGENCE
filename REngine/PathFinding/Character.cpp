@@ -6,31 +6,59 @@ namespace
 	const float spritXoffset = 54.7;
 	const float spritYoffset = 58.9;
 
+	std::unique_ptr<Character> charInstance;
+
 }
 
+void Character::StaticInitialize()
+{
+	assert(charInstance == nullptr, "charInstance already instantiated...\n");
+	charInstance = std::make_unique<Character>();
+}
 
+void Character::StaticTerminate()
+{
+	charInstance.reset();
+}
+
+Character& Character::Get()
+{
+	assert(charInstance != nullptr, "charInstance not created yet must call StaticInitialize() first.\n");
+	return *charInstance;
+}
 
 void Character::Load(const float initialSpeed)
 {
 
-	initialSpeed > 0 ? mMoveSpeed = initialSpeed : mMoveSpeed = 45.f;
+	initialSpeed > 1.f ? mMoveSpeed = initialSpeed : mMoveSpeed = 45.f;
 
 	std::string fullPath;
 	REng::ResourcesFullPath("CharHero.png", fullPath);
 
-
-	//Rectangle
+	//Rectangle initial position and size
+	const int yInitialSpriteRowNumber = 8;//go down 8 rows
 	mRecSprite.x = 0.f;
-	mRecSprite.y = 8 * spritYoffset;
+	mRecSprite.y = yInitialSpriteRowNumber * spritYoffset; 
 	mRecSprite.width = spritXoffset;
 	mRecSprite.height = spritYoffset;
 
+	//load sprite sheet
 	mCharTexture = LoadTexture(fullPath.c_str());
 	bIsMoving = false;
 }
 
 void Character::Unload()
-{}
+{
+
+	mMoveSpeed = 0.f;
+	mCharTexture = Texture2D();
+	mPlayerPos = REng::Math::Vector2(100.f, 100.f);
+	mRecSprite = Rectangle();
+	bIsMoving = false;
+	currentTime = 0.f;
+	currentSprite = 0;
+
+}
 
 void Character::Update(float deltaTime)
 {
@@ -58,8 +86,6 @@ Character::Character()
 
 void Character::PlayerMovement(float deltaTime)
 {
-	//true/false, float, float
-
 
 	if (IsKeyDown(KeyboardKey::KEY_RIGHT))
 	{
@@ -68,13 +94,13 @@ void Character::PlayerMovement(float deltaTime)
 		const int yRecPos = spritYoffset * 7;
 		const int maxNumbersOfSprites = 10;
 
-		float animationMaxTime = .2f;
+		const float animationMaxTime = .2f;
 
 		currentTime += deltaTime;
 		if (currentTime >= animationMaxTime)
 		{
 			xRecPos = spritXoffset * currentSprite++;
-			UpdateRecSprite(false, xRecPos, yRecPos);
+			UpdateRecSprite(true, xRecPos, yRecPos);
 			currentTime = 0.f;
 			if (currentSprite >= maxNumbersOfSprites)
 			{
@@ -84,6 +110,8 @@ void Character::PlayerMovement(float deltaTime)
 
 		mPlayerPos.x += mMoveSpeed * deltaTime;
 	}
+
+	
 
 
 	if (IsKeyDown(KeyboardKey::KEY_LEFT))
@@ -98,7 +126,7 @@ void Character::PlayerMovement(float deltaTime)
 		if (currentTime >= animationMaxTime)
 		{
 			xRecPos = spritXoffset * currentSprite++;
-			UpdateRecSprite(false, xRecPos, yRecPos);
+			UpdateRecSprite(true, xRecPos, yRecPos);
 			currentTime = 0.f;
 			if (currentSprite >= maxNumbersOfSprites)
 			{
@@ -121,7 +149,7 @@ void Character::PlayerMovement(float deltaTime)
 		if (currentTime >= animationMaxTime)
 		{
 			xRecPos = spritXoffset * currentSprite++;
-			UpdateRecSprite(false, xRecPos, yRecPos);
+			UpdateRecSprite(true, xRecPos, yRecPos);
 			currentTime = 0.f;
 			if (currentSprite >= maxNumbersOfSprites)
 			{
@@ -145,7 +173,7 @@ void Character::PlayerMovement(float deltaTime)
 		if (currentTime >= animationMaxTime)
 		{
 			xRecPos = spritXoffset * currentSprite++;
-			UpdateRecSprite(false, xRecPos, yRecPos);
+			UpdateRecSprite(true, xRecPos, yRecPos);
 			currentTime = 0.f;
 			if (currentSprite >= maxNumbersOfSprites)
 			{
@@ -156,7 +184,6 @@ void Character::PlayerMovement(float deltaTime)
 
 		mPlayerPos.y += mMoveSpeed * deltaTime;
 	}
-
 
 
 	if (!bIsMoving)
