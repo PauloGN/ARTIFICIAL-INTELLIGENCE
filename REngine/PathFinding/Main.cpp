@@ -3,8 +3,6 @@
 #include "TileMap.h"
 #include "Character.h"
 
-
-
 void GameInit()
 {
 	//01 Map
@@ -13,20 +11,28 @@ void GameInit()
 	
 	//Main Character
 	Character::StaticInitialize();
-	Character::Get().Load(100.f);
+	
+	Character::Get().Load("CharHero4.png", 100.f, 64, 64, 0, 5, 7, 6, 4, 8, 8, 8, 8);
+
+	//Character::Get().Load("CharHero.png", 100.f, 64, 64, 0, 5, 7, 6, 4, 8, 8, 8, 8);
+
 }
 
 
 bool GameLoop()
 {
+
+	const float deltaTime = GetFrameTime();
+
 	//Map
-	TileMap::Get().Update(GetFrameTime());
+	TileMap::Get().Update(deltaTime);
 	TileMap::Get().Render();
 
 	//Character
-	Character::Get().Update(GetFrameTime());
+	Character::Get().Update(deltaTime);
 	Character::Get().Render();
 
+	//exit condition
 	bool bIsStopped = IsKeyPressed(KeyboardKey::KEY_ESCAPE) || WindowShouldClose();
 	return bIsStopped;
 }
@@ -54,7 +60,6 @@ int main()
 
 	GameCleanUp();
 	REng::Stop();
-
 
 	return 0;
 }

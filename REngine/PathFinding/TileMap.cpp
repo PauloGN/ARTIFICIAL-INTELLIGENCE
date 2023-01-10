@@ -3,9 +3,10 @@
 namespace
 {
 
+	//by standard tile size should be 32
 	const float tileSize = 32.f;
 
-	//instance of sigletom
+	//instance of Singleton
 	std::unique_ptr<TileMap> tileMapInstance;
 
 }
@@ -35,7 +36,6 @@ void TileMap::Load(const char* mapName, const char* TileCollectionName)
 
 void TileMap::Unload()
 {
-
 	mColumns = 0;
 	mRows = 0;
 	mMap.reset();
@@ -65,7 +65,6 @@ void TileMap::Render()
 			DrawTexture(texture, textPos.x, textPos.y, WHITE);
 		}
 	}
-
 }
 
 void TileMap::LoadTileMap(const char* mapName)
@@ -82,10 +81,10 @@ void TileMap::LoadTileMap(const char* mapName)
 
 	if (file != 0)
 	{
-		fscanf_s(file, "Columns: %d\n", &mColumns);
-		fscanf_s(file, "Rows: %d\n", &mRows);
+		fscanf_s(file, "Columns: %d\n", &mColumns);//read and go next
+		fscanf_s(file, "Rows: %d\n", &mRows);//read and go next
 
-		//Create a smartpointer dimention Columns * Rows
+		//Create a smartpointer array dimention Columns * Rows
 		mMap = std::make_unique<int[]>(mColumns * mRows);
 
 		//Loop through rows and Columns
@@ -96,12 +95,12 @@ void TileMap::LoadTileMap(const char* mapName)
 				const int index = GetIndex(x, y);
 				mMap[index] = fgetc(file) - '0';
 			}
+			//go next
 			fgetc(file);
 		}
 
 		fclose(file);
 	}
-
 }
 
 void TileMap::LoadTilesTexture(const char* TileCollectionName)
@@ -113,7 +112,7 @@ void TileMap::LoadTilesTexture(const char* TileCollectionName)
 
 	if (file != 0)
 	{
-		int count = 0;// range of the loop
+		int count = 0;// range of the loop how many assets are going to be loaded 
 		fscanf_s(file, "Count: %d\n", &count);
 
 		for (int i = 0; i < count; i++)
@@ -139,6 +138,34 @@ void TileMap::LoadTilesTexture(const char* TileCollectionName)
 
 bool TileMap::IsCollisdingWith(REng::Math::LineSegment & lineSegment) const
 {
+
+	const int startX = static_cast<int>(lineSegment.from.x / tileSize);
+	const int startY = static_cast<int>(lineSegment.from.y / tileSize);
+	const int endX	 = static_cast<int>(lineSegment.to.x / tileSize);
+	const int endY	 = static_cast<int>(lineSegment.to.y / tileSize);
+
+	//checking if it is out of Bound the Map
+
+	if (startX < 0 || startX >= mColumns ||
+		startY < 0 || startY >= mRows ||
+		endX < 0 || endX >= mColumns ||
+		endY < 0 || endY >= mRows)
+	{
+		return true;
+	}
+
+	for (int y = startY; y <= endY; y++)
+	{
+		for (int x = startY; x <= endX; x++)
+		{
+			const int index = GetIndex(x, y);
+			if (mMap[index] > 27)
+			{
+				return true;
+			}
+		}
+	}
+
 	return false;
 }
 
@@ -152,10 +179,10 @@ Rectangle TileMap::GetBound() const
 
 	Rectangle bound;
 
-	bound.x = 0.0f;
-	bound.y = 0.0f;
-	bound.width = mColumns * tileSize;
-	bound.height = mRows * tileSize;
+	bound.x = 0.0f;						//left
+	bound.y = 0.0f;						//top
+	bound.width = mColumns * tileSize;	//right
+	bound.height = mRows * tileSize;	//bottom
 
 	return bound;
 }

@@ -1,10 +1,8 @@
 #pragma once
 #include <REngine.h>
-#include <filesystem>
 #include <iostream>
 #include <string>
 #include <vector>
-
 
 class TileMap
 {
@@ -14,7 +12,6 @@ public:
 	static void StaticInitialize();
 	static void StaticTerminate();
 	static TileMap& Get();
-
 
 	void Load(const char* mapName, const char* TileCollectionName);
 	void Unload();
@@ -27,14 +24,12 @@ public:
 	bool IsCollisdingWith(REng::Math::LineSegment& lineSegment) const;
 	Rectangle GetBound()const;
 
-
 private:
 
 	//litle math to get index simulating bidimentional array
 	int GetIndex(int column, int row) const;
 
 private:
-
 
 	//map positions
 	std::unique_ptr<int[]> mMap = nullptr;
@@ -43,13 +38,6 @@ private:
 
 	//individual tiles
 	std::vector<Texture2D> mTiles;
-
-
-	//std::vector<int> mTileMap;
-	//std::vector<Texture2D> mTiles;
-	//int mColumns = 0;
-	//int mRows = 0;
-	//int tileSize
 
 };
 

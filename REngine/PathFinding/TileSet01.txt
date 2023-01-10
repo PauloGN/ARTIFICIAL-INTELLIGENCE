@@ -1,4 +1,92 @@
-Count: 2
+Count: 42
 wall.png
+Rock1.png
+Rock2.png
+Rock3.png
+Rock4.png
+TreeA.png
+TreeB.png
+TreeC.png
+TreeD.png
+Water.png
+Water_2.png
+tree0.png
+tree1.png
+tree2.png
+tree3.png
+tree0_2.png
+tree1_2.png
+tree2_2.png
+tree3_2.png
+MA.png
+MB.png
+MC.png
+MD.png
+MA_2.png
+MB_2.png
+MC_2.png
+MD_2.png
+grass.png
+grass_2.png
+flower.png
+flower_0.png
+flower_1.png
+flower_3.png
+Water_Lgrass.png
+Water_Rgrass.png
+Broken_G.png
+Broken_S.png
+GrassD_DirtU.png
+GrassL_DirtR.png
+GrassR_DirtL.png
+GrassU_DirtD.png
 grass_middle.png
 
+
+// Legend
+
+wall.png		 = 0
+Rock1.png		 = 1
+Rock2.png		 = 2
+Rock3.png		 = 3
+Rock4.png		 = 4
+TreeA.png		 = 5
+TreeB.png		 = 6
+TreeC.png		 = 7
+TreeD.png		 = 8
+Water.png		 = 9
+Water_2.png		 = :
+tree0.png		 = ;
+tree1.png		 = <
+tree2.png		 = =
+tree3.png		 = >
+tree0_2.png		 = ?
+tree1_2.png		 = @
+tree2_2.png		 = A
+tree3_2.png		 = B
+MA.png			 = C
+MB.png			 = D
+MC.png			 = E
+MD.png			 = F
+MA_2.png		 = G
+MB_2.png		 = H
+MC_2.png		 = I
+MD_2.png		 = J
+
+//No Collision
+
+grass.png		 = K
+grass_2.png		 = L
+flower.png		 = M
+flower_0.png	 = N
+flower_1.png	 = O
+flower_3.png	 = P
+Water_Lgrass.png = Q
+Water_Rgrass.png = R
+Broken_G.png	 = S
+Broken_S.png	 = T
+GrassD_DirtU.png = U
+GrassL_DirtR.png = V
+GrassR_DirtL.png = W
+GrassU_DirtD.png = X
+grass_middle.png = Y
