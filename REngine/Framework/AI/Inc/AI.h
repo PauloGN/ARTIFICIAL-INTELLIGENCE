@@ -15,3 +15,5 @@ Every cpp file in AI project must include precompiled.h
 */
 #pragma once
 #include "Common.h"
+#include "GridBasedGraph.h"
+//2:16:37

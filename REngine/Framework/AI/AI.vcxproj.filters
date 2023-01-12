@@ -7,6 +7,12 @@
     <Filter Include="Src">
       <UniqueIdentifier>{82b5d5a5-b2c1-41c3-9349-ffb814a84ba3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Inc\Pathfinding">
+      <UniqueIdentifier>{30ceadd9-febd-456b-a32e-bad8bfe8fb3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Pathfinding">
+      <UniqueIdentifier>{f66a2359-4986-4668-95cc-5d711fca2e9d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\AI.h">
@@ -21,6 +27,9 @@
     <ClInclude Include="Inc\TestAI.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\GridBasedGraph.h">
+      <Filter>Inc\Pathfinding</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Precompiled.cpp">
@@ -28,6 +37,9 @@
     </ClCompile>
     <ClCompile Include="Src\TestAI.cpp">
       <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\GridBasedGraph.cpp">
+      <Filter>Src\Pathfinding</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

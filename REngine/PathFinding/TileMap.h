@@ -4,6 +4,13 @@
 #include <string>
 #include <vector>
 
+struct Tiles 
+{
+	Texture2D texture;
+	int16_t weight;
+};
+
+
 class TileMap
 {
 public:
@@ -37,7 +44,7 @@ private:
 	int mRows = 0;
 
 	//individual tiles
-	std::vector<Texture2D> mTiles;
+	std::vector<Tiles> mTiles;
 
 };
 

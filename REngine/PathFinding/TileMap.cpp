@@ -58,7 +58,7 @@ void TileMap::Render()
 		{
 			const int mapIndex = GetIndex(x, y);
 			const int tileIndex = mMap[mapIndex];
-			const Texture2D texture = mTiles[tileIndex];
+			const Texture2D texture = mTiles[tileIndex].texture;
 
 			const REng::Math::Vector2 textPos = {x * tileSize , y * tileSize};
 
@@ -122,7 +122,10 @@ void TileMap::LoadTilesTexture(const char* TileCollectionName)
 			fscanf_s(file, "%s\n", buffer, static_cast<int>(std::size(buffer)));
 			REng::ResourcesFullPath(buffer, fullpath);
 
-			mTiles.push_back(LoadTexture(fullpath.c_str()));
+			//load textures
+			const Tiles tiles(LoadTexture(fullpath.c_str()), 0);
+
+			mTiles.push_back(tiles);
 
 			//Load Tiles textures Exemple
 
