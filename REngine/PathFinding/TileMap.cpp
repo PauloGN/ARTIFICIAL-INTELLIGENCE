@@ -75,7 +75,7 @@ void TileMap::Render()
 			//TEST DRAW
 			if (bShouldDraw)
 			{
-				if (mTiles[tileIndex].weight < 11)
+				if (mTiles[tileIndex].weight < 5)
 				{
 					DrawDebugLine(x, y);
 				}
@@ -248,62 +248,62 @@ int TileMap::ChargeWeight(std::string& tileName)
 void TileMap::DrawDebugLine(const int& x, const int& y)
 {
 		
-	const int startX = static_cast<int>(x * tileSize);
-	const int startY = static_cast<int>(y * tileSize);
+	const int startX = static_cast<int>(x * tileSize + (tileSize * 0.5f));
+	const int startY = static_cast<int>(y * tileSize + (tileSize * 0.5f));
 	
 	if (mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::North])
 	{
-		const int endX = static_cast<int>(x * tileSize);
-		const int endY = static_cast<int>(tileSize * (y - 1));
+		const int endX = static_cast<int>(x * tileSize + (tileSize * 0.5f));
+		const int endY = static_cast<int>(tileSize * (y - 1) + (tileSize * 0.5f));
 		DrawLine(startX, startY, endX, endY, RED);
 	}
 
 	if (mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::South])
 	{
-		const int endX = static_cast<int>(x * tileSize);
-		const int endY = static_cast<int>(tileSize * (y + 1));
+		const int endX = static_cast<int>(x * tileSize + (tileSize * 0.5f));
+		const int endY = static_cast<int>(tileSize * (y + 1) + (tileSize * 0.5f));
 		DrawLine(startX, startY, endX, endY, RED);
 	}
 
 	if (mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::East])
 	{
-		const int endX = static_cast<int>((x + 1) * tileSize);
-		const int endY = static_cast<int>(tileSize * y);
+		const int endX = static_cast<int>((x + 1) * tileSize + (tileSize * 0.5f));
+		const int endY = static_cast<int>(tileSize * y + (tileSize * 0.5f));
 		DrawLine(startX, startY, endX, endY, RED);
 	}
 
 	if (mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::West])
 	{
-		const int endX = static_cast<int>((x - 1) * tileSize);
-		const int endY = static_cast<int>(tileSize * y);
+		const int endX = static_cast<int>((x - 1) * tileSize + (tileSize * 0.5f));
+		const int endY = static_cast<int>(tileSize * y + (tileSize * 0.5f));
 		DrawLine(startX, startY, endX, endY, RED);
 	}
 
 	if (mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::NorthEast])
 	{
-		const int endX = static_cast<int>((x + 1) * tileSize);
-		const int endY = static_cast<int>(tileSize * (y - 1));
+		const int endX = static_cast<int>((x + 1) * tileSize + (tileSize * 0.5f));
+		const int endY = static_cast<int>(tileSize * (y - 1) + (tileSize * 0.5f));
 		DrawLine(startX, startY, endX, endY, WHITE);
 	}
 
 	if (mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::NorthWest])
 	{
-		const int endX = static_cast<int>((x - 1) * tileSize);
-		const int endY = static_cast<int>(tileSize * (y - 1));
+		const int endX = static_cast<int>((x - 1) * tileSize + (tileSize * 0.5f));
+		const int endY = static_cast<int>(tileSize * (y - 1) + (tileSize * 0.5f));
 		DrawLine(startX, startY, endX, endY, RED);
 	}
 
 	if (mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::SouthEast])
 	{
-		const int endX = static_cast<int>((x + 1)* tileSize);
-		const int endY = static_cast<int>(tileSize * (y + 1));
+		const int endX = static_cast<int>((x + 1)* tileSize + (tileSize * 0.5f));
+		const int endY = static_cast<int>(tileSize * (y + 1) + (tileSize * 0.5f));
 		DrawLine(startX, startY, endX, endY, RED);
 	}
 
 	if (mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::SouthWest])
 	{
-		const int endX = static_cast<int>((x - 1) * tileSize);
-		const int endY = static_cast<int>(tileSize * (y + 1));
+		const int endX = static_cast<int>((x - 1) * tileSize + (tileSize * 0.5f));
+		const int endY = static_cast<int>(tileSize * (y + 1) + (tileSize * 0.5f));
 		DrawLine(startX, startY, endX, endY, RED);
 	}
 
@@ -316,181 +316,88 @@ void TileMap::LoadGridBaseGraphNeighbors()
 		for (int x = 0; x < mGridBasedGraph.GetColumns(); x++)
 		{
 			AI::GridBasedGraph::Node* node = mGridBasedGraph.GetNode(x, y);
-			int gridIndex = GetIndex(node->column, node->row);
-
-
-
-			int tileIndex = mMap[gridIndex];
-			if (mTiles[tileIndex].weight < 5)
-			{
-
-				bool has8Neighbors = x > 0 && x < mColumns&& y > 0 && y < mRows;
-				if (has8Neighbors)
-				{
-					LoadNorthNeigbors(x, y);
-					LoadSouthNeigbors(x, y);
-					LoadEastNeigbors(x, y);
-					LoadWestNeigbors(x, y);
-					LoadNorthEastNeigbors(x, y);
-					LoadNortWesthNeigbors(x, y);
-					LoadSouthEastNeigbors(x, y);
-					LoadSouthWestNeigbors(x, y);
-				}
-				else
-				{
-					if (x == 0 && y == 0)
-					{
-						LoadSouthNeigbors(x, y);
-						LoadEastNeigbors(x, y);
-						LoadSouthEastNeigbors(x, y);
-					}
-
-					if (x >= mColumns - 1 && y > 0 && y <= mRows - 1)
-					{
-						LoadNorthNeigbors(x, y);
-						LoadSouthNeigbors(x, y);
-						LoadWestNeigbors(x, y);
-						LoadNortWesthNeigbors(x, y);
-						LoadSouthWestNeigbors(x, y);
-					}
-
-					if (x >= mColumns - 1 && y == 0)
-					{
-						LoadSouthNeigbors(x, y);
-						LoadWestNeigbors(x, y);
-						LoadSouthWestNeigbors(x, y);
-					}
-
-				}
-			}
+			
+			LoadNodeNeighbors(node, x, y - 1);
+			LoadNodeNeighbors(node, x, y + 1);
+			LoadNodeNeighbors(node, x + 1, y);
+			LoadNodeNeighbors(node, x - 1, y);
+			LoadNodeNeighbors(node, x + 1, y -1);
+			LoadNodeNeighbors(node, x + 1, y + 1);
+			LoadNodeNeighbors(node, x - 1, y - 1);
+			LoadNodeNeighbors(node, x - 1, y + 1);
+	
 		}
 	}
 }
 
-void TileMap::LoadNorthNeigbors(const int x, const int y)
+void TileMap::LoadNodeNeighbors(AI::GridBasedGraph::Node* currentNode, const int x, const int y)
 {
-	int index = GetIndex(x, y - 1);
+	int index = GetIndex(x, y);
+
 
 	if (index < 0 || index >= mRows * mColumns)
 	{
 		return;
 	}
 
-	int tileIndex = mMap[index];
-	if (mTiles[tileIndex].weight < 5)
-	{
-		mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::North] = mGridBasedGraph.GetNode(x, y - 1);
-	}
-}
 
-void TileMap::LoadSouthNeigbors(const int x, const int y)
-{
-	int index = GetIndex(x, y + 1);
+	const int tileIndex = mMap[index];
+	const int weight = mTiles[tileIndex].weight;
 
-	if (index < 0 || index >= mRows * mColumns)
+	if (weight > 5)
 	{
 		return;
 	}
 
-	int tileIndex = mMap[index];
-	if (mTiles[tileIndex].weight < 5)
+	AI::GridBasedGraph::Node* neighbourNode = mGridBasedGraph.GetNode(x, y);
+
+
+	//West side
+	if (x < currentNode->column)
 	{
-		mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::South] = mGridBasedGraph.GetNode(x, y + 1);
+		if (y < currentNode->row)
+		{
+			currentNode->neighbors[AI::GridBasedGraph::NorthWest] = neighbourNode;
+		}
+		else if (y > currentNode->row)
+		{
+			currentNode->neighbors[AI::GridBasedGraph::SouthWest] = neighbourNode;
+		}
+		else
+		{
+			currentNode->neighbors[AI::GridBasedGraph::West] = neighbourNode;
+		}
+	}
+
+	//East side
+	if (x > currentNode->column)
+	{
+		if (y < currentNode->row)
+		{
+			currentNode->neighbors[AI::GridBasedGraph::NorthEast] = neighbourNode;
+		}
+		else if (y > currentNode->row)
+		{
+			currentNode->neighbors[AI::GridBasedGraph::SouthEast] = neighbourNode;
+		}
+		else
+		{
+			currentNode->neighbors[AI::GridBasedGraph::East] = neighbourNode;
+		}
+	}
+
+	//North and South side
+	if (x == currentNode->column)
+	{
+		if (y < currentNode->row)
+		{
+			currentNode->neighbors[AI::GridBasedGraph::North] = neighbourNode;
+		}
+		else
+		{
+			currentNode->neighbors[AI::GridBasedGraph::South] = neighbourNode;
+		}
 	}
 }
 
-void TileMap::LoadEastNeigbors(const int x, const int y)
-{
-	int index = GetIndex(x + 1, y);
-
-	if (index < 0 || index >= mRows * mColumns)
-	{
-		return;
-	}
-
-	int tileIndex = mMap[index];
-	if (mTiles[tileIndex].weight < 5)
-	{
-		mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::East] = mGridBasedGraph.GetNode(x + 1, y);
-	}
-}
-
-void TileMap::LoadWestNeigbors(const int x, const int y)
-{
-	int index = GetIndex(x - 1, y);
-
-	if (index < 0 || index >= mRows * mColumns)
-	{
-		return;
-	}
-
-	int tileIndex = mMap[index];
-	if (mTiles[tileIndex].weight < 5)
-	{
-		mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::West] = mGridBasedGraph.GetNode(x - 1, y);
-	}
-}
-	
-void TileMap::LoadNorthEastNeigbors(const int x, const int y)
-{
-	int index = GetIndex(x + 1, y - 1);
-
-	if (index < 0 || index >= mRows * mColumns)
-	{
-		return;
-	}
-	int tileIndex = mMap[index];
-	if (mTiles[tileIndex].weight < 5)
-	{
-		mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::NorthEast] = mGridBasedGraph.GetNode(x + 1, y - 1);
-	}
-}
-
-void TileMap::LoadNortWesthNeigbors(const int x, const int y)
-{
-	int index = GetIndex(x - 1, y - 1);
-
-	if (index < 0 || index >= mRows * mColumns)
-	{
-		return;
-	}
-
-	int tileIndex = mMap[index];
-	if (mTiles[tileIndex].weight < 5)
-	{
-		mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::NorthWest] = mGridBasedGraph.GetNode(x - 1, y - 1);
-	}
-}
-
-void TileMap::LoadSouthEastNeigbors(const int x, const int y)
-{
-	int index = GetIndex(x + 1, y + 1);
-
-	if (index < 0 || index >= mRows * mColumns)
-	{
-		return;
-	}
-
-	int tileIndex = mMap[index];
-	if (mTiles[tileIndex].weight < 5)
-	{
-		mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::SouthEast] = mGridBasedGraph.GetNode(x + 1, y + 1);
-	}
-}
-
-void TileMap::LoadSouthWestNeigbors(const int x, const int y)
-{
-	int index = GetIndex(x - 1, y + 1);
-
-	if (index < 0 || index >= mRows * mColumns)
-	{
-		return;
-	}
-
-	int tileIndex = mMap[index];
-	if (mTiles[tileIndex].weight < 5)
-	{
-		mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::SouthWest] = mGridBasedGraph.GetNode(x - 1, y + 1);
-	}
-}
 

@@ -38,15 +38,13 @@ void GridBasedGraph::Initialize(int Columns, int Rows)
 GridBasedGraph::Node* GridBasedGraph::GetNode(int x, int y)
 {
 	//TODO
-	int maxLimit = (mRows * mColumns);
-	int index = GetIndex(x, y);
+	const int index = GetIndex(x, y);
 	return &mNodes[index];
 }
 
 const GridBasedGraph::Node* GridBasedGraph::GetNode(int x, int y) const
 {
 	//TODO
-	const int maxLimit = (mRows * mColumns);
 	const int index = GetIndex(x, y);
 	return &mNodes[index];
 }

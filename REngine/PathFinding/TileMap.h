@@ -57,15 +57,7 @@ private:
 	bool bShouldDraw = false;
 
 	void LoadGridBaseGraphNeighbors();
-
-	void LoadNorthNeigbors(const int x, const int y);
-	void LoadSouthNeigbors(const int x, const int y);
-	void LoadEastNeigbors(const int x, const int y);
-	void LoadWestNeigbors(const int x, const int y);
-	void LoadNorthEastNeigbors(const int x, const int y);
-	void LoadNortWesthNeigbors(const int x, const int y);
-	void LoadSouthEastNeigbors(const int x, const int y);
-	void LoadSouthWestNeigbors(const int x, const int y);
-
+	void LoadNodeNeighbors(AI::GridBasedGraph::Node* currentNode, const int x , const int y);
+	
 };
 
