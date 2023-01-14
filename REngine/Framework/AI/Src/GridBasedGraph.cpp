@@ -10,6 +10,9 @@ void GridBasedGraph::Initialize(int Columns, int Rows)
 	//Resize mNodes to the matching dimention
 	//for each node, set its atributes (row / column)
 
+	mRows = Rows;
+	mColumns = Columns;
+
 	if (mNodes)
 	{
 		mNodes.reset();
@@ -26,7 +29,7 @@ void GridBasedGraph::Initialize(int Columns, int Rows)
 		{
 			const int index = GetIndex(x, y);
 			mNodes[index].column = x;
-			mNodes[index].column = y;
+			mNodes[index].row = y;
 		}
 	}
 
@@ -35,15 +38,16 @@ void GridBasedGraph::Initialize(int Columns, int Rows)
 GridBasedGraph::Node* GridBasedGraph::GetNode(int x, int y)
 {
 	//TODO
-
-	return nullptr;
+	int maxLimit = (mRows * mColumns);
+	int index = GetIndex(x, y);
+	return &mNodes[index];
 }
 
 const GridBasedGraph::Node* GridBasedGraph::GetNode(int x, int y) const
 {
 	//TODO
 	const int maxLimit = (mRows * mColumns);
-	const int index = GetIndex(x, y) % maxLimit;
+	const int index = GetIndex(x, y);
 	return &mNodes[index];
 }
 

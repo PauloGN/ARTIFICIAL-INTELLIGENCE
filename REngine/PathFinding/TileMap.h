@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <AI.h>
 
 struct Tiles 
 {
@@ -35,6 +36,9 @@ private:
 
 	//litle math to get index simulating bidimentional array
 	int GetIndex(int column, int row) const;
+	//Get weight from the tile list
+	int ChargeWeight(std::string& tileName);
+
 
 private:
 
@@ -45,6 +49,23 @@ private:
 
 	//individual tiles
 	std::vector<Tiles> mTiles;
+
+	//GridBase AI Section
+	AI::GridBasedGraph mGridBasedGraph;
+
+	void DrawDebugLine(const int& x, const int& y);
+	bool bShouldDraw = false;
+
+	void LoadGridBaseGraphNeighbors();
+
+	void LoadNorthNeigbors(const int x, const int y);
+	void LoadSouthNeigbors(const int x, const int y);
+	void LoadEastNeigbors(const int x, const int y);
+	void LoadWestNeigbors(const int x, const int y);
+	void LoadNorthEastNeigbors(const int x, const int y);
+	void LoadNortWesthNeigbors(const int x, const int y);
+	void LoadSouthEastNeigbors(const int x, const int y);
+	void LoadSouthWestNeigbors(const int x, const int y);
 
 };
 

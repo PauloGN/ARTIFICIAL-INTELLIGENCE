@@ -31,6 +31,8 @@ bool GameLoop()
 	//Character
 	Character::Get().Update(deltaTime);
 	Character::Get().Render();
+    //DrawLine(0, 0, 32, 32, PINK);
+	//DrawLine(32, 64, 32, 32, PINK);
 
 	//exit condition
 	bool bIsStopped = IsKeyPressed(KeyboardKey::KEY_ESCAPE) || WindowShouldClose();

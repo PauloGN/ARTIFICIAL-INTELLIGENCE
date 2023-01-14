@@ -46,5 +46,8 @@
     <Text Include="TileSet01.txt">
       <Filter>Tiles</Filter>
     </Text>
+    <Text Include="Level02.txt">
+      <Filter>Maps</Filter>
+    </Text>
   </ItemGroup>
 </Project>

@@ -30,7 +30,6 @@ namespace AI
 		//
 		void Initialize(int Columns, int Rows);
 
-
 		Node* GetNode(int x, int y);//allow modify the node 
 		const Node* GetNode(int x, int y)const;// do not allow modifications 
 
