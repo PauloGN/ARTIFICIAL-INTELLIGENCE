@@ -3,8 +3,9 @@
 namespace
 {
 	//by standard tile size should be 32 bits
-	const float tileSize = 32.f;
-
+	float tileSize = 32.f;
+	float tileHalthWidth = tileSize * .5f;
+	float tileHalthHeight = tileSize * .5f;
 	//instance of Singleton
 	std::unique_ptr<TileMap> tileMapInstance;
 }
@@ -30,6 +31,10 @@ void TileMap::Load(const char* mapName, const char* TileCollectionName)
 {
 	bShouldDraw = false;
 	LoadTilesTexture(TileCollectionName);
+	// Getting tilesize and calculating its halth size
+	tileSize = mTiles[0].texture.height;
+	tileHalthWidth = mTiles[0].texture.width * .5f;
+	tileHalthHeight = mTiles[0].texture.height * .5f;
 	LoadTileMap(mapName);
 }
 
@@ -69,10 +74,7 @@ void TileMap::Render()
 
 			DrawTexture(texture, textPos.x, textPos.y, WHITE);
 
-			//TODO Drawline()
 			//draw line for every node that is connected
-
-			//TEST DRAW
 			if (bShouldDraw)
 			{
 				if (mTiles[tileIndex].weight < 5)
@@ -82,7 +84,6 @@ void TileMap::Render()
 			}
 		}
 	}
-
 }
 
 void TileMap::LoadTileMap(const char* mapName)
@@ -116,23 +117,14 @@ void TileMap::LoadTileMap(const char* mapName)
 			//go next
 			fgetc(file);
 		}
-
+		//once the mMap is totally loaded
 		fclose(file);
 	}
 
-	//TODO
 	//Initialize mGridBasedGraph;
-
 	mGridBasedGraph.Initialize(mColumns, mRows);
 
-	//TODO
-	//for
-	//for
 	//Conect the nodes to its neighbors
-	//hint
-	// if (condition of weight allowed) {connect nodes}
-	//mGridBasedGraph.GetNode(4, 5)->neighbors[AI::GridBasedGraph::East] = mGridBasedGraph.GetNode(5,5);
-
 	LoadGridBaseGraphNeighbors();
 }
 
@@ -224,6 +216,31 @@ Rectangle TileMap::GetBound() const
 	return bound;
 }
 
+std::vector<REng::Math::Vector2> TileMap::FindPath(int startX, int startY, int endX, int endY)
+{
+	std::vector<REng::Math::Vector2> path;
+	AI::NodeList closedList;
+
+	AI::BFS bfs;
+	if (bfs.Run(mGridBasedGraph, startX, startY, endX, endY))
+	{
+		closedList = bfs.GetClosedList();
+		auto node = closedList.back();
+		while (node != nullptr)
+		{
+			path.push_back(GetPixelPosition(node->column, node->row));
+			node = node->parent;
+		}
+		std::reverse(path.begin(), path.end());
+	}
+	else
+	{
+		mClosedList = bfs.GetClosedList();
+	}
+
+	return path;
+}
+
 int TileMap::GetIndex(int column, int row) const
 {
 	//Exemplo: Column 1, row 3 with 10 total
@@ -245,65 +262,67 @@ int TileMap::ChargeWeight(std::string& tileName)
 	return Weight - '0';
 }
 
+//AI Section
+
 void TileMap::DrawDebugLine(const int& x, const int& y)
 {
 		
-	const int startX = static_cast<int>(x * tileSize + (tileSize * 0.5f));
-	const int startY = static_cast<int>(y * tileSize + (tileSize * 0.5f));
+	const int startX = static_cast<int>(x * tileSize + tileHalthWidth);
+	const int startY = static_cast<int>(y * tileSize + tileHalthHeight);
 	
 	if (mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::North])
 	{
-		const int endX = static_cast<int>(x * tileSize + (tileSize * 0.5f));
-		const int endY = static_cast<int>(tileSize * (y - 1) + (tileSize * 0.5f));
+		const int endX = static_cast<int>(x * tileSize + tileHalthWidth);
+		const int endY = static_cast<int>(tileSize * (y - 1) + tileHalthHeight);
 		DrawLine(startX, startY, endX, endY, RED);
 	}
 
 	if (mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::South])
 	{
-		const int endX = static_cast<int>(x * tileSize + (tileSize * 0.5f));
-		const int endY = static_cast<int>(tileSize * (y + 1) + (tileSize * 0.5f));
+		const int endX = static_cast<int>(x * tileSize + tileHalthWidth);
+		const int endY = static_cast<int>(tileSize * (y + 1) + tileHalthHeight);
 		DrawLine(startX, startY, endX, endY, RED);
 	}
 
 	if (mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::East])
 	{
-		const int endX = static_cast<int>((x + 1) * tileSize + (tileSize * 0.5f));
-		const int endY = static_cast<int>(tileSize * y + (tileSize * 0.5f));
+		const int endX = static_cast<int>((x + 1) * tileSize + tileHalthWidth);
+		const int endY = static_cast<int>(tileSize * y + tileHalthHeight);
 		DrawLine(startX, startY, endX, endY, RED);
 	}
 
 	if (mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::West])
 	{
-		const int endX = static_cast<int>((x - 1) * tileSize + (tileSize * 0.5f));
-		const int endY = static_cast<int>(tileSize * y + (tileSize * 0.5f));
+		const int endX = static_cast<int>((x - 1) * tileSize + tileHalthWidth);
+		const int endY = static_cast<int>(tileSize * y + tileHalthHeight);
 		DrawLine(startX, startY, endX, endY, RED);
 	}
 
 	if (mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::NorthEast])
 	{
-		const int endX = static_cast<int>((x + 1) * tileSize + (tileSize * 0.5f));
-		const int endY = static_cast<int>(tileSize * (y - 1) + (tileSize * 0.5f));
+		const int endX = static_cast<int>((x + 1) * tileSize + tileHalthWidth);
+		const int endY = static_cast<int>(tileSize * (y - 1) + tileHalthHeight);
 		DrawLine(startX, startY, endX, endY, WHITE);
 	}
 
 	if (mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::NorthWest])
 	{
-		const int endX = static_cast<int>((x - 1) * tileSize + (tileSize * 0.5f));
-		const int endY = static_cast<int>(tileSize * (y - 1) + (tileSize * 0.5f));
+		const int endX = static_cast<int>((x - 1) * tileSize + tileHalthWidth);
+		const int endY = static_cast<int>(tileSize * (y - 1) + tileHalthHeight);
 		DrawLine(startX, startY, endX, endY, RED);
 	}
 
 	if (mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::SouthEast])
 	{
-		const int endX = static_cast<int>((x + 1)* tileSize + (tileSize * 0.5f));
-		const int endY = static_cast<int>(tileSize * (y + 1) + (tileSize * 0.5f));
+		const int endX = static_cast<int>((x + 1)* tileSize + tileHalthWidth);
+		const int endY = static_cast<int>(tileSize * (y + 1) + tileHalthHeight);
 		DrawLine(startX, startY, endX, endY, RED);
 	}
 
 	if (mGridBasedGraph.GetNode(x, y)->neighbors[AI::GridBasedGraph::SouthWest])
 	{
-		const int endX = static_cast<int>((x - 1) * tileSize + (tileSize * 0.5f));
-		const int endY = static_cast<int>(tileSize * (y + 1) + (tileSize * 0.5f));
+		const int endX = static_cast<int>((x - 1) * tileSize + tileHalthWidth);
+		const int endY = static_cast<int>(tileSize * (y + 1) + tileHalthHeight);
 		DrawLine(startX, startY, endX, endY, RED);
 	}
 
@@ -325,7 +344,6 @@ void TileMap::LoadGridBaseGraphNeighbors()
 			LoadNodeNeighbors(node, x + 1, y + 1);
 			LoadNodeNeighbors(node, x - 1, y - 1);
 			LoadNodeNeighbors(node, x - 1, y + 1);
-	
 		}
 	}
 }
@@ -334,12 +352,10 @@ void TileMap::LoadNodeNeighbors(AI::GridBasedGraph::Node* currentNode, const int
 {
 	int index = GetIndex(x, y);
 
-
-	if (index < 0 || index >= mRows * mColumns)
+	if (x < 0 || x >= mColumns || y < 0 || y >= mRows)
 	{
 		return;
 	}
-
 
 	const int tileIndex = mMap[index];
 	const int weight = mTiles[tileIndex].weight;
@@ -350,7 +366,6 @@ void TileMap::LoadNodeNeighbors(AI::GridBasedGraph::Node* currentNode, const int
 	}
 
 	AI::GridBasedGraph::Node* neighbourNode = mGridBasedGraph.GetNode(x, y);
-
 
 	//West side
 	if (x < currentNode->column)
@@ -400,4 +415,11 @@ void TileMap::LoadNodeNeighbors(AI::GridBasedGraph::Node* currentNode, const int
 	}
 }
 
-
+REng::Math::Vector2 TileMap::GetPixelPosition(int x, int y) const
+{
+	return
+	{
+		(x + 0.5f) * 32,
+		(y + 0.5f) * 32
+	};
+}

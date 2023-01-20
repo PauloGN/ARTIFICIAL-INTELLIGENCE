@@ -6,7 +6,6 @@ using namespace AI;
 
 void GridBasedGraph::Initialize(int Columns, int Rows)
 {
-	//TODO
 	//Resize mNodes to the matching dimention
 	//for each node, set its atributes (row / column)
 
@@ -32,19 +31,26 @@ void GridBasedGraph::Initialize(int Columns, int Rows)
 			mNodes[index].row = y;
 		}
 	}
-
 }
 
 GridBasedGraph::Node* GridBasedGraph::GetNode(int x, int y)
 {
-	//TODO
+	if (x < 0 || x >= mColumns || y < 0 || y >= mRows)
+	{
+		return nullptr;
+	}
+
 	const int index = GetIndex(x, y);
 	return &mNodes[index];
 }
 
 const GridBasedGraph::Node* GridBasedGraph::GetNode(int x, int y) const
 {
-	//TODO
+	if (x < 0 || x >= mColumns || y < 0 || y >= mRows)
+	{
+		return nullptr;
+	}
+
 	const int index = GetIndex(x, y);
 	return &mNodes[index];
 }
@@ -57,6 +63,21 @@ int GridBasedGraph::GetColumns() const
 int GridBasedGraph::GetRows() const
 {
 	return mRows;
+}
+
+void AI::GridBasedGraph::ResetSearchParam()
+{
+	if (mNodes == nullptr)
+	{
+		return;
+	}
+
+	for (int i = 0; i < mRows * mColumns; i++)
+	{
+		mNodes[i].parent = nullptr;
+		mNodes[i].bOpened = false;
+		mNodes[i].bClosed = false;
+	}
 }
 
 int GridBasedGraph::GetIndex(int x, int y) const

@@ -11,7 +11,6 @@ struct Tiles
 	int16_t weight;
 };
 
-
 class TileMap
 {
 public:
@@ -31,6 +30,11 @@ public:
 
 	bool IsCollisdingWith(REng::Math::LineSegment& lineSegment) const;
 	Rectangle GetBound()const;
+
+	//FIND PATH *****************
+
+	std::vector<REng::Math::Vector2> FindPath(int startX, int startY, int endX, int EndY);
+
 
 private:
 
@@ -59,5 +63,10 @@ private:
 	void LoadGridBaseGraphNeighbors();
 	void LoadNodeNeighbors(AI::GridBasedGraph::Node* currentNode, const int x , const int y);
 	
+
+	//*********************
+
+	REng::Math::Vector2 GetPixelPosition(int x, int y) const;
+	std::list<AI::GridBasedGraph::Node*> mClosedList;
 };
 

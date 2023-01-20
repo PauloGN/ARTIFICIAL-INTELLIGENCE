@@ -25,6 +25,12 @@ namespace AI
 			//Witch Rows and Column this node is at the moment
 			int row = 0;
 			int column = 0;
+
+			//Search parameters for pathfinding **********************************
+			Node* parent = nullptr;
+			bool bOpened = false;
+			bool bClosed = false;
+
 		};
 
 		//
@@ -35,6 +41,9 @@ namespace AI
 
 		int GetColumns() const;
 		int GetRows() const;
+
+		//************************************
+		void ResetSearchParam();
 
 	private:
 

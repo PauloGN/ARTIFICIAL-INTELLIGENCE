@@ -30,6 +30,12 @@
     <ClInclude Include="Inc\GridBasedGraph.h">
       <Filter>Inc\Pathfinding</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\BFS.h">
+      <Filter>Inc\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\DFS.h">
+      <Filter>Inc\Pathfinding</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Precompiled.cpp">
@@ -39,6 +45,12 @@
       <Filter>Src</Filter>
     </ClCompile>
     <ClCompile Include="Src\GridBasedGraph.cpp">
+      <Filter>Src\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\BFS.cpp">
+      <Filter>Src\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\DFS.cpp">
       <Filter>Src\Pathfinding</Filter>
     </ClCompile>
   </ItemGroup>

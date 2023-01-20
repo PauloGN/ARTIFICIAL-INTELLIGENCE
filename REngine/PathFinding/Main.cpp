@@ -7,11 +7,10 @@ void GameInit()
 {
 	//01 Map
 	TileMap::StaticInitialize();
-	TileMap::Get().Load("Level01.txt", "TileSet01.txt");
+	TileMap::Get().Load("Level03.txt", "TileSet01.txt");
 	
 	//Main Character
 	Character::StaticInitialize();
-	
 	Character::Get().Load("CharHero4.png", 100.f, 64, 64, 0, 5, 7, 6, 4, 8, 8, 8, 8);
 
 	//Character::Get().Load("CharHero.png", 100.f, 64, 64, 0, 5, 7, 6, 4, 8, 8, 8, 8);
