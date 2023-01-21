@@ -59,7 +59,7 @@ public:
 
 	Character();
 	
-
+	const REng::Math::Vector2 GetPlayerPos() const { return mPlayerPos;}
 
 private:
 

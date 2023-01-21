@@ -26,11 +26,10 @@ namespace AI
 			int row = 0;
 			int column = 0;
 
-			//Search parameters for pathfinding **********************************
+			//Search parameters for pathfinding ********************************** WEEK 03
 			Node* parent = nullptr;
 			bool bOpened = false;
 			bool bClosed = false;
-
 		};
 
 		//
@@ -42,7 +41,7 @@ namespace AI
 		int GetColumns() const;
 		int GetRows() const;
 
-		//************************************
+		//************************************ WEEK 03
 		void ResetSearchParam();
 
 	private:

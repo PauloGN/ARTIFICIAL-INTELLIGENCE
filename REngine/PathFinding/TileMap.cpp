@@ -1,4 +1,5 @@
 #include "TileMap.h"
+#include "Character.h"
 
 namespace
 {
@@ -29,7 +30,7 @@ TileMap& TileMap::Get()
 
 void TileMap::Load(const char* mapName, const char* TileCollectionName)
 {
-	bShouldDraw = false;
+	mDrawLineType = DrawLineType::DLT_NONE;
 	LoadTilesTexture(TileCollectionName);
 	// Getting tilesize and calculating its halth size
 	tileSize = mTiles[0].texture.height;
@@ -51,10 +52,7 @@ void TileMap::Unload()
 void TileMap::Update(float DeltaTime)
 {
 
-	if (IsKeyPressed(KeyboardKey::KEY_L))
-	{
-		bShouldDraw = !bShouldDraw;
-	}
+	UpdateDrawLineType();
 
 	//1h.2 empty for now
 }
@@ -75,7 +73,7 @@ void TileMap::Render()
 			DrawTexture(texture, textPos.x, textPos.y, WHITE);
 
 			//draw line for every node that is connected
-			if (bShouldDraw)
+			if (mDrawLineType == DrawLineType::DLT_DebugLine)
 			{
 				if (mTiles[tileIndex].weight < 5)
 				{
@@ -84,6 +82,9 @@ void TileMap::Render()
 			}
 		}
 	}
+	// BFS 	//DFS
+	const REng::Math::Vector2 StartPos = GetIndexPositionByPixel( Character::Get().GetPlayerPos().x, Character::Get().GetPlayerPos().y);
+	SearchAndDraw(StartPos.x,StartPos.y, 25,13);
 }
 
 void TileMap::LoadTileMap(const char* mapName)
@@ -233,10 +234,9 @@ std::vector<REng::Math::Vector2> TileMap::FindPath(int startX, int startY, int e
 		}
 		std::reverse(path.begin(), path.end());
 	}
-	else
-	{
-		mClosedList = bfs.GetClosedList();
-	}
+
+	mClosedList = bfs.GetClosedList();
+
 
 	return path;
 }
@@ -262,9 +262,31 @@ int TileMap::ChargeWeight(std::string& tileName)
 	return Weight - '0';
 }
 
+void TileMap::UpdateDrawLineType()
+{
+
+	if (IsKeyPressed(KeyboardKey::KEY_F1))
+	{
+		mDrawLineType = DrawLineType::DLT_BFS;
+		bMakeSearch = true;
+	}
+	else if (IsKeyPressed(KeyboardKey::KEY_F2))
+	{
+		mDrawLineType = DrawLineType::DLT_DFS;
+		bMakeSearch = true;
+	}
+	else if (IsKeyPressed(KeyboardKey::KEY_F3))
+	{
+		mDrawLineType = DrawLineType::DLT_DebugLine;
+	}else if(IsKeyPressed(KeyboardKey::KEY_N))
+	{
+		mDrawLineType = DrawLineType::DLT_NONE;
+	}
+}
+
 //AI Section
 
-void TileMap::DrawDebugLine(const int& x, const int& y)
+void TileMap::DrawDebugLine(const int& x = 0, const int& y = 0)
 {
 		
 	const int startX = static_cast<int>(x * tileSize + tileHalthWidth);
@@ -419,7 +441,51 @@ REng::Math::Vector2 TileMap::GetPixelPosition(int x, int y) const
 {
 	return
 	{
-		(x + 0.5f) * 32,
-		(y + 0.5f) * 32
+		(x + 0.5f) * tileSize,
+		(y + 0.5f) * tileSize
 	};
 }
+
+REng::Math::Vector2 TileMap::GetIndexPositionByPixel(int x, int y) const
+{
+	return
+	{
+		(x + 32.5f) / tileSize,
+		(y + 32.5f) / tileSize
+	};
+}
+
+void TileMap::SearchAndDraw(int startX, int startY, int endX, int endY)
+{
+	switch (mDrawLineType)
+	{
+	case DrawLineType::DLT_DebugLine:
+		break;
+	case DrawLineType::DLT_BFS:
+
+		if (bMakeSearch)
+		{
+			mPath = FindPath(startX, startY, endX, endY);
+			bMakeSearch = !bMakeSearch;
+		}
+
+		for(auto node : mClosedList)
+		{
+			DrawDebugLine(node->column, node->row);
+		}
+
+		for (auto& v : mPath)
+		{
+			DrawCircle(v.x, v.y, 10, RED);
+		}
+
+		break;
+	case DrawLineType::DLT_DFS:
+		break;
+	case DrawLineType::DLT_NONE:
+		break;
+	default:
+		break;
+	}
+}
+

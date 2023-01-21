@@ -5,6 +5,14 @@
 #include <vector>
 #include <AI.h>
 
+enum class DrawLineType : uint16_t
+{
+	DLT_DebugLine,
+	DLT_BFS,
+	DLT_DFS,
+	DLT_NONE
+};
+
 struct Tiles 
 {
 	Texture2D texture;
@@ -31,7 +39,7 @@ public:
 	bool IsCollisdingWith(REng::Math::LineSegment& lineSegment) const;
 	Rectangle GetBound()const;
 
-	//FIND PATH *****************
+	//FIND PATH *****************  WEEK 03
 
 	std::vector<REng::Math::Vector2> FindPath(int startX, int startY, int endX, int EndY);
 
@@ -43,6 +51,9 @@ private:
 	//Get weight from the tile list
 	int ChargeWeight(std::string& tileName);
 
+	//update DrawLine type
+
+	void UpdateDrawLineType();
 
 private:
 
@@ -58,15 +69,19 @@ private:
 	AI::GridBasedGraph mGridBasedGraph;
 
 	void DrawDebugLine(const int& x, const int& y);
-	bool bShouldDraw = false;
 
 	void LoadGridBaseGraphNeighbors();
 	void LoadNodeNeighbors(AI::GridBasedGraph::Node* currentNode, const int x , const int y);
 	
 
-	//*********************
+	//********************* WEEK 03
 
+	bool bMakeSearch = false;
+	DrawLineType mDrawLineType;
+	std::vector<REng::Math::Vector2> mPath;
 	REng::Math::Vector2 GetPixelPosition(int x, int y) const;
+	REng::Math::Vector2 GetIndexPositionByPixel(int x, int y) const;
 	std::list<AI::GridBasedGraph::Node*> mClosedList;
+	void SearchAndDraw(int startX, int startY, int endX, int endY);
 };
 
