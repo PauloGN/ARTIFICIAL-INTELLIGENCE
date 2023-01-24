@@ -222,21 +222,41 @@ std::vector<REng::Math::Vector2> TileMap::FindPath(int startX, int startY, int e
 	std::vector<REng::Math::Vector2> path;
 	AI::NodeList closedList;
 
-	AI::BFS bfs;
-	if (bfs.Run(mGridBasedGraph, startX, startY, endX, endY))
+
+	if (mDrawLineType == DrawLineType::DLT_BFS)
 	{
-		closedList = bfs.GetClosedList();
-		auto node = closedList.back();
-		while (node != nullptr)
+		AI::BFS bfs;
+		if (bfs.Run(mGridBasedGraph, startX, startY, endX, endY))
 		{
-			path.push_back(GetPixelPosition(node->column, node->row));
-			node = node->parent;
+			closedList = bfs.GetClosedList();
+			auto node = closedList.back();
+			while (node != nullptr)
+			{
+				path.push_back(GetPixelPosition(node->column, node->row));
+				node = node->parent;
+			}
+			std::reverse(path.begin(), path.end());
 		}
-		std::reverse(path.begin(), path.end());
+
+		mClosedList = bfs.GetClosedList();
 	}
+	else if (mDrawLineType == DrawLineType::DLT_DFS)
+	{
+		AI::DFS dfs;
+		if (dfs.Run(mGridBasedGraph, startX, startY, endX, endY))
+		{
+			closedList = dfs.GetClosedList();
+			auto node = closedList.back();
+			while (node != nullptr)
+			{
+				path.push_back(GetPixelPosition(node->column, node->row));
+				node = node->parent;
+			}
+			std::reverse(path.begin(), path.end());
+		}
 
-	mClosedList = bfs.GetClosedList();
-
+		mClosedList = dfs.GetClosedList();
+	}
 
 	return path;
 }
@@ -348,6 +368,17 @@ void TileMap::DrawDebugLine(const int& x = 0, const int& y = 0)
 		DrawLine(startX, startY, endX, endY, RED);
 	}
 
+}
+
+void TileMap::DrawParentLine(AI::GridBasedGraph::Node* node)
+{
+	if (node->parent != nullptr)
+	{
+		const REng::Math::Vector2 StartPos = GetPixelPosition(node->column, node->row);
+		const REng::Math::Vector2 EndPos = GetPixelPosition(node->parent->column, node->parent->row);
+		
+		DrawLine((int)StartPos.x, (int)StartPos.y, (int)EndPos.x, (int)EndPos.y, RED);
+	}
 }
 
 void TileMap::LoadGridBaseGraphNeighbors()
@@ -462,6 +493,7 @@ void TileMap::SearchAndDraw(int startX, int startY, int endX, int endY)
 	case DrawLineType::DLT_DebugLine:
 		break;
 	case DrawLineType::DLT_BFS:
+	case DrawLineType::DLT_DFS:
 
 		if (bMakeSearch)
 		{
@@ -471,7 +503,7 @@ void TileMap::SearchAndDraw(int startX, int startY, int endX, int endY)
 
 		for(auto node : mClosedList)
 		{
-			DrawDebugLine(node->column, node->row);
+			DrawParentLine(node);
 		}
 
 		for (auto& v : mPath)
@@ -479,8 +511,6 @@ void TileMap::SearchAndDraw(int startX, int startY, int endX, int endY)
 			DrawCircle(v.x, v.y, 10, RED);
 		}
 
-		break;
-	case DrawLineType::DLT_DFS:
 		break;
 	case DrawLineType::DLT_NONE:
 		break;

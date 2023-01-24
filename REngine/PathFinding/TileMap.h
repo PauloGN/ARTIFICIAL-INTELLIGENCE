@@ -69,6 +69,7 @@ private:
 	AI::GridBasedGraph mGridBasedGraph;
 
 	void DrawDebugLine(const int& x, const int& y);
+	void DrawParentLine(AI::GridBasedGraph::Node* node);
 
 	void LoadGridBaseGraphNeighbors();
 	void LoadNodeNeighbors(AI::GridBasedGraph::Node* currentNode, const int x , const int y);
@@ -77,7 +78,7 @@ private:
 	//********************* WEEK 03
 
 	bool bMakeSearch = false;
-	DrawLineType mDrawLineType;
+	DrawLineType mDrawLineType = DrawLineType::DLT_NONE;
 	std::vector<REng::Math::Vector2> mPath;
 	REng::Math::Vector2 GetPixelPosition(int x, int y) const;
 	REng::Math::Vector2 GetIndexPositionByPixel(int x, int y) const;
