@@ -28,6 +28,7 @@ public:
 	static void StaticTerminate();
 	static TileMap& Get();
 
+	//GameTile states
 	void Load(const char* mapName, const char* TileCollectionName);
 	void Unload();
 	void Update(float DeltaTime);
@@ -40,19 +41,18 @@ public:
 	Rectangle GetBound()const;
 
 	//FIND PATH *****************  WEEK 03
-
-	std::vector<REng::Math::Vector2> FindPath(int startX, int startY, int endX, int EndY);
+	std::vector<REng::Math::Vector2> FindPath(int startX, int startY, int endX, int EndY);//Given a initial position and destination find a path
 
 
 private:
 
 	//litle math to get index simulating bidimentional array
 	int GetIndex(int column, int row) const;
+
 	//Get weight from the tile list
 	int ChargeWeight(std::string& tileName);
 
 	//update DrawLine type
-
 	void UpdateDrawLineType();
 
 private:

@@ -3,7 +3,7 @@
 
 namespace
 {
-	//by standard tile size should be 32 bits
+	//by standard tile size should be 32 bits if it is not it will be updated on Load func
 	float tileSize = 32.f;
 	float tileHalthWidth = tileSize * .5f;
 	float tileHalthHeight = tileSize * .5f;
@@ -30,7 +30,7 @@ TileMap& TileMap::Get()
 
 void TileMap::Load(const char* mapName, const char* TileCollectionName)
 {
-	mDrawLineType = DrawLineType::DLT_NONE;
+	mDrawLineType = DrawLineType::DLT_NONE;//define the type of search to be made and drew
 	LoadTilesTexture(TileCollectionName);
 	// Getting tilesize and calculating its halth size
 	tileSize = mTiles[0].texture.height;
@@ -41,10 +41,10 @@ void TileMap::Load(const char* mapName, const char* TileCollectionName)
 
 void TileMap::Unload()
 {
+	mDrawLineType = DrawLineType::DLT_NONE;
 	mColumns = 0;
 	mRows = 0;
 	mMap.reset();
-
 	mMap = nullptr;
 	mTiles.clear();
 }
@@ -52,6 +52,7 @@ void TileMap::Unload()
 void TileMap::Update(float DeltaTime)
 {
 
+	//Sets to true that a search needs to happen and how it will be drawn.
 	UpdateDrawLineType();
 
 	//1h.2 empty for now
@@ -68,6 +69,7 @@ void TileMap::Render()
 			const int tileIndex = mMap[mapIndex];
 			const Texture2D texture = mTiles[tileIndex].texture;
 
+			//getting position to draw
 			const REng::Math::Vector2 textPos = {x * tileSize , y * tileSize};
 
 			DrawTexture(texture, textPos.x, textPos.y, WHITE);
@@ -82,9 +84,9 @@ void TileMap::Render()
 			}
 		}
 	}
-	// BFS 	//DFS
-	const REng::Math::Vector2 StartPos = GetIndexPositionByPixel( Character::Get().GetPlayerPos().x, Character::Get().GetPlayerPos().y);
-	SearchAndDraw(StartPos.x,StartPos.y, 25,13);
+	//BFS//DFS
+	const REng::Math::Vector2 StartPos = GetIndexPositionByPixel(Character::Get().GetPlayerPos().x, Character::Get().GetPlayerPos().y);
+	SearchAndDraw(StartPos.x,StartPos.y, 9,13);
 }
 
 void TileMap::LoadTileMap(const char* mapName)
@@ -506,10 +508,26 @@ void TileMap::SearchAndDraw(int startX, int startY, int endX, int endY)
 			DrawParentLine(node);
 		}
 
-		for (auto& v : mPath)
+		for (size_t i = 0; i < mPath.size(); i++)
 		{
-			DrawCircle(v.x, v.y, 10, RED);
+			if (i == 0)
+			{
+				DrawCircle(mPath[i].x, mPath[i].y, 10, DARKGREEN);
+			}
+			else if (i < mPath.size() - 1)
+			{
+				DrawCircle(mPath[i].x, mPath[i].y, 10, YELLOW);
+			}
+			else
+			{
+				DrawCircle(mPath[i].x, mPath[i].y, 10, RED);
+			}
 		}
+
+		//for (auto& v : mPath)
+		//{
+		//	DrawCircle(v.x, v.y, 10, RED);
+		//}
 
 		break;
 	case DrawLineType::DLT_NONE:
