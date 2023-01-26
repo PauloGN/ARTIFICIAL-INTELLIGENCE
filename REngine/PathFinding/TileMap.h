@@ -5,7 +5,7 @@
 #include <vector>
 #include <AI.h>
 
-enum class DrawLineType : uint16_t
+enum class DrawLineType : uint8_t
 {
 	DLT_DebugLine,
 	DLT_BFS,

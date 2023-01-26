@@ -30,6 +30,11 @@ namespace AI
 			Node* parent = nullptr;
 			bool bOpened = false;
 			bool bClosed = false;
+
+			//WEEK 4
+
+			float g = 0.0f;
+
 		};
 
 		//

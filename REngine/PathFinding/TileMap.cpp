@@ -9,6 +9,33 @@ namespace
 	float tileHalthHeight = tileSize * .5f;
 	//instance of Singleton
 	std::unique_ptr<TileMap> tileMapInstance;
+
+	REng::Math::Vector2 endPos(9.f, 13.f);
+
+	void UpdateEndSearchPoint()
+	{
+		const float speed = 10 * GetFrameTime();
+		if (IsKeyDown(KeyboardKey::KEY_KP_4))
+		{
+			endPos.x -= speed;
+		}
+
+		if (IsKeyDown(KeyboardKey::KEY_KP_6))
+		{
+			endPos.x += speed;
+		}
+
+		if (IsKeyDown(KeyboardKey::KEY_KP_8))
+		{
+			endPos.y -= speed;
+		}
+
+		if (IsKeyDown(KeyboardKey::KEY_KP_2))
+		{
+			endPos.y += speed;
+		}
+
+	}
 }
 
 void TileMap::StaticInitialize()
@@ -33,9 +60,14 @@ void TileMap::Load(const char* mapName, const char* TileCollectionName)
 	mDrawLineType = DrawLineType::DLT_NONE;//define the type of search to be made and drew
 	LoadTilesTexture(TileCollectionName);
 	// Getting tilesize and calculating its halth size
-	tileSize = mTiles[0].texture.height;
-	tileHalthWidth = mTiles[0].texture.width * .5f;
-	tileHalthHeight = mTiles[0].texture.height * .5f;
+
+	if (mTiles.size() > 0)
+	{
+		tileSize = mTiles[0].texture.height;
+		tileHalthWidth = mTiles[0].texture.width * .5f;
+		tileHalthHeight = mTiles[0].texture.height * .5f;
+	}
+
 	LoadTileMap(mapName);
 }
 
@@ -47,6 +79,7 @@ void TileMap::Unload()
 	mMap.reset();
 	mMap = nullptr;
 	mTiles.clear();
+	bMakeSearch = false;
 }
 
 void TileMap::Update(float DeltaTime)
@@ -55,7 +88,11 @@ void TileMap::Update(float DeltaTime)
 	//Sets to true that a search needs to happen and how it will be drawn.
 	UpdateDrawLineType();
 
-	//1h.2 empty for now
+	UpdateEndSearchPoint();
+	
+
+
+	//1h.2 OBS
 }
 
 void TileMap::Render()
@@ -67,7 +104,7 @@ void TileMap::Render()
 		{
 			const int mapIndex = GetIndex(x, y);
 			const int tileIndex = mMap[mapIndex];
-			const Texture2D texture = mTiles[tileIndex].texture;
+			const Texture2D& texture = mTiles[tileIndex].texture;
 
 			//getting position to draw
 			const REng::Math::Vector2 textPos = {x * tileSize , y * tileSize};
@@ -84,9 +121,13 @@ void TileMap::Render()
 			}
 		}
 	}
+	//Draw End Point pos
+	REng::Math::Vector2 endposition =  GetPixelPosition(endPos.x, endPos.y);
+	DrawCircle(endposition.x, endposition.y, 10.f, RED);
+
 	//BFS//DFS
 	const REng::Math::Vector2 StartPos = GetIndexPositionByPixel(Character::Get().GetPlayerPos().x, Character::Get().GetPlayerPos().y);
-	SearchAndDraw(StartPos.x,StartPos.y, 9,13);
+	SearchAndDraw(StartPos.x,StartPos.y, endPos.x, endPos.y);
 }
 
 void TileMap::LoadTileMap(const char* mapName)
