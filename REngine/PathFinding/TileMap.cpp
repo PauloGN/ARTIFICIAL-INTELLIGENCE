@@ -12,27 +12,43 @@ namespace
 
 	REng::Math::Vector2 endPos(9.f, 13.f);
 
-	void UpdateEndSearchPoint()
+	void UpdateEndSearchPoint(int maxX, int maxY)
 	{
 		const float speed = 10 * GetFrameTime();
 		if (IsKeyDown(KeyboardKey::KEY_KP_4))
 		{
 			endPos.x -= speed;
+			if (endPos.x - speed <= 0)
+			{
+				endPos.x = 0;
+			}
 		}
 
 		if (IsKeyDown(KeyboardKey::KEY_KP_6))
 		{
 			endPos.x += speed;
+			if (endPos.x - speed >= maxX)
+			{
+				endPos.x = maxX -1;
+			}
 		}
 
 		if (IsKeyDown(KeyboardKey::KEY_KP_8))
 		{
 			endPos.y -= speed;
+			if (endPos.y - speed < 0.f)
+			{
+				endPos.y = 0;
+			}
 		}
 
 		if (IsKeyDown(KeyboardKey::KEY_KP_2))
 		{
 			endPos.y += speed;
+			if (endPos.y - speed > maxY)
+			{
+				endPos.y = maxY -1;
+			}
 		}
 
 	}
@@ -88,12 +104,14 @@ void TileMap::Update(float DeltaTime)
 	//Sets to true that a search needs to happen and how it will be drawn.
 	UpdateDrawLineType();
 
-	UpdateEndSearchPoint();
+	UpdateEndSearchPoint(mColumns, mRows);
+}
+
 	
 
 
 	//1h.2 OBS
-}
+
 
 void TileMap::Render()
 {
