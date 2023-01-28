@@ -10,8 +10,19 @@ enum class DrawLineType : uint8_t
 	DLT_DebugLine,
 	DLT_BFS,
 	DLT_DFS,
+	DLT_Dijktra,
+	DLT_AStar,
 	DLT_NONE
 };
+
+
+enum class HeuristicsType : uint8_t
+{
+	HT_ManHattan,
+	HT_Euclidean,
+	HT_Diagonal
+};
+
 
 struct Tiles 
 {
@@ -42,6 +53,12 @@ public:
 
 	//FIND PATH *****************  WEEK 03
 	std::vector<REng::Math::Vector2> FindPath(int startX, int startY, int endX, int EndY);//Given a initial position and destination find a path
+
+
+	//WEEK 04 DIJKSTRA AND A*
+
+	float GetCost(const AI::GridBasedGraph::Node* node) const;
+	std::vector<REng::Math::Vector2> FindPathDijkistra(int startX, int startY, int endX, int EndY);
 
 
 private:
@@ -84,5 +101,16 @@ private:
 	REng::Math::Vector2 GetIndexPositionByPixel(int x, int y) const;
 	std::list<AI::GridBasedGraph::Node*> mClosedList;
 	void SearchAndDraw(int startX, int startY, int endX, int endY);
+
+	//WEEK 04
+
+	HeuristicsType heuristicsType;
+
+	//UI
+	std::string mAlgorithmText = "";
+	std::string mHeuristicsText = "Heuristics: ManHanttan";;
+	void RenderUI();
+	int8_t mModuleID = 0;
+
 };
 

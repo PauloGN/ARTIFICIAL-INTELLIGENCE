@@ -7,7 +7,7 @@ void GameInit()
 {
 	//01 Map
 	TileMap::StaticInitialize();
-	TileMap::Get().Load("Level03.txt", "TileSet01.txt");
+	TileMap::Get().Load("Level01.txt", "TileSet01.txt");
 	
 	//Main Character
 	Character::StaticInitialize();
@@ -30,9 +30,6 @@ bool GameLoop()
 	//Character
 	Character::Get().Update(deltaTime);
 	Character::Get().Render();
-
-    //DrawLine(0, 0, 32, 32, PINK);
-	//DrawLine(32, 64, 32, 32, PINK);
 
 	//exit condition
 	bool bIsStopped = IsKeyPressed(KeyboardKey::KEY_ESCAPE) || WindowShouldClose();

@@ -50,7 +50,6 @@ namespace
 				endPos.y = maxY -1;
 			}
 		}
-
 	}
 }
 
@@ -76,15 +75,15 @@ void TileMap::Load(const char* mapName, const char* TileCollectionName)
 	mDrawLineType = DrawLineType::DLT_NONE;//define the type of search to be made and drew
 	LoadTilesTexture(TileCollectionName);
 	// Getting tilesize and calculating its halth size
-
 	if (mTiles.size() > 0)
 	{
 		tileSize = mTiles[0].texture.height;
 		tileHalthWidth = mTiles[0].texture.width * .5f;
 		tileHalthHeight = mTiles[0].texture.height * .5f;
 	}
-
 	LoadTileMap(mapName);
+	heuristicsType = HeuristicsType::HT_ManHattan;
+	mHeuristicsText = "Heuristics: ManHanttan";
 }
 
 void TileMap::Unload()
@@ -105,12 +104,8 @@ void TileMap::Update(float DeltaTime)
 	UpdateDrawLineType();
 
 	UpdateEndSearchPoint(mColumns, mRows);
-}
-
-	
-
-
 	//1h.2 OBS
+}
 
 
 void TileMap::Render()
@@ -139,13 +134,18 @@ void TileMap::Render()
 			}
 		}
 	}
-	//Draw End Point pos
-	REng::Math::Vector2 endposition =  GetPixelPosition(endPos.x, endPos.y);
-	DrawCircle(endposition.x, endposition.y, 10.f, RED);
 
 	//BFS//DFS
+	REng::Math::Vector2 endposition =  GetPixelPosition(endPos.x, endPos.y);
 	const REng::Math::Vector2 StartPos = GetIndexPositionByPixel(Character::Get().GetPlayerPos().x, Character::Get().GetPlayerPos().y);
 	SearchAndDraw(StartPos.x,StartPos.y, endPos.x, endPos.y);
+
+	//Draw End Point pos
+	DrawCircle(endposition.x, endposition.y, 10.f, RED);
+
+	//Render UI
+	RenderUI();
+
 }
 
 void TileMap::LoadTileMap(const char* mapName)
@@ -280,11 +280,14 @@ Rectangle TileMap::GetBound() const
 
 std::vector<REng::Math::Vector2> TileMap::FindPath(int startX, int startY, int endX, int endY)
 {
+	mClosedList.clear();
 	std::vector<REng::Math::Vector2> path;
 	AI::NodeList closedList;
+	path.clear();
 
-
-	if (mDrawLineType == DrawLineType::DLT_BFS)
+	switch (mDrawLineType)
+	{
+	case DrawLineType::DLT_BFS:
 	{
 		AI::BFS bfs;
 		if (bfs.Run(mGridBasedGraph, startX, startY, endX, endY))
@@ -301,7 +304,8 @@ std::vector<REng::Math::Vector2> TileMap::FindPath(int startX, int startY, int e
 
 		mClosedList = bfs.GetClosedList();
 	}
-	else if (mDrawLineType == DrawLineType::DLT_DFS)
+		break;
+	case DrawLineType::DLT_DFS:
 	{
 		AI::DFS dfs;
 		if (dfs.Run(mGridBasedGraph, startX, startY, endX, endY))
@@ -318,6 +322,63 @@ std::vector<REng::Math::Vector2> TileMap::FindPath(int startX, int startY, int e
 
 		mClosedList = dfs.GetClosedList();
 	}
+		break;
+	case DrawLineType::DLT_Dijktra:
+
+		path = FindPathDijkistra(startX, startY, endX, endY);
+
+		break;
+	case DrawLineType::DLT_AStar:
+		break;
+	case DrawLineType::DLT_NONE:
+		break;
+	default:
+		break;
+	}
+
+	return path;
+}
+
+//Dijkstra																WEEK 4*****
+float TileMap::GetCost(const AI::GridBasedGraph::Node* node) const
+{
+	if (node == nullptr)
+	{
+		return 0.0f;
+	}
+	const int mapIndex = GetIndex(node->column, node->row);
+	const int tileIndex = mMap[mapIndex];
+
+	return static_cast<float>(mTiles[tileIndex].weight);
+}
+
+std::vector<REng::Math::Vector2> TileMap::FindPathDijkistra(int startX, int startY, int endX, int endY)
+{
+
+	mClosedList.clear();
+	std::vector<REng::Math::Vector2> path;
+	AI::NodeList closedList;
+
+		AI::Dijkstra dijkstra;
+		//Wrapper function
+		auto getCostWrapper = [&](const AI::GridBasedGraph::Node* nodeToGetCost)
+		{
+			return GetCost(nodeToGetCost);
+		};
+
+		if (dijkstra.Run(mGridBasedGraph, startX, startY, endX, endY, getCostWrapper))
+		{
+			closedList = dijkstra.GetClosedList();
+			auto node = closedList.back();
+			while (node != nullptr)
+			{
+				path.push_back(GetPixelPosition(node->column, node->row));
+				node = node->parent;
+			}
+			std::reverse(path.begin(), path.end());
+		}
+
+		mClosedList = dijkstra.GetClosedList();
 
 	return path;
 }
@@ -345,24 +406,80 @@ int TileMap::ChargeWeight(std::string& tileName)
 
 void TileMap::UpdateDrawLineType()
 {
-
+	
 	if (IsKeyPressed(KeyboardKey::KEY_F1))
 	{
 		mDrawLineType = DrawLineType::DLT_BFS;
 		bMakeSearch = true;
+		mAlgorithmText = "BFS Search";
 	}
 	else if (IsKeyPressed(KeyboardKey::KEY_F2))
 	{
 		mDrawLineType = DrawLineType::DLT_DFS;
 		bMakeSearch = true;
+		mAlgorithmText = "DFS Search";
 	}
 	else if (IsKeyPressed(KeyboardKey::KEY_F3))
 	{
 		mDrawLineType = DrawLineType::DLT_DebugLine;
-	}else if(IsKeyPressed(KeyboardKey::KEY_N))
+		mAlgorithmText = "Draw debug lines";
+	}
+	else if (IsKeyPressed(KeyboardKey::KEY_F4))
+	{
+		mDrawLineType = DrawLineType::DLT_Dijktra;
+		bMakeSearch = true;
+		mAlgorithmText = "Dijkstra Search";
+	}
+	else if (IsKeyPressed(KeyboardKey::KEY_F5))
+	{
+		mDrawLineType = DrawLineType::DLT_AStar;
+		bMakeSearch = true;
+		mAlgorithmText = "A* Search";
+	}
+	else if(IsKeyPressed(KeyboardKey::KEY_N))
 	{
 		mDrawLineType = DrawLineType::DLT_NONE;
+		mAlgorithmText = "";
 	}
+
+	//Modules
+
+	if (IsKeyPressed(KeyboardKey::KEY_KP_5))
+	{
+		mModuleID++;
+		if (mModuleID > 2)
+		{
+			mModuleID = 0;
+		}
+		switch (mModuleID)
+		{
+		case 0:
+		{
+			heuristicsType = HeuristicsType::HT_ManHattan;
+			mHeuristicsText = "Heuristics: ManHanttan";
+			break;
+		}
+		case 1:
+		{
+			heuristicsType = HeuristicsType::HT_Euclidean;
+			mHeuristicsText = "Heuristics: Euclidean";
+		break;
+		}
+		case 2:
+		{
+			heuristicsType = HeuristicsType::HT_Diagonal;
+			mHeuristicsText = "Heuristics: Diagonal";
+			break;
+		}
+		default:
+			heuristicsType = HeuristicsType::HT_ManHattan;
+			mHeuristicsText = "Heuristics: ManHanttan";
+			break;
+		}
+
+
+	}
+
 }
 
 //AI Section
@@ -582,17 +699,61 @@ void TileMap::SearchAndDraw(int startX, int startY, int endX, int endY)
 				DrawCircle(mPath[i].x, mPath[i].y, 10, RED);
 			}
 		}
+		break;
+	case DrawLineType::DLT_Dijktra:
 
-		//for (auto& v : mPath)
-		//{
-		//	DrawCircle(v.x, v.y, 10, RED);
-		//}
+
+		if (bMakeSearch)
+		{
+			mPath = FindPath(startX, startY, endX, endY);
+			bMakeSearch = !bMakeSearch;
+		}
+
+		for (auto node : mClosedList)
+		{
+			DrawParentLine(node);
+		}
+
+		for (size_t i = 0; i < mPath.size(); i++)
+		{
+			if (i == 0)
+			{
+				DrawCircle(mPath[i].x, mPath[i].y, 10, DARKGREEN);
+			}
+			else if (i < mPath.size() - 1)
+			{
+				DrawCircle(mPath[i].x, mPath[i].y, 10, YELLOW);
+			}
+			else
+			{
+				DrawCircle(mPath[i].x, mPath[i].y, 10, RED);
+			}
+		}
+
 
 		break;
-	case DrawLineType::DLT_NONE:
+
+	case DrawLineType::DLT_AStar:
 		break;
+
 	default:
 		break;
 	}
+}
+
+void TileMap::RenderUI()
+{
+	
+	const int xAlgPos = static_cast<int>(400);
+	const int yAlgPos = static_cast<int>(25.0f);
+
+	DrawText(TextToUpper(mAlgorithmText.c_str()), xAlgPos, yAlgPos, 22 ,WHITE);
+
+	if (mDrawLineType == DrawLineType::DLT_AStar)
+	{
+		const int xHeuristicPos = mAlgorithmText.length() * tileSize + xAlgPos;
+		DrawText(TextToUpper(mHeuristicsText.c_str()), xHeuristicPos, yAlgPos, 22, WHITE);
+	}
+
 }
 

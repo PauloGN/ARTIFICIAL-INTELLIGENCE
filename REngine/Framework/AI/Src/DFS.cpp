@@ -26,6 +26,10 @@ bool AI::DFS::Run(GridBasedGraph& graph, int startX, int startY, int endX, int e
 
 	auto endNode = graph.GetNode(endX, endY);
 
+	if (!endNode)
+	{
+		return found;
+	}
 
 	while ((!endNode->bClosed) && (!mOpenList.empty()))
 	{

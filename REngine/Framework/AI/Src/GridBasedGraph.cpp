@@ -78,6 +78,7 @@ void AI::GridBasedGraph::ResetSearchParam()
 		mNodes[i].bOpened = false;
 		mNodes[i].bClosed = false;
 		mNodes[i].g = 0.0f;
+		mNodes[i].h = 0.0f;
 	}
 }
 

@@ -7,13 +7,14 @@ namespace AI
 
 	using NodeList = std::list<GridBasedGraph::Node*>;
 	using GetCost = std::function<float(const GridBasedGraph::Node*)>;// to get the value from outside of AI
+	using GetHeuristics = std::function<float(const GridBasedGraph::Node*, const GridBasedGraph::Node*)>;// to get the value from outside of AI START node and END node
 
-	class Dijkstra
+	class AStar
 	{
 	public:
 
 		//if the node if found return true
-		bool Run(GridBasedGraph& graph, int startX, int startY, int endX, int endY, GetCost getCostFunc);
+		bool Run(GridBasedGraph& graph, int startX, int startY, int endX, int endY, GetCost getCostFunc, GetHeuristics getHeuristicsFunc);
 		const NodeList& GetClosedList()const { return mClosedList; }
 
 	private:

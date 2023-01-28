@@ -19,3 +19,5 @@ Every cpp file in AI project must include precompiled.h
 #include "BFS.h"
 #include "DFS.h"
 //2:16:37
+#include "Dijkstra.h"
+#include "AStar.h"

@@ -31,9 +31,12 @@ namespace AI
 			bool bOpened = false;
 			bool bClosed = false;
 
-			//WEEK 4
+			//WEEK 4 Dijkstra info
 
 			float g = 0.0f;
+
+			//A* INFO
+			float h = 0.0f;
 
 		};
 

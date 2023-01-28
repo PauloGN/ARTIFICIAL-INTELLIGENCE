@@ -13,11 +13,8 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Maps">
+    <Filter Include="Assets">
       <UniqueIdentifier>{26dbee33-a0a0-45aa-82e2-8663b1b4ecb3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Tiles">
-      <UniqueIdentifier>{4f962479-9b68-4d91-9980-f1a2bc18d149}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -41,16 +38,16 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Level01.txt">
-      <Filter>Maps</Filter>
-    </Text>
-    <Text Include="TileSet01.txt">
-      <Filter>Tiles</Filter>
+      <Filter>Assets</Filter>
     </Text>
     <Text Include="Level02.txt">
-      <Filter>Maps</Filter>
+      <Filter>Assets</Filter>
     </Text>
     <Text Include="Level03.txt">
-      <Filter>Maps</Filter>
+      <Filter>Assets</Filter>
+    </Text>
+    <Text Include="TileSet01.txt">
+      <Filter>Assets</Filter>
     </Text>
   </ItemGroup>
 </Project>

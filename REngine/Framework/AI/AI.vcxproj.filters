@@ -39,6 +39,9 @@
     <ClInclude Include="Inc\Dijkstra.h">
       <Filter>Inc\Pathfinding</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\AStar.h">
+      <Filter>Inc\Pathfinding</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Precompiled.cpp">
@@ -57,6 +60,9 @@
       <Filter>Src\Pathfinding</Filter>
     </ClCompile>
     <ClCompile Include="Src\Dijkstra.cpp">
+      <Filter>Src\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\AStar.cpp">
       <Filter>Src\Pathfinding</Filter>
     </ClCompile>
   </ItemGroup>

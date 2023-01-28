@@ -9,9 +9,9 @@ bool AI::BFS::Run(GridBasedGraph& graph, int startX, int startY, int endX, int e
 	mClosedList.clear();
 
 	// add the start node to the open list
-	auto node = graph.GetNode(startX, startY);
-	node->bOpened = true;
-	mOpenList.push_back(node);
+	auto nodeA = graph.GetNode(startX, startY);
+	nodeA->bOpened = true;
+	mOpenList.push_back(nodeA);
 
 	bool found = false;
 
@@ -48,15 +48,15 @@ bool AI::BFS::Run(GridBasedGraph& graph, int startX, int startY, int endX, int e
 				auto nbh = tempNode->neighbors[i];
 				if (nbh != nullptr && !nbh->bClosed && !nbh->bOpened)
 				{
-					mOpenList.push_back(nbh);
 					nbh->bOpened = true;
 					nbh->parent = tempNode;
+					mOpenList.push_back(nbh);
 				}
 			}
 		}
 
-		mClosedList.push_back(tempNode);
 		tempNode->bClosed = true;
+		mClosedList.push_back(tempNode);
 	}
 
 	return found;
