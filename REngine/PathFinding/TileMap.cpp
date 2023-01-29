@@ -82,7 +82,7 @@ void TileMap::Load(const char* mapName, const char* TileCollectionName)
 		tileHalthHeight = mTiles[0].texture.height * .5f;
 	}
 	LoadTileMap(mapName);
-	heuristicsType = HeuristicsType::HT_ManHattan;
+	mHeuristicsType = HeuristicsType::HT_ManHattan;
 	mHeuristicsText = "Heuristics: ManHanttan";
 }
 
@@ -329,6 +329,9 @@ std::vector<REng::Math::Vector2> TileMap::FindPath(int startX, int startY, int e
 
 		break;
 	case DrawLineType::DLT_AStar:
+
+		path = FindPathAStar(startX, startY, endX, endY);
+
 		break;
 	case DrawLineType::DLT_NONE:
 		break;
@@ -350,6 +353,52 @@ float TileMap::GetCost(const AI::GridBasedGraph::Node* node) const
 	const int tileIndex = mMap[mapIndex];
 
 	return static_cast<float>(mTiles[tileIndex].weight);
+}
+
+float TileMap::GetHeuristics(const AI::GridBasedGraph::Node* nodeA, const AI::GridBasedGraph::Node* nodeB) const
+{
+
+	if (nodeA == nullptr || nodeB == nullptr)
+	{
+		return 0.0f;
+	}
+
+	float distance = 0.0f;
+	float dif_X = 0.0f;
+	float dif_Y = 0.0f;
+		const int D = 1;
+		const int D2 = 1;
+
+	switch (mHeuristicsType)
+	{
+
+
+	case HeuristicsType::HT_ManHattan:
+
+		dif_X = abs(nodeA->column - nodeB->column);
+		dif_Y = abs(nodeA->row - nodeB->row);
+		distance = D * dif_X + dif_Y;
+
+		break;
+	case HeuristicsType::HT_Euclidean://pitagoras
+
+		dif_X = nodeA->column - nodeB->column;
+		dif_Y = nodeA->row - nodeB->row;
+		distance = D * sqrt(dif_X * dif_X + dif_Y * dif_Y);
+
+		break;
+	case HeuristicsType::HT_Diagonal:
+
+		dif_X = abs(nodeA->column - nodeB->column);
+		dif_Y = abs(nodeA->row - nodeB->row);
+		distance = D * (dif_X + dif_Y) + (D2  - 2 * D) * std::min(dif_X, dif_Y);
+
+		break;
+	default:
+		break;
+	}
+
+	return distance;
 }
 
 std::vector<REng::Math::Vector2> TileMap::FindPathDijkistra(int startX, int startY, int endX, int endY)
@@ -379,6 +428,42 @@ std::vector<REng::Math::Vector2> TileMap::FindPathDijkistra(int startX, int star
 		}
 
 		mClosedList = dijkstra.GetClosedList();
+
+	return path;
+}
+
+std::vector<REng::Math::Vector2> TileMap::FindPathAStar(int startX, int startY, int endX, int endY)
+{
+	mClosedList.clear();
+	std::vector<REng::Math::Vector2> path;
+	AI::NodeList closedList;
+
+	AI::AStar aStar;
+	//Wrapper function
+	auto getCostWrapper = [&](const AI::GridBasedGraph::Node* nodeToGetCost)
+	{
+		return GetCost(nodeToGetCost);
+	};
+
+
+	auto getHeuristic = [&](const AI::GridBasedGraph::Node* nodeA, const AI::GridBasedGraph::Node* nodeB)
+	{
+		return GetHeuristics(nodeA, nodeB);
+	};
+
+	if (aStar.Run(mGridBasedGraph, startX, startY, endX, endY, getCostWrapper, getHeuristic))
+	{
+		closedList = aStar.GetClosedList();
+		auto node = closedList.back();
+		while (node != nullptr)
+		{
+			path.push_back(GetPixelPosition(node->column, node->row));
+			node = node->parent;
+		}
+		std::reverse(path.begin(), path.end());
+	}
+
+	mClosedList = aStar.GetClosedList();
 
 	return path;
 }
@@ -455,31 +540,28 @@ void TileMap::UpdateDrawLineType()
 		{
 		case 0:
 		{
-			heuristicsType = HeuristicsType::HT_ManHattan;
+			mHeuristicsType = HeuristicsType::HT_ManHattan;
 			mHeuristicsText = "Heuristics: ManHanttan";
 			break;
 		}
 		case 1:
 		{
-			heuristicsType = HeuristicsType::HT_Euclidean;
+			mHeuristicsType = HeuristicsType::HT_Euclidean;
 			mHeuristicsText = "Heuristics: Euclidean";
 		break;
 		}
 		case 2:
 		{
-			heuristicsType = HeuristicsType::HT_Diagonal;
+			mHeuristicsType = HeuristicsType::HT_Diagonal;
 			mHeuristicsText = "Heuristics: Diagonal";
 			break;
 		}
 		default:
-			heuristicsType = HeuristicsType::HT_ManHattan;
+			mHeuristicsType = HeuristicsType::HT_ManHattan;
 			mHeuristicsText = "Heuristics: ManHanttan";
 			break;
 		}
-
-
 	}
-
 }
 
 //AI Section
@@ -730,10 +812,38 @@ void TileMap::SearchAndDraw(int startX, int startY, int endX, int endY)
 			}
 		}
 
-
 		break;
 
 	case DrawLineType::DLT_AStar:
+
+
+		if (bMakeSearch)
+		{
+			mPath = FindPath(startX, startY, endX, endY);
+			bMakeSearch = !bMakeSearch;
+		}
+
+		for (auto node : mClosedList)
+		{
+			DrawParentLine(node);
+		}
+
+		for (size_t i = 0; i < mPath.size(); i++)
+		{
+			if (i == 0)
+			{
+				DrawCircle(mPath[i].x, mPath[i].y, 10, DARKGREEN);
+			}
+			else if (i < mPath.size() - 1)
+			{
+				DrawCircle(mPath[i].x, mPath[i].y, 10, YELLOW);
+			}
+			else
+			{
+				DrawCircle(mPath[i].x, mPath[i].y, 10, RED);
+			}
+		}
+
 		break;
 
 	default:

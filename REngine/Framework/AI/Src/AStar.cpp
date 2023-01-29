@@ -1,6 +1,8 @@
 #include "Precompiled.h"
 #include "AStar.h"
 
+//http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html
+
 bool AI::AStar::Run(GridBasedGraph& graph, int startX, int startY, int endX, int endY, GetCost getCostFunc, GetHeuristics getHeuristicsFunc)
 {
 	graph.ResetSearchParam();
@@ -8,9 +10,11 @@ bool AI::AStar::Run(GridBasedGraph& graph, int startX, int startY, int endX, int
 	mClosedList.clear();
 
 	// add the start node to the open list
-	auto node = graph.GetNode(startX, startY);
-	node->bOpened = true;
-	mOpenList.push_back(node);
+	auto nodeA = graph.GetNode(startX, startY);
+	nodeA->bOpened = true;
+	nodeA->g = 0.0f;
+	nodeA->parent = nullptr;
+	mOpenList.push_back(nodeA);
 
 	bool found = false;
 
@@ -21,12 +25,13 @@ bool AI::AStar::Run(GridBasedGraph& graph, int startX, int startY, int endX, int
 		return found;
 	}
 
+
 	while ((!endNode->bClosed) && (!mOpenList.empty()))
 	{
-		auto tempNode = mOpenList.front();
+		auto currentNode = mOpenList.front();
 		mOpenList.pop_front();
 
-		if (tempNode->column == endX && tempNode->row == endY)
+		if (currentNode->column == endX && currentNode->row == endY)
 		{
 			found = true;
 		}
@@ -34,33 +39,48 @@ bool AI::AStar::Run(GridBasedGraph& graph, int startX, int startY, int endX, int
 		{
 			for (size_t i = 0; i < 8; i++)
 			{
-				auto nbh = tempNode->neighbors[i];
-				if (nbh == nullptr || nbh->bClosed) { continue; }
+				auto nbr = currentNode->neighbors[i];
+				if (nbr == nullptr || nbr->bClosed) { continue; }
 
-				if (!nbh->bOpened)
+				if (!nbr->bOpened)
 				{
-					nbh->bOpened = true;
-					nbh->parent = tempNode;
-					nbh->g = tempNode->g + getCostFunc(nbh);
-					nbh->h = getHeuristicsFunc(nbh, endNode);
+					nbr->bOpened = true;
+					nbr->parent = currentNode;
 					//TODO
 					//Set the cost g
-					//neighbor->g = currentnode-> + GetCost(node);
+					nbr->g = currentNode->g + getCostFunc(nbr);
+					nbr->h = getHeuristicsFunc(nbr, endNode);
+
+					std::list<GridBasedGraph::Node*>::iterator it;
+					for (it = mOpenList.begin(); it != mOpenList.end(); ++it)
+					{
+						auto t = *it;
+						if ((t->g + t->h) > (nbr->g + nbr->h))
+						{
+							break;
+						}
+					}
+					mOpenList.insert(it, nbr);
+
 					//insert in the open list
-					//need to sort the open list OR insert sorted related to G + H
+					//need to sort the open list OR insert sorted
 				}
-				//else if (new cost is cheaoer)
-				//{
-				//	do the edge relaxation
-				// updatind the parent and use the new g that is cheaper and then resort the openlist
-				//Heuristics in this case do not change
-				//}
+				else if (nbr->g  > currentNode->g + getCostFunc(nbr))//if cost is cheaper
+				{
+					//	do the edge relaxation
+					// updatind the parent and use the new g that is cheaper and then resort the openlist
+
+					nbr->g = currentNode->g + getCostFunc(nbr);
+					//nbr->h = currentNode->h;
+					nbr->parent = currentNode;
+				}
 			}
 		}
 
-		tempNode->bClosed = true;
-		mClosedList.push_back(tempNode);
-	}
+		currentNode->bClosed = true;
+		mClosedList.push_back(currentNode);
+
+	}//end while
 
 	return found;
 }

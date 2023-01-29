@@ -58,8 +58,9 @@ public:
 	//WEEK 04 DIJKSTRA AND A*
 
 	float GetCost(const AI::GridBasedGraph::Node* node) const;
+	float GetHeuristics(const AI::GridBasedGraph::Node* nodeA, const AI::GridBasedGraph::Node* nodeB) const;
 	std::vector<REng::Math::Vector2> FindPathDijkistra(int startX, int startY, int endX, int EndY);
-
+	std::vector<REng::Math::Vector2> FindPathAStar(int startX, int startY, int endX, int EndY);
 
 private:
 
@@ -104,7 +105,7 @@ private:
 
 	//WEEK 04
 
-	HeuristicsType heuristicsType;
+	HeuristicsType mHeuristicsType = HeuristicsType::HT_ManHattan;
 
 	//UI
 	std::string mAlgorithmText = "";

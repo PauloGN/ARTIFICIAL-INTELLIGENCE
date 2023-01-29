@@ -20,7 +20,5 @@ namespace AI
 
 		NodeList mOpenList;
 		NodeList mClosedList;
-
-
 	};
 }

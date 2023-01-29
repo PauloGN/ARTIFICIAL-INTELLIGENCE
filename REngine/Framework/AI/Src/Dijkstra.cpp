@@ -24,7 +24,6 @@ bool AI::Dijkstra::Run(GridBasedGraph& graph, int startX, int startY, int endX, 
 		return found;
 	}
 
-
 	while ((!endNode->bClosed) && (!mOpenList.empty()))
 	{
 		auto currentNode = mOpenList.front();
@@ -49,6 +48,7 @@ bool AI::Dijkstra::Run(GridBasedGraph& graph, int startX, int startY, int endX, 
 					//Set the cost g
 					nbr->g = currentNode->g + getCostFunc(nbr);
 
+					//std::cout << getCostFunc(nbr)<<std::endl;
 
 					std::list<GridBasedGraph::Node*>::iterator it;
 					for (it = mOpenList.begin(); it != mOpenList.end(); ++it)
@@ -60,6 +60,7 @@ bool AI::Dijkstra::Run(GridBasedGraph& graph, int startX, int startY, int endX, 
 						}
 					}
 					mOpenList.insert(it, nbr);
+
 
 					//insert in the open list
 					//need to sort the open list OR insert sorted
