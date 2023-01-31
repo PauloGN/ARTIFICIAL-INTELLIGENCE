@@ -11,7 +11,7 @@ namespace
 	std::unique_ptr<TileMap> tileMapInstance;
 
 	REng::Math::Vector2 endPos(9.f, 13.f);
-
+	uint16_t weightOfBlocking = 5;
 	void UpdateEndSearchPoint(int maxX, int maxY)
 	{
 		const float speed = 10 * GetFrameTime();
@@ -73,6 +73,7 @@ TileMap& TileMap::Get()
 void TileMap::Load(const char* mapName, const char* TileCollectionName)
 {
 	mDrawLineType = DrawLineType::DLT_NONE;//define the type of search to be made and drew
+	weightOfBlocking = 5;
 	LoadTilesTexture(TileCollectionName);
 	// Getting tilesize and calculating its halth size
 	if (mTiles.size() > 0)
@@ -127,7 +128,7 @@ void TileMap::Render()
 			//draw line for every node that is connected
 			if (mDrawLineType == DrawLineType::DLT_DebugLine)
 			{
-				if (mTiles[tileIndex].weight < 5)
+				if (mTiles[tileIndex].weight < weightOfBlocking)
 				{
 					DrawDebugLine(x, y);
 				}
@@ -673,7 +674,7 @@ void TileMap::LoadNodeNeighbors(AI::GridBasedGraph::Node* currentNode, const int
 	const int tileIndex = mMap[index];
 	const int weight = mTiles[tileIndex].weight;
 
-	if (weight > 5)
+	if (weight > weightOfBlocking)
 	{
 		return;
 	}
