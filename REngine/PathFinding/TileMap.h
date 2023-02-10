@@ -15,14 +15,12 @@ enum class DrawLineType : uint8_t
 	DLT_NONE
 };
 
-
 enum class HeuristicsType : uint8_t
 {
 	HT_ManHattan,
 	HT_Euclidean,
 	HT_Diagonal
 };
-
 
 struct Tiles 
 {
@@ -91,7 +89,6 @@ private:
 
 	void LoadGridBaseGraphNeighbors();
 	void LoadNodeNeighbors(AI::GridBasedGraph::Node* currentNode, const int x , const int y);
-	
 
 	//********************* WEEK 03
 
@@ -103,7 +100,7 @@ private:
 	std::list<AI::GridBasedGraph::Node*> mClosedList;
 	void SearchAndDraw(int startX, int startY, int endX, int endY);
 
-	//WEEK 04
+	//****************** WEEK 04
 
 	HeuristicsType mHeuristicsType = HeuristicsType::HT_ManHattan;
 

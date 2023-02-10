@@ -103,7 +103,6 @@ void TileMap::Update(float DeltaTime)
 
 	//Sets to true that a search needs to happen and how it will be drawn.
 	UpdateDrawLineType();
-
 	UpdateEndSearchPoint(mColumns, mRows);
 	//1h.2 OBS
 }
@@ -141,7 +140,7 @@ void TileMap::Render()
 	const REng::Math::Vector2 StartPos = GetIndexPositionByPixel(Character::Get().GetPlayerPos().x, Character::Get().GetPlayerPos().y);
 	SearchAndDraw(StartPos.x,StartPos.y, endPos.x, endPos.y);
 
-	//Draw End Point pos
+	//Draw End Point position
 	DrawCircle(endposition.x, endposition.y, 10.f, RED);
 
 	//Render UI

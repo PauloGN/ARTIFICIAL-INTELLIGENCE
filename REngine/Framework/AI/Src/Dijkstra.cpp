@@ -61,7 +61,6 @@ bool AI::Dijkstra::Run(GridBasedGraph& graph, int startX, int startY, int endX, 
 					}
 					mOpenList.insert(it, nbr);
 
-
 					//insert in the open list
 					//need to sort the open list OR insert sorted
 				}
@@ -72,6 +71,7 @@ bool AI::Dijkstra::Run(GridBasedGraph& graph, int startX, int startY, int endX, 
 
 					nbr->g = currentNode->g + getCostFunc(nbr);
 					nbr->parent = currentNode;
+					//mOpenList.sort();
 				}
 			}
 		}

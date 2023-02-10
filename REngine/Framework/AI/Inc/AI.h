@@ -21,3 +21,9 @@ Every cpp file in AI project must include precompiled.h
 //2:16:37
 #include "Dijkstra.h"
 #include "AStar.h"
+
+//Week 06
+#include "AIWorld.h"
+#include "Entity.h"
+#include "State.h"
+#include "StateMachine.h"

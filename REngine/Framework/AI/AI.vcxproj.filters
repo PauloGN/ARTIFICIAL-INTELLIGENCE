@@ -13,6 +13,15 @@
     <Filter Include="Src\Pathfinding">
       <UniqueIdentifier>{f66a2359-4986-4668-95cc-5d711fca2e9d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Inc\FSM">
+      <UniqueIdentifier>{6cd5f460-c7c2-4c5b-9dce-369d7305e5d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Inc\World">
+      <UniqueIdentifier>{fdfb61ce-ea4c-4b2f-a108-0df17abde555}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\World">
+      <UniqueIdentifier>{ba537d9e-43d5-4080-a626-a68e228130be}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\AI.h">
@@ -42,6 +51,18 @@
     <ClInclude Include="Inc\AStar.h">
       <Filter>Inc\Pathfinding</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\State.h">
+      <Filter>Inc\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\StateMachine.h">
+      <Filter>Inc\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Entity.h">
+      <Filter>Inc\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\AIWorld.h">
+      <Filter>Inc\World</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Precompiled.cpp">
@@ -64,6 +85,12 @@
     </ClCompile>
     <ClCompile Include="Src\AStar.cpp">
       <Filter>Src\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Entity.cpp">
+      <Filter>Src\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\AIWorld.cpp">
+      <Filter>Src\World</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

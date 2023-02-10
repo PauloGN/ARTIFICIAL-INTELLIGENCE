@@ -26,7 +26,7 @@ MA_2.png=9
 MB_2.png=9
 MC_2.png=9
 MD_2.png=9
-grass.png=1
+grass.png=0
 grass_2.png=3
 flower.png=2
 flower_0.png=2
@@ -40,7 +40,7 @@ GrassD_DirtU.png=2
 GrassL_DirtR.png=2
 GrassR_DirtL.png=2
 GrassU_DirtD.png=2
-grass_middle.png=1
+grass_middle.png=0
 
 
 // Legend

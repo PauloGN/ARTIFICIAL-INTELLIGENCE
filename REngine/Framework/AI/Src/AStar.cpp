@@ -73,6 +73,7 @@ bool AI::AStar::Run(GridBasedGraph& graph, int startX, int startY, int endX, int
 					nbr->g = currentNode->g + getCostFunc(nbr);
 					//nbr->h = currentNode->h;
 					nbr->parent = currentNode;
+					//mOpenList.sort();
 				}
 			}
 		}

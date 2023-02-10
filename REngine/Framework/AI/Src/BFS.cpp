@@ -1,6 +1,10 @@
 #include "Precompiled.h"
 #include "BFS.h"
 
+
+//FIFO -> pushing back and poping front
+
+
 bool AI::BFS::Run(GridBasedGraph& graph, int startX, int startY, int endX, int endY)
 {
 
