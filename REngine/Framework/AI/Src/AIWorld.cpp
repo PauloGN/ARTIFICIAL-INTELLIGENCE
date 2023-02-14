@@ -18,5 +18,4 @@ void AI::AIWorld::UnRegisterEntity(Entity * entity)
 		std::iter_swap(iter, mEntities.end() - 1);
 		mEntities.pop_back();
 	}
-
 }
