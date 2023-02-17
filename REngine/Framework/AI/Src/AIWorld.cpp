@@ -19,3 +19,17 @@ void AI::AIWorld::UnRegisterEntity(Entity * entity)
 		mEntities.pop_back();
 	}
 }
+
+std::vector<AI::Entity*> AI::AIWorld::GetAllEntitiesOfType(uint32_t typeID)
+{
+	std::vector<Entity*> entities;
+	for (auto entity : mEntities)
+	{
+		if (entity->GetTypeID() == typeID)
+		{
+			entities.push_back(entity);
+		}
+	}
+
+	return entities;
+}

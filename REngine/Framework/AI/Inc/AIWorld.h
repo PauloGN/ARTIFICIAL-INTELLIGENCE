@@ -22,7 +22,6 @@ Decision Module
 
 */
 
-
 namespace AI
 {
 	class AIWorld
@@ -32,6 +31,8 @@ namespace AI
 		//we are goint to register the agent in AI World each one is going to have its own ID
 		void RegisterEntity(Entity* entity);
 		void UnRegisterEntity(Entity* entity);
+
+		std::vector<Entity*> GetAllEntitiesOfType(uint32_t typeID);
 
 		uint32_t GetNextID() 
 		{ 

@@ -26,8 +26,8 @@ namespace AI
 		AIWorld& world;//reference of the world
 
 		//Position - pixel position represented inside our wolrd
-		float x = 0.0f;
-		float y = 0.0f;
+		float posX = 0.0f;
+		float posY = 0.0f;
 
 		//Direction ai is looking at / where our character is point to
 		float headingX  = 0.0f;

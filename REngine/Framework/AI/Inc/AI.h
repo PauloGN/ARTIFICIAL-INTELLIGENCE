@@ -27,3 +27,4 @@ Every cpp file in AI project must include precompiled.h
 #include "Entity.h"
 #include "State.h"
 #include "StateMachine.h"
+#include "Agent.h"
