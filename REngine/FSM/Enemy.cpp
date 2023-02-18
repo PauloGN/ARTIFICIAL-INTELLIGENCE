@@ -1,4 +1,6 @@
 #include "Enemy.h"
+#include "EnemyState.h"
+#include "TypeId.h"
 
 
 namespace
@@ -20,6 +22,15 @@ namespace
 
 void Enemy::Load(const char* spriteName, const float initialSpeed, float spritXoffset, float spritYoffset, unsigned short IdleColumn, unsigned short WalkRightColumn, unsigned short WalkLeftColumn, unsigned short WalkUpColumn, unsigned short WalkDownColumn, unsigned short AttackColumn, unsigned short IdleNumberOfSprites, unsigned short WalkNumberOfsprites, unsigned short AttackNumberOfsprites)
 {
+
+	//Set up states
+	mStateMachine = std::make_unique<AI::StateMachine<Enemy>>(*this);
+	mStateMachine->AddState<EnemyIdle>();
+	mStateMachine->AddState<EnemyWalk>();
+	mStateMachine->AddState<EnemyAttack>();
+	mStateMachine->ChangeState(S_Idle);
+
+
 	//load sprite sheet
 	std::string fullPath;
 	REng::ResourcesFullPath(spriteName, fullPath);
@@ -58,35 +69,26 @@ void Enemy::Unload()
 
 void Enemy::Update(float deltaTime)
 {
-	float xRecPos = 0.f;
-	const int yRecPos = mSpriteInfo.mSpritYoffset * mSpriteInfo.mWalkDownColumn;
-	const int maxNumbersOfSprites = mSpriteInfo.mWalkNumberOfsprites;
 
-	mAnimCurrentTime += deltaTime;
-	if (mAnimCurrentTime >= mFrameDuration)
-	{
-		xRecPos = mSpriteInfo.mSpritXoffset * mCurrentSprite++;
-		UpdateRecSprite(true, xRecPos, yRecPos);
-		mAnimCurrentTime = 0.f;
-		if (mCurrentSprite >= maxNumbersOfSprites)
-		{
-			mCurrentSprite = 0;
-		}
-	}
+	mStateMachine->Update(deltaTime);
 
-	posY += mMoveSpeed * deltaTime;
-	lastMove = LastMove::LM_Down;
-
-	PlayerMovement(deltaTime);
 }
 
 void Enemy::Render()
 {
-	//DrawTexture(mCharTexture, mPlayerPos.x, mPlayerPos.y, WHITE);
-	DrawTextureRec(mEnemySpritesheet, mRecSprite, { posX, posY }, WHITE);
+
+	DrawTextureRec(mEnemySpritesheet, mRecSprite, {posX, posY}, WHITE);
+	DrawCircle(DestinationX, DestinationY, 5, RED);
 }
 
-Enemy::Enemy(AI::AIWorld world):Agent(world, 0)
+void Enemy::ChangeState(State state)
+{
+
+	mStateMachine->ChangeState(state);
+
+}
+
+Enemy::Enemy(AI::AIWorld world):Agent(world, Types::T_NPC)
 {
 	//position
 
@@ -103,12 +105,10 @@ Enemy::Enemy(AI::AIWorld world):Agent(world, 0)
 }
 
 
-void Enemy::PlayerMovement(float deltaTime)
+void Enemy::PlayerMovement(float deltaTime, int heading)
 {
 
-	/*
-
-	if (IsKeyDown(KeyboardKey::KEY_RIGHT))
+	if ( heading == 0)// go Right
 	{
 
 		float xRecPos = 0.f;
@@ -127,12 +127,11 @@ void Enemy::PlayerMovement(float deltaTime)
 			}
 		}
 
-		posX += mMoveSpeed * deltaTime;
 		lastMove = LastMove::LM_Rigth;
 	}
 
 
-	if (IsKeyDown(KeyboardKey::KEY_LEFT))
+	if (heading == 1)// go left
 	{
 		float xRecPos = 0.f;
 		const int yRecPos = mSpriteInfo.mSpritYoffset * mSpriteInfo.mWalkLeftColumn;
@@ -150,11 +149,10 @@ void Enemy::PlayerMovement(float deltaTime)
 			}
 		}
 
-		posX -= mMoveSpeed * deltaTime;
 		lastMove = LastMove::LM_Left;
 	}
 
-	if (IsKeyDown(KeyboardKey::KEY_UP))
+	if (heading == 2) //go Up
 	{
 		float xRecPos = 0.f;
 		const int yRecPos = mSpriteInfo.mSpritYoffset * mSpriteInfo.mWalkUpColumn;
@@ -172,12 +170,11 @@ void Enemy::PlayerMovement(float deltaTime)
 			}
 		}
 
-		posY -= mMoveSpeed * deltaTime;
 		lastMove = LastMove::LM_Up;
 	}
 
 
-	if (IsKeyDown(KeyboardKey::KEY_DOWN))
+	if (heading == 3)//Go down
 	{
 		float xRecPos = 0.f;
 		const int yRecPos = mSpriteInfo.mSpritYoffset * mSpriteInfo.mWalkDownColumn;
@@ -195,10 +192,8 @@ void Enemy::PlayerMovement(float deltaTime)
 			}
 		}
 
-		posY += mMoveSpeed * deltaTime;
 		lastMove = LastMove::LM_Down;
 	}
-	*/
 
 
 	if (IsKeyDown(KeyboardKey::KEY_HOME))
@@ -243,14 +238,6 @@ void Enemy::PlayerMovement(float deltaTime)
 		}
 	}
 
-
-	if (!bIsMoving)
-	{
-		Idle(deltaTime);
-	}
-
-	bIsMoving = false;
-
 }
 
 void Enemy::Idle(float deltaTime)
@@ -277,6 +264,9 @@ void Enemy::Idle(float deltaTime)
 	}
 
 }
+
+void Enemy::Attack()
+{}
 
 void Enemy::UpdateRecSprite(bool isMoving, const float recX, const float recY)
 {

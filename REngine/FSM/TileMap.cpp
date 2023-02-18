@@ -1,5 +1,5 @@
 #include "TileMap.h"
-#include "Character.h"
+//#include "Character.h"
 
 namespace
 {
@@ -137,7 +137,7 @@ void TileMap::Render()
 
 	//BFS//DFS
 	REng::Math::Vector2 endposition =  GetPixelPosition(endPos.x, endPos.y);
-	const REng::Math::Vector2 StartPos = GetIndexPositionByPixel(Character::Get().GetPlayerPos().x, Character::Get().GetPlayerPos().y);
+	const REng::Math::Vector2 StartPos = GetIndexPositionByPixel(32.0f, 32.0f);
 	SearchAndDraw(StartPos.x,StartPos.y, endPos.x, endPos.y);
 
 	//Draw End Point position

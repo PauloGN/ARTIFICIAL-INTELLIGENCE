@@ -23,13 +23,13 @@ namespace AI
 
 		void Update(float deltaTime)
 		{
-			AIAssert(mCurrentState != nullptr, "StateMachine --- Current State is null!");
+			assert(mCurrentState != nullptr, "StateMachine --- Current State is null!");
 			mCurrentState->Update(mAgent, deltaTime);
 		}
 
 		void ChangeState(int index)
 		{
-			AIAssert(index >= 0 && index < mStates.size(), "StateMachine --- Invalid index %i, state count = %zu", index, mStates.size());
+			assert(index >= 0 && index < mStates.size(), "StateMachine --- Invalid index %i, state count = %zu", index, mStates.size());
 			if (mCurrentState)
 				mCurrentState->Exit(mAgent);
 			mCurrentState = mStates[index].get();

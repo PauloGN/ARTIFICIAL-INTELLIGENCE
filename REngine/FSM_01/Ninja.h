@@ -1,21 +1,9 @@
 #pragma once
-#include<REngine.h>
-#include<iostream>
 #include <AI.h>
+#include <REngine.h>
 
-
-class Enemy : public AI::Agent
+class Ninja : public AI::Agent
 {
-
-public:
-
-	enum State
-	{
-		S_Idle,
-		S_Walk,
-		S_Attac
-	};
-
 	struct SpriteInfo
 	{
 
@@ -53,7 +41,10 @@ public:
 	};
 
 
-	Enemy(AI::AIWorld world);
+public:
+
+	Ninja(AI::AIWorld& _world);
+
 
 	void Load(const char* spriteName, const float initialSpeed, float spritXoffset, float spritYoffset, unsigned short IdleColumn, unsigned short WalkRightColumn, unsigned short WalkLeftColumn, unsigned short WalkUpColumn, unsigned short WalkDownColumn, unsigned short AttackColumn, unsigned short IdleNumberOfSprites, unsigned short WalkNumberOfsprites, unsigned short AttackNumberOfsprites);
 
@@ -62,39 +53,19 @@ public:
 	void Render();
 
 
-	const REng::Math::Vector2 GetPlayerPos() const {  return REng::Math::Vector2(posX, posY); }
-
 private:
 
 	//Sprites
 	Rectangle mRecSprite;
-	Texture2D mEnemySpritesheet;
+	Texture2D mNinjaSpritesheet;
 	SpriteInfo mSpriteInfo;
 
-
-	float mMoveSpeed = 0.0f;
-	
-
 	//Animation
-	bool bIsMoving;
 	float mAnimCurrentTime;
 	int mCurrentSprite;
 	const float mFrameDuration = .2f;
+	void UpdateRecSprite(const float recX, const float recY);
 
-	//Brain
-	std::unique_ptr<AI::StateMachine<Enemy>> mStateMachine;
-	float mHunger = 0.0f;
-private:
-
-	void UpdateRecSprite(bool isMoving, const float recX, const float recY);
-
-public:
-
-	//Brain
-	void ChangeState(State state);
-	void PlayerMovement(float deltaTime, int heading);
-	void Idle(float deltaTime);
-	void Attack();
 
 };
 

@@ -1,5 +1,4 @@
 #pragma once
-#include "Entity.h"
 
 /*
 
@@ -24,6 +23,9 @@ Decision Module
 
 namespace AI
 {
+	class Entity;
+	using EntityPtrs = std::vector<Entity*>;
+
 	class AIWorld
 	{
 	public:
@@ -34,7 +36,7 @@ namespace AI
 
 		std::vector<Entity*> GetAllEntitiesOfType(uint32_t typeID);
 
-		uint32_t GetNextID() 
+		uint32_t GetNextID() const
 		{ 
 			assert(mNextID < UINT32_MAX && "AIWorld run out of IDs");
 			return mNextID++;
@@ -42,8 +44,7 @@ namespace AI
 
 	private:
 
-		std::vector<Entity*> mEntities;
-		uint32_t mNextID = 0;
+		EntityPtrs mEntities;
+		mutable uint32_t mNextID = 0;
 	};
-
 }

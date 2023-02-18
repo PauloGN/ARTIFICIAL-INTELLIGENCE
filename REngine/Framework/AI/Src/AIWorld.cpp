@@ -1,6 +1,8 @@
 #include "Precompiled.h"
 #include "AIWorld.h"
 
+#include "Entity.h"
+
 void AI::AIWorld::RegisterEntity(Entity* entity)
 {
 	assert((std::find(mEntities.begin(), mEntities.end(), entity)) == mEntities.end() && "Entity already Registered");
