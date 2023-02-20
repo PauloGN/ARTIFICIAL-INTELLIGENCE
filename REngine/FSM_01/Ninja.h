@@ -39,21 +39,39 @@ class Ninja : public AI::Agent
 		}
 
 	};
-
+	struct NinjaAtributes
+	{
+		float goldAtTheBank = 0.0f;
+		float goldInSaddlebag = 0.0f;
+		float tiredness = 0.0f;
+	};
 
 public:
 
-	Ninja(AI::AIWorld& _world);
+	enum NinjaState
+	{
+		Idle,
+		Attack,
+		GoBank,
+		GoShelter,
+		GoHuting
+	};
 
+	Ninja(AI::AIWorld& _world);
 
 	void Load(const char* spriteName, const float initialSpeed, float spritXoffset, float spritYoffset, unsigned short IdleColumn, unsigned short WalkRightColumn, unsigned short WalkLeftColumn, unsigned short WalkUpColumn, unsigned short WalkDownColumn, unsigned short AttackColumn, unsigned short IdleNumberOfSprites, unsigned short WalkNumberOfsprites, unsigned short AttackNumberOfsprites);
 
 	void Unload();
 	void Update(float deltaTime);
 	void Render();
+	void ChangeState(NinjaState state);//state machine
 
+	NinjaAtributes ninjaAtribultes;
 
 private:
+
+	//States
+	std::unique_ptr<AI::StateMachine<Ninja>> mStateMachine;
 
 	//Sprites
 	Rectangle mRecSprite;
@@ -65,7 +83,5 @@ private:
 	int mCurrentSprite;
 	const float mFrameDuration = .2f;
 	void UpdateRecSprite(const float recX, const float recY);
-
-
 };
 

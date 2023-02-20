@@ -1,4 +1,5 @@
 #include "Ninja.h"
+#include "TypeId.h"
 
 //#include "EnemyState.h"
 //#include "TypeId.h"
@@ -16,11 +17,10 @@ namespace
 	};
 
 	LastMove lastMove = LastMove::none;
-
 }
 
 
-Ninja::Ninja(AI::AIWorld& _world):Agent(_world, 0)
+Ninja::Ninja(AI::AIWorld& _world):Agent(_world, Types::Ninja)
 {
 
 	mNinjaSpritesheet = Texture2D();
@@ -96,6 +96,10 @@ void Ninja::Render()
 	DrawTextureRec(mNinjaSpritesheet, mRecSprite, { posX, posY }, WHITE);
 	//DrawCircle(DestinationX, DestinationY, 5, RED);
 
+}
+
+void Ninja::ChangeState(NinjaState state)
+{
 }
 
 void Ninja::UpdateRecSprite(const float recX, const float recY)
