@@ -281,7 +281,6 @@ void Ninja::Attack(float deltaTime)
 		if (mCurrentTarget->posX <= posX)
 		{
 			mSpriteInfo.mAttackColumn = 45;
-
 		}
 
 		if (mCurrentTarget->posX < posX)
