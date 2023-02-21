@@ -6,10 +6,10 @@ Bank::Bank(AI::AIWorld& world):Entity(world, Types::T_Bank)
 	mTexture = Texture2D();
 }
 
-void Bank::Load()
+void Bank::Load(const float X, const float Y)
 {
-	posX = 1480;
-	posY = 780;
+	posX = X;
+	posY = Y;
 
 	//load sprite sheet
 	std::string fullPath;

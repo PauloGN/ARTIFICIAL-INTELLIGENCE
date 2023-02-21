@@ -68,3 +68,21 @@ private:
 	Bank* mBank = nullptr;
 
 };
+
+
+//==============================================     Bank
+
+class Shelter;
+class NinjaGoShelter : public AI::State<Ninja>
+{
+public:
+
+	void Enter(Ninja& agent) override;
+	void Update(Ninja& agent, float deltaTime) override;
+	void Exit(Ninja& agent) override;
+
+private:
+
+	Shelter* mShelter = nullptr;
+	float mWaitTime = 0.0f;
+};

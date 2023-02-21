@@ -1,6 +1,7 @@
 #include "Ninja.h"
 #include "TypeId.h"
 #include "NinjaStates.h"
+#include "Monster.h"
 
 namespace
 {
@@ -23,7 +24,7 @@ Ninja::Ninja(AI::AIWorld& _world):Agent(_world, Types::T_NinjaChar)
 
 	mNinjaSpritesheet = Texture2D();
 
-	posX = 0.0f;
+	posX = 590.0f;
 	posY = 0.0f;
 
 	mRecSprite = Rectangle();
@@ -42,6 +43,7 @@ void Ninja::Load(const char* spriteName, const float initialSpeed, float spritXo
 	mStateMachine->AddState<NinjaHunting>();
 	mStateMachine->AddState<NinjaAttack>();
 	mStateMachine->AddState<NinjaGoBank>();
+	mStateMachine->AddState<NinjaGoShelter>();
 	mStateMachine->ChangeState(NS_Idle);
 
 	//load sprite sheet
@@ -57,6 +59,9 @@ void Ninja::Load(const char* spriteName, const float initialSpeed, float spritXo
 	mRecSprite.y = yInitialSpriteRowNumber * mSpriteInfo.mSpritYoffset;
 	mRecSprite.width = mSpriteInfo.mSpritXoffset;
 	mRecSprite.height = mSpriteInfo.mSpritYoffset;
+
+	//render spritesheet is true
+	bRender = true;
 }
 
 void Ninja::Unload()
@@ -80,7 +85,10 @@ void Ninja::Update(float deltaTime)
 
 void Ninja::Render()
 {
-	DrawTextureRec(mNinjaSpritesheet, mRecSprite, { posX, posY }, WHITE);
+	if (bRender)
+	{
+		DrawTextureRec(mNinjaSpritesheet, mRecSprite, { posX, posY }, WHITE);
+	}
 	//DrawCircle(DestinationX, DestinationY, 5, RED);
 
 }
@@ -260,12 +268,6 @@ void Ninja::NinjaMovement(float deltaTime)
 		lastMove = LastMove::LM_Down;
 	}
 
-
-	if (IsKeyDown(KeyboardKey::KEY_HOME))
-	{
-		Attack(deltaTime);
-	}
-
 }
 
 void Ninja::Attack(float deltaTime)
@@ -274,10 +276,19 @@ void Ninja::Attack(float deltaTime)
 	switch (lastMove)
 	{
 	case LastMove::LM_Rigth:
-		mSpriteInfo.mAttackColumn = 47;
-		break;
 	case LastMove::LM_Left:
-		mSpriteInfo.mAttackColumn = 45;
+
+		if (mCurrentTarget->posX <= posX)
+		{
+			mSpriteInfo.mAttackColumn = 45;
+
+		}
+
+		if (mCurrentTarget->posX < posX)
+		{
+			mSpriteInfo.mAttackColumn = 47;
+		}
+
 		break;
 	case LastMove::LM_Up:
 		mSpriteInfo.mAttackColumn = 46;

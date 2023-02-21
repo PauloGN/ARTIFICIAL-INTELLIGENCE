@@ -48,7 +48,7 @@ class Ninja : public AI::Agent
 		int tiredness = 0.0f;
 
 		//Saddlebage
-		void IncreaseSaddlebagGold() { goldInSaddlebag += 30; }
+		void IncreaseSaddlebagGold() { goldInSaddlebag += 12; }
 		//void DecreaseSaddlebagGold();
 		//
 		////Bank
@@ -56,7 +56,7 @@ class Ninja : public AI::Agent
 		void DecreaseBankGold(){}
 		//
 		////Life
-		void GettingRest() {};
+		void GettingRest() { tiredness -= 5; if (tiredness <= 0) { tiredness = 0; } };
 		void GettingTired(int lifeDmg) { tiredness += lifeDmg; }
 
 	};
@@ -90,6 +90,8 @@ public:
 	void Attack(float deltaTime);
 	void SetCurrentTarget(Monster* target) { mCurrentTarget = target; }
 	Monster* GetCurrentTarget() {return mCurrentTarget; }
+
+	bool bRender;
 
 private:
 

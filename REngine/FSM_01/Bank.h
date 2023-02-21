@@ -8,7 +8,7 @@ public:
 
 	Bank(AI::AIWorld& world);
 
-	void Load();
+	void Load(const float X, const float Y);
 	void Unload();
 
 	void Update(float deltaTime);

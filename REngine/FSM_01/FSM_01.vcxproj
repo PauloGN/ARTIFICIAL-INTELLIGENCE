@@ -140,6 +140,7 @@
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Ninja.cpp" />
     <ClCompile Include="NinjaStates.cpp" />
+    <ClCompile Include="Shelter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Framework\AI\AI.vcxproj">
@@ -154,6 +155,7 @@
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Ninja.h" />
     <ClInclude Include="NinjaStates.h" />
+    <ClInclude Include="Shelter.h" />
     <ClInclude Include="TypeId.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

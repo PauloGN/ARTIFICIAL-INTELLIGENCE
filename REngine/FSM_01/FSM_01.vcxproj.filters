@@ -30,6 +30,9 @@
     <ClCompile Include="Bank.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="Shelter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ninja.h">
@@ -45,6 +48,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Bank.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shelter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

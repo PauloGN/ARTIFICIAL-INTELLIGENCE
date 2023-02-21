@@ -2,6 +2,7 @@
 #include "Monster.h"
 #include "TypeId.h"
 #include "Bank.h"
+#include "Shelter.h"
 
 namespace
 {
@@ -43,9 +44,9 @@ void NinjaIdle::Update(Ninja& agent, float deltaTime)
 		{
 			agent.ChangeState(Ninja::NS_GoHuting);
 		}
-		else
+		else if(agent.ninjaAtribultes.tiredness >= 100)
 		{
-			//GoShelter
+			agent.ChangeState(Ninja::NS_GoShelter);
 		}
 
 		if (agent.ninjaAtribultes.goldInSaddlebag > 100)
@@ -71,9 +72,6 @@ void NinjaIdle::Exit(Ninja& agent)
 
 void NinjaHunting::Enter(Ninja& agent)
 {
-
-	//Hunting drives to exhaustion
-	agent.ninjaAtribultes.GettingTired(4);
 
 	std::vector<AI::Entity*> entities = agent.world.GetAllEntitiesOfType(Types::T_Monster);
 	float minDistance = FLT_MAX;
@@ -108,7 +106,7 @@ void NinjaHunting::Update(Ninja& agent, float deltaTime)
 		const auto agentToTarget = targetPos - agentPos;
 		const float distance = REng::Math::Magnitude(agentToTarget);
 
-		if (distance > 5.0f)
+		if (distance > 6.0f)
 		{
 			const auto direction = agentToTarget / distance;
 			
@@ -121,6 +119,8 @@ void NinjaHunting::Update(Ninja& agent, float deltaTime)
 		}
 		else
 		{
+			//Hunting drives to exhaustion
+			agent.ninjaAtribultes.GettingTired(4);
 			agent.SetCurrentTarget(mTarget);
 			agent.ChangeState(Ninja::NS_Attack);
 		}
@@ -168,7 +168,7 @@ void NinjaAttack::Update(Ninja& agent, float deltaTime)
 		}
 		else
 		{
-			//GoShelter
+			agent.ChangeState(Ninja::NS_GoShelter);
 		}
 
 		if (agent.ninjaAtribultes.goldInSaddlebag > 100)
@@ -186,7 +186,7 @@ void NinjaAttack::Update(Ninja& agent, float deltaTime)
 void NinjaAttack::Exit(Ninja& agent)
 {
 	//Hunting drives to exhaustion
-	agent.ninjaAtribultes.GettingTired(2);
+	agent.ninjaAtribultes.GettingTired(10);
 }
 
 
@@ -257,9 +257,9 @@ void NinjaGoBank::Update(Ninja& agent, float deltaTime)
 	{
 		agent.ChangeState(Ninja::NS_GoHuting);
 	}
-	else
+	else if(agent.ninjaAtribultes.tiredness >= 100 && agent.ninjaAtribultes.goldInSaddlebag <= 100)
 	{
-		//GoShelter
+		agent.ChangeState(Ninja::NS_GoShelter);
 	}
 
 
@@ -269,4 +269,91 @@ void NinjaGoBank::Update(Ninja& agent, float deltaTime)
 
 void NinjaGoBank::Exit(Ninja& agent)
 {
+}
+
+
+//================================================================					SHELTER
+
+void NinjaGoShelter::Enter(Ninja& agent)
+{
+	mWaitTime = 2.0f;
+
+	std::vector<AI::Entity*> entities = agent.world.GetAllEntitiesOfType(Types::T_Shelter);
+	float minDistance = FLT_MAX;
+
+	for (auto entity : entities)
+	{
+		const REng::Math::Vector2 agentPos({ agent.posX, agent.posY });
+		const REng::Math::Vector2 entityPos({ entity->posX, entity->posY });
+
+		float distanceSqr = REng::Math::MagnitudeSqr(agentPos - entityPos);
+		if (distanceSqr < minDistance)
+		{
+			minDistance = distanceSqr;
+			mShelter = static_cast<Shelter*>(entity);
+		}
+	}
+
+}
+
+void NinjaGoShelter::Update(Ninja& agent, float deltaTime)
+{
+
+	{
+		//Go to the Shelter
+		if (mShelter)
+		{
+			//Vector
+			const REng::Math::Vector2 agentPos({ agent.posX, agent.posY });
+			const REng::Math::Vector2 targetPos({ mShelter->posX, mShelter->posY });
+
+			agent.DestinationX = mShelter->posX;
+			agent.DestinationY = mShelter->posY;
+
+			const auto agentToTarget = targetPos - agentPos;
+			const float distance = REng::Math::Magnitude(agentToTarget);
+
+			if (distance > 5.0f)
+			{
+				const auto direction = agentToTarget / distance;
+
+				//speed
+				agent.velovityX = direction.x * 100.0f;
+				agent.velovityY = direction.y * 100.0f;
+
+				//Movement & Animation
+				agent.NinjaMovement(deltaTime);
+			}
+			else
+			{
+				mWaitTime -= deltaTime;
+				mShelter->bLightFire = true;
+				agent.bRender = false;
+				if (mWaitTime <= 0.0f)
+				{
+					mWaitTime = 1.0f;
+					agent.ninjaAtribultes.GettingRest();
+				}
+			}
+
+		}
+	}
+
+	if (agent.ninjaAtribultes.tiredness <= 0)
+	{
+		agent.ChangeState(Ninja::NS_GoHuting);
+	}
+	else if(agent.ninjaAtribultes.goldInSaddlebag >= 120)
+	{
+		agent.ChangeState(Ninja::NS_GoBank);
+	}
+
+	DrawUI(agent, "Go Getting rest");
+
+}
+
+void NinjaGoShelter::Exit(Ninja& agent)
+{
+	mShelter->bLightFire = false;
+	agent.bRender = true;
 }

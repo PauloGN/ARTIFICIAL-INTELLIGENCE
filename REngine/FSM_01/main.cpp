@@ -3,6 +3,7 @@
 #include "Ninja.h"
 #include "Monster.h"
 #include "Bank.h"
+#include "Shelter.h"
 
 
 namespace
@@ -10,6 +11,8 @@ namespace
 	std::unique_ptr<AI::AIWorld> world;
 	std::unique_ptr<Ninja> ninja;
 	std::unique_ptr<Bank> bank;
+	std::unique_ptr<Bank> bank_2;
+	std::unique_ptr<Shelter> shelter;
 	std::vector<std::unique_ptr<Monster>> monsters;
 
 	const int maxNumberOfEnemies = 10;
@@ -23,14 +26,20 @@ void GameInit()
 	ninja = std::make_unique<Ninja>(*world.get());
 	ninja->Load("CharHero4.1.png", 100.f, 64, 64, 0, 5, 7, 6, 4, 44, 8, 8, 2);
 
+	//Bank
 	bank = std::make_unique<Bank>(*world.get());
-	bank->Load();
+	bank->Load(1480, 780);
+	bank_2 = std::make_unique<Bank>(*world.get());
+	bank_2->Load(35, 780);
+	//Shelter
+	shelter = std::make_unique<Shelter>(*world.get());
+	shelter->Load(780, 64);
 
 	for (int i = 0; i < maxNumberOfEnemies; ++i)
 	{
 		monsters.emplace_back(std::make_unique<Monster>(*world.get()));
 		monsters[i]->Load(i);
-		monsters[i]->posX = {REng::Math::RandomFloat(100.0f, 1600.0f)};
+		monsters[i]->posX = {REng::Math::RandomFloat(100.0f, 1530.0f)};
 		monsters[i]->posY = {REng::Math::RandomFloat(100.0f, 500.0f) };
 	}
 }
@@ -84,6 +93,13 @@ bool GameUpdate()
 	bank->Update(deltaTime);
 	bank->Render();
 
+	bank_2->Update(deltaTime);
+	bank_2->Render();
+
+	// ================ Shelter
+
+	shelter->Update(deltaTime);
+	shelter->Render();
 
 	bool isStopped = IsKeyPressed(KeyboardKey::KEY_ESCAPE);
 	return isStopped;
