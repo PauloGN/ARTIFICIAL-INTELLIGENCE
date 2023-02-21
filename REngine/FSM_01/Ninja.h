@@ -48,12 +48,12 @@ class Ninja : public AI::Agent
 		int tiredness = 0.0f;
 
 		//Saddlebage
-		void IncreaseSaddlebagGold() { goldInSaddlebag += 10; }
+		void IncreaseSaddlebagGold() { goldInSaddlebag += 30; }
 		//void DecreaseSaddlebagGold();
 		//
 		////Bank
-		//void IncreaseBankGold();
-		//void DecreaseBankGold();
+		void IncreaseBankGold() { goldAtTheBank += goldInSaddlebag; goldInSaddlebag = 0.0f; }
+		void DecreaseBankGold(){}
 		//
 		////Life
 		void GettingRest() {};

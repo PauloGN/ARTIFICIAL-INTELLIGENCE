@@ -41,6 +41,7 @@ void Ninja::Load(const char* spriteName, const float initialSpeed, float spritXo
 	mStateMachine->AddState<NinjaIdle>();
 	mStateMachine->AddState<NinjaHunting>();
 	mStateMachine->AddState<NinjaAttack>();
+	mStateMachine->AddState<NinjaGoBank>();
 	mStateMachine->ChangeState(NS_Idle);
 
 	//load sprite sheet

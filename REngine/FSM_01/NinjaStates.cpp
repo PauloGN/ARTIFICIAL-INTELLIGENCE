@@ -39,7 +39,7 @@ void NinjaIdle::Update(Ninja& agent, float deltaTime)
 	mWaitTime -= deltaTime;
 	if (mWaitTime <= 0.0f)
 	{
-		if(agent.ninjaAtribultes.tiredness <= 100)
+		if(agent.ninjaAtribultes.tiredness <= 100 && agent.ninjaAtribultes.goldInSaddlebag <= 100)
 		{
 			agent.ChangeState(Ninja::NS_GoHuting);
 		}
@@ -50,7 +50,7 @@ void NinjaIdle::Update(Ninja& agent, float deltaTime)
 
 		if (agent.ninjaAtribultes.goldInSaddlebag > 100)
 		{
-			//GoBank
+			agent.ChangeState(Ninja::NS_GoBank);
 		}
 	}
 
@@ -173,7 +173,7 @@ void NinjaAttack::Update(Ninja& agent, float deltaTime)
 
 		if (agent.ninjaAtribultes.goldInSaddlebag > 100)
 		{
-			//GoBank
+			agent.ChangeState(Ninja::NS_GoBank);
 		}
 			return;
 	}
@@ -221,6 +221,50 @@ void NinjaGoBank::Enter(Ninja& agent)
 
 void NinjaGoBank::Update(Ninja& agent, float deltaTime)
 {
+
+	//Go to the Bank
+	if (mBank)
+	{
+		//Vector
+		const REng::Math::Vector2 agentPos({ agent.posX, agent.posY });
+		const REng::Math::Vector2 targetPos({ mBank->posX, mBank->posY });
+
+		agent.DestinationX = mBank->posX;
+		agent.DestinationY = mBank->posY;
+
+		const auto agentToTarget = targetPos - agentPos;
+		const float distance = REng::Math::Magnitude(agentToTarget);
+
+		if (distance > 5.0f)
+		{
+			const auto direction = agentToTarget / distance;
+
+			//speed
+			agent.velovityX = direction.x * 100.0f;
+			agent.velovityY = direction.y * 100.0f;
+
+			//Movement & Animation
+			agent.NinjaMovement(deltaTime);
+		}
+		else
+		{
+			agent.ninjaAtribultes.IncreaseBankGold();
+		}
+
+	}
+
+	if (agent.ninjaAtribultes.tiredness <= 100 && agent.ninjaAtribultes.goldInSaddlebag <= 100)
+	{
+		agent.ChangeState(Ninja::NS_GoHuting);
+	}
+	else
+	{
+		//GoShelter
+	}
+
+
+	DrawUI(agent, "Go banking");
+
 }
 
 void NinjaGoBank::Exit(Ninja& agent)
