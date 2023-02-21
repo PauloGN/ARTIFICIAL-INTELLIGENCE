@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Ninja.cpp" />
     <ClCompile Include="NinjaStates.cpp" />
   </ItemGroup>
@@ -148,6 +149,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Monster.h" />
     <ClInclude Include="Ninja.h" />
     <ClInclude Include="NinjaStates.h" />
     <ClInclude Include="TypeId.h" />

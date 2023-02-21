@@ -10,7 +10,7 @@ AI::Entity::Entity(AIWorld& world, uint32_t typeId)
 
 AI::Entity::~Entity()
 {
-	world.UnRegisterEntity(this);
+	world.UnregisterEntity(this);
 }
 
 

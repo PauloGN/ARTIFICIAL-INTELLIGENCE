@@ -10,7 +10,7 @@ void AI::AIWorld::RegisterEntity(Entity* entity)
 	mEntities.push_back(entity);
 }
 
-void AI::AIWorld::UnRegisterEntity(Entity * entity)
+void AI::AIWorld::UnregisterEntity(Entity * entity)
 {
 	auto iter = std::find(mEntities.begin(), mEntities.end(), entity);
 

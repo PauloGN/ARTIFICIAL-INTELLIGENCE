@@ -41,20 +41,20 @@ class Ninja : public AI::Agent
 	};
 	struct NinjaAtributes
 	{
-		float goldAtTheBank = 0.0f;
-		float goldInSaddlebag = 0.0f;
-		float tiredness = 0.0f;
+		int goldAtTheBank = 0.0f;
+		int goldInSaddlebag = 0.0f;
+		int tiredness = 0.0f;
 	};
 
 public:
 
 	enum NinjaState
 	{
-		Idle,
-		Attack,
-		GoBank,
-		GoShelter,
-		GoHuting
+		NS_Idle,
+		NS_Attack,
+		NS_GoBank,
+		NS_GoShelter,
+		NS_GoHuting
 	};
 
 	Ninja(AI::AIWorld& _world);
@@ -67,6 +67,9 @@ public:
 	void ChangeState(NinjaState state);//state machine
 
 	NinjaAtributes ninjaAtribultes;
+
+	//State functions
+	void Idle(float deltaTime);
 
 private:
 

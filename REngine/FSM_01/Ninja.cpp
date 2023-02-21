@@ -1,8 +1,6 @@
 #include "Ninja.h"
 #include "TypeId.h"
-
-//#include "EnemyState.h"
-//#include "TypeId.h"
+#include "NinjaStates.h"
 
 namespace
 {
@@ -20,7 +18,7 @@ namespace
 }
 
 
-Ninja::Ninja(AI::AIWorld& _world):Agent(_world, Types::Ninja)
+Ninja::Ninja(AI::AIWorld& _world):Agent(_world, Types::T_NinjaChar)
 {
 
 	mNinjaSpritesheet = Texture2D();
@@ -37,6 +35,12 @@ Ninja::Ninja(AI::AIWorld& _world):Agent(_world, Types::Ninja)
 
 void Ninja::Load(const char* spriteName, const float initialSpeed, float spritXoffset, float spritYoffset, unsigned short IdleColumn, unsigned short WalkRightColumn, unsigned short WalkLeftColumn, unsigned short WalkUpColumn, unsigned short WalkDownColumn, unsigned short AttackColumn, unsigned short IdleNumberOfSprites, unsigned short WalkNumberOfsprites, unsigned short AttackNumberOfsprites)
 {
+
+	//Set up states
+	mStateMachine = std::make_unique<AI::StateMachine<Ninja>>(*this);
+	mStateMachine->AddState<NinjaIdle>();
+	mStateMachine->AddState<NinjaHunting>();
+	mStateMachine->ChangeState(NS_Idle);
 
 	//load sprite sheet
 	std::string fullPath;
@@ -67,28 +71,30 @@ void Ninja::Unload()
 
 void Ninja::Update(float deltaTime)
 {
+	//velovityX = 1;
 
-	velovityX = 1;
+	//float xRecPos = 0.f;
+	//const int yRecPos = mSpriteInfo.mSpritYoffset * mSpriteInfo.mWalkRightColumn;
+	//const int maxNumbersOfSprites = mSpriteInfo.mWalkNumberOfsprites;
 
-	float xRecPos = 0.f;
-	const int yRecPos = mSpriteInfo.mSpritYoffset * mSpriteInfo.mWalkRightColumn;
-	const int maxNumbersOfSprites = mSpriteInfo.mWalkNumberOfsprites;
+	//mAnimCurrentTime += deltaTime;
+	//if (mAnimCurrentTime >= mFrameDuration)
+	//{
+	//	xRecPos = mSpriteInfo.mSpritXoffset * mCurrentSprite++;
+	//	UpdateRecSprite( xRecPos, yRecPos);
+	//	mAnimCurrentTime = 0.f;
+	//	if (mCurrentSprite >= maxNumbersOfSprites)
+	//	{
+	//		mCurrentSprite = 0;
+	//	}
+	//}
 
-	mAnimCurrentTime += deltaTime;
-	if (mAnimCurrentTime >= mFrameDuration)
-	{
-		xRecPos = mSpriteInfo.mSpritXoffset * mCurrentSprite++;
-		UpdateRecSprite( xRecPos, yRecPos);
-		mAnimCurrentTime = 0.f;
-		if (mCurrentSprite >= maxNumbersOfSprites)
-		{
-			mCurrentSprite = 0;
-		}
-	}
+	//posX += velovityX * 100 * deltaTime;
 
-	posX += velovityX * 100 * deltaTime;
+	//lastMove = LastMove::LM_Rigth;
 
-	lastMove = LastMove::LM_Rigth;
+	mStateMachine->Update(deltaTime);
+
 }
 
 void Ninja::Render()
@@ -100,6 +106,29 @@ void Ninja::Render()
 
 void Ninja::ChangeState(NinjaState state)
 {
+}
+
+void Ninja::Idle(float deltaTime)
+{
+	float xRecPos = 0.f;
+	const int yRecPos = 0;
+	const int maxNumbersOfSprites = mSpriteInfo.mIdleNumberOfSprites;
+
+	float animationMaxTimeIdle = .3f;
+
+	mAnimCurrentTime += deltaTime;
+	if (mAnimCurrentTime >= animationMaxTimeIdle)
+	{
+
+		xRecPos = mSpriteInfo.mSpritXoffset * (mCurrentSprite % maxNumbersOfSprites);
+		mCurrentSprite++;
+		UpdateRecSprite(xRecPos, yRecPos);
+		mAnimCurrentTime = 0.f;
+		if (mCurrentSprite >= maxNumbersOfSprites)
+		{
+			mCurrentSprite = 0;
+		}
+	}
 }
 
 void Ninja::UpdateRecSprite(const float recX, const float recY)
