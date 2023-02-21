@@ -16,6 +16,8 @@ public:
 
 	bool IsDesfeated() const { return bIsDefeated; }
 
+	void Die() { bIsDefeated = true; }
+
 private:
 
 	bool bIsDefeated;

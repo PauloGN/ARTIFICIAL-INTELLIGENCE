@@ -2,16 +2,18 @@
 #include <AI.h>
 #include "Ninja.h"
 #include "Monster.h"
+#include "Bank.h"
 
 
 namespace
 {
 	std::unique_ptr<AI::AIWorld> world;
 	std::unique_ptr<Ninja> ninja;
+	std::unique_ptr<Bank> bank;
 	std::vector<std::unique_ptr<Monster>> monsters;
 
-	const int maxNumberOfBrains = 10;
-	int currentNumberOfBrains = 10;
+	const int maxNumberOfEnemies = 10;
+	int currentNumberOfEnemies = 10;
 }
 
 
@@ -21,7 +23,10 @@ void GameInit()
 	ninja = std::make_unique<Ninja>(*world.get());
 	ninja->Load("CharHero4.1.png", 100.f, 64, 64, 0, 5, 7, 6, 4, 44, 8, 8, 2);
 
-	for (int i = 0; i < maxNumberOfBrains; ++i)
+	bank = std::make_unique<Bank>(*world.get());
+	bank->Load();
+
+	for (int i = 0; i < maxNumberOfEnemies; ++i)
 	{
 		monsters.emplace_back(std::make_unique<Monster>(*world.get()));
 		monsters[i]->Load(i);
@@ -37,13 +42,16 @@ bool GameUpdate()
 	ninja->Render();
 
 
+	// ----------------------------------------          Monster
+
 	for (auto iter = monsters.begin(); iter != monsters.end();)
 	{
-		Monster* brain = iter->get();
-		if (brain->IsDesfeated())
+		Monster* monster = iter->get();
+		if (monster->IsDesfeated())
 		{
 			iter = monsters.erase(iter);
-			world->UnregisterEntity(brain);
+			world->UnregisterEntity(monster);
+			break;
 		}
 		else
 		{
@@ -51,11 +59,31 @@ bool GameUpdate()
 		}
 	}
 
-	for (auto& brain : monsters)
+	//Update Mosters
+	for (auto& monster : monsters)
 	{
-		brain->Update(deltaTime);
-		brain->Render();
+		monster->Update(deltaTime);
+		monster->Render();
 	}
+
+	//Reset Monsters
+	if (monsters.size() <= 0)
+	{
+		for (int i = 0; i < maxNumberOfEnemies; ++i)
+		{
+			monsters.emplace_back(std::make_unique<Monster>(*world.get()));
+			monsters[i]->Load(i);
+			monsters[i]->posX = { REng::Math::RandomFloat(100.0f, 1600.0f) };
+			monsters[i]->posY = { REng::Math::RandomFloat(100.0f, 500.0f) };
+		}
+	}
+
+
+	// ================ Bank
+
+	bank->Update(deltaTime);
+	bank->Render();
+
 
 	bool isStopped = IsKeyPressed(KeyboardKey::KEY_ESCAPE);
 	return isStopped;

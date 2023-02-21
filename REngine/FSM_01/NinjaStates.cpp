@@ -1,26 +1,32 @@
 #include "NinjaStates.h"
 #include "Monster.h"
 #include "TypeId.h"
+#include "Bank.h"
 
 namespace
 {
 
-	void DrawUI(Ninja& NinjaRef)
+	void DrawUI(Ninja& NinjaRef, const char*clue )
 	{
-		DrawText("Idle", NinjaRef.posX + 10, NinjaRef.posY + 50, 16, WHITE);
+		std::string myGold = "My Gold: " + std::to_string(NinjaRef.ninjaAtribultes.goldInSaddlebag);
+		std::string myBank = "Gold at the Bank: " + std::to_string(NinjaRef.ninjaAtribultes.goldAtTheBank);
+		std::string myLife = "Tiredness level: " +  std::to_string( NinjaRef.ninjaAtribultes.tiredness);
+
+		DrawText(clue, NinjaRef.posX + 10, NinjaRef.posY + 50, 16, WHITE);
+		DrawText(myGold.c_str(), 32, 10, 18, YELLOW);
+		DrawText(myBank.c_str(), 160, 10, 18, YELLOW);
+		DrawText(myLife.c_str(), 384,  10, 18, YELLOW);
 	}
 
 }
 
-/// <summary>
-/// IDLE
+
+//===============================================================================							 IDLE
 /// </summary>
 /// <param name="agent">
 /// 
 /// from Idle agent can go Home, go shelter or go hunting
-/// 
-/// 
-/// </param>
+
 
 void NinjaIdle::Enter(Ninja& agent)
 {
@@ -33,9 +39,9 @@ void NinjaIdle::Update(Ninja& agent, float deltaTime)
 	mWaitTime -= deltaTime;
 	if (mWaitTime <= 0.0f)
 	{
-		if(agent.ninjaAtribultes.tiredness <= 10)
+		if(agent.ninjaAtribultes.tiredness <= 100)
 		{
-			//Hunter
+			agent.ChangeState(Ninja::NS_GoHuting);
 		}
 		else
 		{
@@ -50,7 +56,7 @@ void NinjaIdle::Update(Ninja& agent, float deltaTime)
 
 	agent.Idle(deltaTime);
 
-	DrawUI(agent);
+	DrawUI(agent, "Idle");
 
 }
 
@@ -58,13 +64,17 @@ void NinjaIdle::Exit(Ninja& agent)
 {
 }
 
-/// <summary>
-/// Hunting
+
+//==============================================================================================			 Hunting
 /// </summary>
 /// <param name="agent"></param>
 
 void NinjaHunting::Enter(Ninja& agent)
 {
+
+	//Hunting drives to exhaustion
+	agent.ninjaAtribultes.GettingTired(4);
+
 	std::vector<AI::Entity*> entities = agent.world.GetAllEntitiesOfType(Types::T_Monster);
 	float minDistance = FLT_MAX;
 
@@ -92,6 +102,9 @@ void NinjaHunting::Update(Ninja& agent, float deltaTime)
 		const REng::Math::Vector2 agentPos({ agent.posX, agent.posY });
 		const REng::Math::Vector2 targetPos({ mTarget->posX, mTarget->posY });
 
+		agent.DestinationX = mTarget->posX;
+		agent.DestinationY = mTarget->posY;
+
 		const auto agentToTarget = targetPos - agentPos;
 		const float distance = REng::Math::Magnitude(agentToTarget);
 
@@ -102,24 +115,114 @@ void NinjaHunting::Update(Ninja& agent, float deltaTime)
 			//speed
 			agent.velovityX = direction.x * 200.0f;
 			agent.velovityY = direction.y * 200.0f;
-			//Move
-			agent.posX += agent.velovityX * deltaTime;
-			agent.posY += agent.velovityY * deltaTime;
 
-			//Animation
-			//agent.UpdateAnimation(deltaTime);
+			//Movement & Animation
+			agent.NinjaMovement(deltaTime);
 		}
 		else
 		{
-			//agent.EatBrain();
-			//mTarget->Consume();
+			agent.SetCurrentTarget(mTarget);
+			agent.ChangeState(Ninja::NS_Attack);
+		}
+	}
 
+	DrawUI(agent, "Hunting");
+
+}
+
+void NinjaHunting::Exit(Ninja& agent)
+{
+}
+
+
+//=====================================================================================				 Attack
+/// </summary>
+/// <param name="agent"></param>
+
+void NinjaAttack::Enter(Ninja& agent)
+{
+	mWaitTime = 3.0f;
+
+}
+
+void NinjaAttack::Update(Ninja& agent, float deltaTime)
+{
+
+	mWaitTime -= deltaTime;
+	if (mWaitTime <= 0.0f)
+	{
+
+		//Get a monster to attack
+		mTarget = agent.GetCurrentTarget();
+			if (mTarget)
+			{
+				mTarget->Die();
+			}
+
+		agent.ninjaAtribultes.IncreaseSaddlebagGold();
+		
+
+		if (agent.ninjaAtribultes.tiredness <= 100)
+		{
 			agent.ChangeState(Ninja::NS_Idle);
+		}
+		else
+		{
+			//GoShelter
+		}
+
+		if (agent.ninjaAtribultes.goldInSaddlebag > 100)
+		{
+			//GoBank
+		}
+			return;
+	}
+
+	agent.Attack(deltaTime);
+	DrawUI(agent, "Attacking");
+
+}
+
+void NinjaAttack::Exit(Ninja& agent)
+{
+	//Hunting drives to exhaustion
+	agent.ninjaAtribultes.GettingTired(2);
+}
+
+
+//=====================================================================================				 Go To the Bank
+/// </summary>
+/// <param name="agent"></param>
+
+
+void NinjaGoBank::Enter(Ninja& agent)
+{
+
+	//go to the bank is stressfull
+	agent.ninjaAtribultes.GettingTired(1);
+
+	std::vector<AI::Entity*> entities = agent.world.GetAllEntitiesOfType(Types::T_Bank);
+	float minDistance = FLT_MAX;
+
+	for (auto entity : entities)
+	{
+		const REng::Math::Vector2 agentPos({ agent.posX, agent.posY });
+		const REng::Math::Vector2 entityPos({ entity->posX, entity->posY });
+
+		float distanceSqr = REng::Math::MagnitudeSqr(agentPos - entityPos);
+		if (distanceSqr < minDistance)
+		{
+			minDistance = distanceSqr;
+			mBank = static_cast<Bank*>(entity);
 		}
 	}
 
 }
 
-void NinjaHunting::Exit(Ninja& agent)
+void NinjaGoBank::Update(Ninja& agent, float deltaTime)
+{
+}
+
+void NinjaGoBank::Exit(Ninja& agent)
 {
 }

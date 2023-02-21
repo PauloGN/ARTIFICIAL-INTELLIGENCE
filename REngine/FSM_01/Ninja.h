@@ -2,6 +2,8 @@
 #include <AI.h>
 #include <REngine.h>
 
+class Monster;
+
 class Ninja : public AI::Agent
 {
 	struct SpriteInfo
@@ -44,6 +46,19 @@ class Ninja : public AI::Agent
 		int goldAtTheBank = 0.0f;
 		int goldInSaddlebag = 0.0f;
 		int tiredness = 0.0f;
+
+		//Saddlebage
+		void IncreaseSaddlebagGold() { goldInSaddlebag += 10; }
+		//void DecreaseSaddlebagGold();
+		//
+		////Bank
+		//void IncreaseBankGold();
+		//void DecreaseBankGold();
+		//
+		////Life
+		void GettingRest() {};
+		void GettingTired(int lifeDmg) { tiredness += lifeDmg; }
+
 	};
 
 public:
@@ -51,10 +66,10 @@ public:
 	enum NinjaState
 	{
 		NS_Idle,
+		NS_GoHuting,
 		NS_Attack,
 		NS_GoBank,
-		NS_GoShelter,
-		NS_GoHuting
+		NS_GoShelter
 	};
 
 	Ninja(AI::AIWorld& _world);
@@ -70,11 +85,17 @@ public:
 
 	//State functions
 	void Idle(float deltaTime);
+	void NinjaMovement(float deltaTime);
+
+	void Attack(float deltaTime);
+	void SetCurrentTarget(Monster* target) { mCurrentTarget = target; }
+	Monster* GetCurrentTarget() {return mCurrentTarget; }
 
 private:
 
 	//States
 	std::unique_ptr<AI::StateMachine<Ninja>> mStateMachine;
+	Monster* mCurrentTarget = nullptr;
 
 	//Sprites
 	Rectangle mRecSprite;
@@ -87,4 +108,3 @@ private:
 	const float mFrameDuration = .2f;
 	void UpdateRecSprite(const float recX, const float recY);
 };
-

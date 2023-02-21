@@ -29,11 +29,6 @@ void Monster::Load(int index)
 	mTextureRect.width = static_cast<float>(mTexture.width) / static_cast<float>(mAnimFrames);
 	mTextureRect.height = static_cast<float>(mTexture.height);
 
-	//number of animations
-	if ((index % monsterNames.size()) == 0)
-	{
-		mAnimFrames = 8;
-	}
 
 }
 

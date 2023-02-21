@@ -40,6 +40,7 @@ void Ninja::Load(const char* spriteName, const float initialSpeed, float spritXo
 	mStateMachine = std::make_unique<AI::StateMachine<Ninja>>(*this);
 	mStateMachine->AddState<NinjaIdle>();
 	mStateMachine->AddState<NinjaHunting>();
+	mStateMachine->AddState<NinjaAttack>();
 	mStateMachine->ChangeState(NS_Idle);
 
 	//load sprite sheet
@@ -71,27 +72,6 @@ void Ninja::Unload()
 
 void Ninja::Update(float deltaTime)
 {
-	//velovityX = 1;
-
-	//float xRecPos = 0.f;
-	//const int yRecPos = mSpriteInfo.mSpritYoffset * mSpriteInfo.mWalkRightColumn;
-	//const int maxNumbersOfSprites = mSpriteInfo.mWalkNumberOfsprites;
-
-	//mAnimCurrentTime += deltaTime;
-	//if (mAnimCurrentTime >= mFrameDuration)
-	//{
-	//	xRecPos = mSpriteInfo.mSpritXoffset * mCurrentSprite++;
-	//	UpdateRecSprite( xRecPos, yRecPos);
-	//	mAnimCurrentTime = 0.f;
-	//	if (mCurrentSprite >= maxNumbersOfSprites)
-	//	{
-	//		mCurrentSprite = 0;
-	//	}
-	//}
-
-	//posX += velovityX * 100 * deltaTime;
-
-	//lastMove = LastMove::LM_Rigth;
 
 	mStateMachine->Update(deltaTime);
 
@@ -106,6 +86,7 @@ void Ninja::Render()
 
 void Ninja::ChangeState(NinjaState state)
 {
+	mStateMachine->ChangeState(state);
 }
 
 void Ninja::Idle(float deltaTime)
@@ -129,6 +110,204 @@ void Ninja::Idle(float deltaTime)
 			mCurrentSprite = 0;
 		}
 	}
+}
+
+void Ninja::NinjaMovement(float deltaTime)
+{
+
+	int heading = 0;
+	const float agentToDestinationX = DestinationX - posX;
+	const float agentToDestinationY = DestinationY - posY;
+
+	const float distance = REng::Math::Magnitude({ agentToDestinationX , agentToDestinationY });
+
+
+	if (distance >= 5.0f)
+	{
+
+		//Normalize
+		const float directionX = agentToDestinationX / distance;
+		const float directionY = agentToDestinationY / distance;
+
+		const int diffX = static_cast<int>(abs(DestinationX - posX));
+		const int diffY = static_cast<int>(abs(DestinationY - posY));
+
+
+		if (diffX >= diffY)
+		{
+			velovityX = directionX * 100.0f;
+			velovityY = directionY * 50.0f;
+
+			posX += velovityX * deltaTime;
+			posY += velovityY * deltaTime;
+
+			//check update animation
+			if (posX > DestinationX)//go Left
+			{
+
+				heading = 1;
+
+			}
+			else if (posX <= DestinationX)//go Right
+			{
+				heading=  0;
+			}
+		}
+		else if (diffX < diffY)
+		{
+			velovityX = directionX * 50.0f;
+			velovityY = directionY * 100.0f;
+
+			posY += velovityY * deltaTime;
+			if (posY > DestinationY)//go Up
+			{
+				heading =  2;
+			}
+
+			else if (posY <= DestinationY)//go down
+			{
+				heading = 3;
+			}
+		}
+	}
+
+
+	if (heading == 0)// go Right
+	{
+
+		float xRecPos = 0.f;
+		const int yRecPos = mSpriteInfo.mSpritYoffset * mSpriteInfo.mWalkRightColumn;
+		const int maxNumbersOfSprites = mSpriteInfo.mWalkNumberOfsprites;
+
+		mAnimCurrentTime += deltaTime;
+		if (mAnimCurrentTime >= mFrameDuration)
+		{
+			xRecPos = mSpriteInfo.mSpritXoffset * mCurrentSprite++;
+			UpdateRecSprite(xRecPos, yRecPos);
+			mAnimCurrentTime = 0.f;
+			if (mCurrentSprite >= maxNumbersOfSprites)
+			{
+				mCurrentSprite = 0;
+			}
+		}
+
+		lastMove = LastMove::LM_Rigth;
+	}
+
+
+	if (heading == 1)// go left
+	{
+		float xRecPos = 0.f;
+		const int yRecPos = mSpriteInfo.mSpritYoffset * mSpriteInfo.mWalkLeftColumn;
+		const int maxNumbersOfSprites = mSpriteInfo.mWalkNumberOfsprites;
+
+		mAnimCurrentTime += deltaTime;
+		if (mAnimCurrentTime >= mFrameDuration)
+		{
+			xRecPos = mSpriteInfo.mSpritXoffset * mCurrentSprite++;
+			UpdateRecSprite(xRecPos, yRecPos);
+			mAnimCurrentTime = 0.f;
+			if (mCurrentSprite >= maxNumbersOfSprites)
+			{
+				mCurrentSprite = 0;
+			}
+		}
+
+		lastMove = LastMove::LM_Left;
+	}
+
+	if (heading == 2) //go Up
+	{
+		float xRecPos = 0.f;
+		const int yRecPos = mSpriteInfo.mSpritYoffset * mSpriteInfo.mWalkUpColumn;
+		const int maxNumbersOfSprites = mSpriteInfo.mWalkNumberOfsprites;
+
+		mAnimCurrentTime += deltaTime;
+		if (mAnimCurrentTime >= mFrameDuration)
+		{
+			xRecPos = mSpriteInfo.mSpritXoffset * mCurrentSprite++;
+			UpdateRecSprite(xRecPos, yRecPos);
+			mAnimCurrentTime = 0.f;
+			if (mCurrentSprite >= maxNumbersOfSprites)
+			{
+				mCurrentSprite = 0;
+			}
+		}
+
+		lastMove = LastMove::LM_Up;
+	}
+
+
+	if (heading == 3)//Go down
+	{
+		float xRecPos = 0.f;
+		const int yRecPos = mSpriteInfo.mSpritYoffset * mSpriteInfo.mWalkDownColumn;
+		const int maxNumbersOfSprites = mSpriteInfo.mWalkNumberOfsprites;
+
+		mAnimCurrentTime += deltaTime;
+		if (mAnimCurrentTime >= mFrameDuration)
+		{
+			xRecPos = mSpriteInfo.mSpritXoffset * mCurrentSprite++;
+			UpdateRecSprite(xRecPos, yRecPos);
+			mAnimCurrentTime = 0.f;
+			if (mCurrentSprite >= maxNumbersOfSprites)
+			{
+				mCurrentSprite = 0;
+			}
+		}
+
+		lastMove = LastMove::LM_Down;
+	}
+
+
+	if (IsKeyDown(KeyboardKey::KEY_HOME))
+	{
+		Attack(deltaTime);
+	}
+
+}
+
+void Ninja::Attack(float deltaTime)
+{
+
+	switch (lastMove)
+	{
+	case LastMove::LM_Rigth:
+		mSpriteInfo.mAttackColumn = 47;
+		break;
+	case LastMove::LM_Left:
+		mSpriteInfo.mAttackColumn = 45;
+		break;
+	case LastMove::LM_Up:
+		mSpriteInfo.mAttackColumn = 46;
+		break;
+	case LastMove::LM_Down:
+		mSpriteInfo.mAttackColumn = 44;
+		break;
+	case LastMove::none:
+		break;
+	default:
+		break;
+	}
+
+
+	float xRecPos = 0.f;
+	const int yRecPos = mSpriteInfo.mSpritYoffset * mSpriteInfo.mAttackColumn;
+	const int maxNumbersOfSprites = mSpriteInfo.mAttackNumberOfsprites;
+
+
+	mAnimCurrentTime += deltaTime;
+	if (mAnimCurrentTime >= mFrameDuration)
+	{
+		xRecPos = mSpriteInfo.mSpritXoffset * mCurrentSprite++;
+		UpdateRecSprite(xRecPos, yRecPos);
+		mAnimCurrentTime = 0.f;
+		if (mCurrentSprite >= maxNumbersOfSprites)
+		{
+			mCurrentSprite = 0;
+		}
+	}
+
 }
 
 void Ninja::UpdateRecSprite(const float recX, const float recY)
