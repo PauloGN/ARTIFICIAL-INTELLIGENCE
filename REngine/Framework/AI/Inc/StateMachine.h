@@ -5,7 +5,7 @@
 namespace AI
 {
 	template<class AgentType>
-	class StateMachine
+	class StateMachine final
 	{
 	public:
 		using StateType = State<AgentType>;

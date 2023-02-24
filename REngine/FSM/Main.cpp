@@ -70,7 +70,7 @@ bool GameLoop()
 		if (pickup->IsComsumed())
 		{
 			iter = pickUpsVector.erase(iter);
-			world->UnRegisterEntity(pickup);
+			world->UnregisterEntity(pickup);
 		}
 		else
 		{

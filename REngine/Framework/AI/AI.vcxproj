@@ -155,6 +155,8 @@
     <ClInclude Include="Inc\GridBasedGraph.h" />
     <ClInclude Include="Inc\State.h" />
     <ClInclude Include="Inc\StateMachine.h" />
+    <ClInclude Include="Inc\SteeringBehavior.h" />
+    <ClInclude Include="Inc\SteeringModule.h" />
     <ClInclude Include="Inc\TestAI.h" />
     <ClInclude Include="Src\Precompiled.h" />
   </ItemGroup>
@@ -173,6 +175,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Src\SteeringBehavior.cpp" />
+    <ClCompile Include="Src\SteeringModule.cpp" />
     <ClCompile Include="Src\TestAI.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

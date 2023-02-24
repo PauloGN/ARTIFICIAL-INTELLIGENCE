@@ -26,3 +26,7 @@ Every cpp file in AI project must include precompiled.h
 #include "Agent.h"
 #include "AIWorld.h"
 #include "StateMachine.h"
+
+//Week 08
+#include "SteeringBehavior.h"
+#include "SteeringModule.h"
