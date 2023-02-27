@@ -9,8 +9,6 @@ namespace
 	
 	//Spaceship
 	std::unique_ptr<Spaceship> spaceship;
-
-
 	void SetDestination(Spaceship& spaceship)
 	{
 
@@ -36,7 +34,7 @@ void GameInit()
 	spaceship = std::make_unique<Spaceship>(*world.get());
 	spaceship->Load();
 	spaceship->posX = 100.0f;
-	spaceship->posY = 90.0f;
+	spaceship->posY = 100.0f;
 }
 
 bool GameUpdate()
@@ -46,7 +44,7 @@ bool GameUpdate()
 	//Spaceship
 	spaceship->Update(deltaTime);
 	spaceship->Render();
-	SetDestination(*spaceship.get());
+	SetDestination(*spaceship.get());//move spaceship
 
 	bool isStopped = IsKeyPressed(KeyboardKey::KEY_ESCAPE);
 	return isStopped;
@@ -55,7 +53,6 @@ bool GameUpdate()
 void GameCleanup()
 {
 	//Spaceship
-
 }
 
 void RenderDebugUI()

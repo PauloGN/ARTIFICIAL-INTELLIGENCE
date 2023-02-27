@@ -12,8 +12,11 @@ std::pair<float, float> AI::SteeringModule::Calculate()
 
 	for (auto& behavior: mBehaviors)
 	{
-		totalForce.first += behavior->Calculate(mAgent).first;
-		totalForce.second += behavior->Calculate(mAgent).second;
+
+		std::pair<float, float> TempTotalForce = behavior->Calculate(mAgent);
+
+		totalForce.first += TempTotalForce.first;
+		totalForce.second += TempTotalForce.second;
 
 	}
 

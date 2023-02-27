@@ -18,7 +18,7 @@ Every cpp file in AI project must include precompiled.h
 #include "GridBasedGraph.h"
 #include "BFS.h"
 #include "DFS.h"
-//2:16:37
+
 #include "Dijkstra.h"
 #include "AStar.h"
 
@@ -28,5 +28,10 @@ Every cpp file in AI project must include precompiled.h
 #include "StateMachine.h"
 
 //Week 08
+#include "ArriveBehavior.h"
+#include "EvadeBehavior.h"
+#include "FleeBehavior.h"
+#include "PursuitBehavior.h"
 #include "SteeringBehavior.h"
 #include "SteeringModule.h"
+#include "SeekBehavior.h"

@@ -20,7 +20,7 @@ namespace AI
 			return static_cast<NewBehaviorType*>(newBehavior.get());
 		}
 
-		std::pair<float, float>Calculate();
+		std::pair<float, float>Calculate();//<-vector 2 firt = X and second = Y
 
 	private:
 		Agent& mAgent;

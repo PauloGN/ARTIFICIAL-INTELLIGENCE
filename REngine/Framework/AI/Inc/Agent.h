@@ -10,6 +10,8 @@ namespace AI
 	{
 	public:
 
+		Agent* otherAgent = nullptr;
+
 		Agent(AIWorld& world, uint32_t typeId);
 		~Agent() override = default;
 

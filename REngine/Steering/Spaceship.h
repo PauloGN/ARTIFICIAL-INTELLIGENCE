@@ -16,6 +16,12 @@ public:
 
 private:
 
+	//controls all inner behaviors
+	std::unique_ptr<AI::SteeringModule> mSteeringModule;
+	//sprites to draw
 	std::array<Texture2D, 16> mTextures;
-
+	//Keep The reference for steering behavior as a week pointer
+	AI::SeekBehavior* mSeekBehavior = nullptr;
+	AI::FleeBehavior* mFleeBehavior = nullptr;
+	AI::ArriveBehavior* mArriveBehavior = nullptr;
 };

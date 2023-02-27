@@ -1,6 +1,8 @@
 #pragma once
 
-namespace
+//https://www.red3d.com/cwr/steer/
+
+namespace AI
 {
 	class Agent;
 	class SteeringBehavior
@@ -17,6 +19,13 @@ namespace
 
 		void ShowDebug(bool debug) { mDebug = debug; }
 		bool IsDebug() const { return mDebug; }
+
+	public:
+
+		//HelperFunction
+		float SSqrt(float value) { return sqrtf(value); }
+		float SMagnitudeSqr(const std::pair<float, float>& v) { return (v.first * v.first) + (v.second * v.second); }
+		float SMagnitude(const std::pair<float, float>& v) { return SSqrt(SMagnitudeSqr(v)); }
 
 
 	private:

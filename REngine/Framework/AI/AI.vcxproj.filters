@@ -78,6 +78,21 @@
     <ClInclude Include="Inc\SteeringBehavior.h">
       <Filter>Inc\Steering</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\SeekBehavior.h">
+      <Filter>Inc\Steering</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\FleeBehavior.h">
+      <Filter>Inc\Steering</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\ArriveBehavior.h">
+      <Filter>Inc\Steering</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\PursuitBehavior.h">
+      <Filter>Inc\Steering</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\EvadeBehavior.h">
+      <Filter>Inc\Steering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Precompiled.cpp">
@@ -114,6 +129,21 @@
       <Filter>Src\Steering</Filter>
     </ClCompile>
     <ClCompile Include="Src\SteeringBehavior.cpp">
+      <Filter>Src\Steering</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\SeekBehavior.cpp">
+      <Filter>Src\Steering</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\FleeBehavior.cpp">
+      <Filter>Src\Steering</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\ArriveBehavior.cpp">
+      <Filter>Src\Steering</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\PursuitBehavior.cpp">
+      <Filter>Src\Steering</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\EvadeBehavior.cpp">
       <Filter>Src\Steering</Filter>
     </ClCompile>
   </ItemGroup>

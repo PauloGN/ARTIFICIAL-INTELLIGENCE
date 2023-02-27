@@ -2,7 +2,5 @@
 
 enum Types
 {
-	T_Spaceship
-
-
+	T_Spaceship,
 };
