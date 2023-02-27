@@ -22,6 +22,8 @@ namespace AI
 
 		std::pair<float, float>Calculate();//<-vector 2 firt = X and second = Y
 
+		//const std::vector<std::unique_ptr<SteeringBehavior>> GetBehavior() const { return mBehaviors; }
+
 	private:
 		Agent& mAgent;
 		std::vector<std::unique_ptr<SteeringBehavior>> mBehaviors;

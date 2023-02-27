@@ -9,17 +9,31 @@ namespace
 	
 	//Spaceship
 	std::unique_ptr<Spaceship> spaceship;
-	void SetDestination(Spaceship& spaceship)
+	void SetDestination(Spaceship& spaceship, ControllerType controller)
 	{
 
-		if (IsMouseButtonDown(MouseButton::MOUSE_BUTTON_LEFT))
+		switch (controller)
 		{
-			const float mouseX = GetMousePosition().x;
-			const float mouseY = GetMousePosition().y;
+		case CT_Human:
 
-			spaceship.DestinationX = mouseX;
-			spaceship.DestinationY = mouseY;
+			if (IsMouseButtonDown(MouseButton::MOUSE_BUTTON_LEFT))
+			{
+				const float mouseX = GetMousePosition().x;
+				const float mouseY = GetMousePosition().y;
+
+				spaceship.DestinationX = mouseX;
+				spaceship.DestinationY = mouseY;
+			}
+			break;
+
+		case CT_AI:
+
+
+			break;
+		default:
+			break;
 		}
+
 	}
 
 }
@@ -32,9 +46,11 @@ void GameInit()
 
 	//Spaceship
 	spaceship = std::make_unique<Spaceship>(*world.get());
-	spaceship->Load();
+	spaceship->Load("SpaceshipSprites\\spaceshipB_%02i.png", ST_Seek);
 	spaceship->posX = 100.0f;
 	spaceship->posY = 100.0f;
+
+	//OtherSpaceship
 }
 
 bool GameUpdate()
@@ -44,7 +60,10 @@ bool GameUpdate()
 	//Spaceship
 	spaceship->Update(deltaTime);
 	spaceship->Render();
-	SetDestination(*spaceship.get());//move spaceship
+	spaceship->DrawUI(CT_Human);
+	SetDestination(*spaceship.get(), CT_Human);//move spaceship type controller
+
+	//Other Spaceship
 
 	bool isStopped = IsKeyPressed(KeyboardKey::KEY_ESCAPE);
 	return isStopped;

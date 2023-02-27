@@ -32,14 +32,13 @@ std::pair<float, float> AI::ArriveBehavior::Calculate(Agent& agent)
 
 
 	//getting closer -- Arriving condition
-	if (distanceToDestination <= 500.0f)
+	if (distanceToDestination <= 300.0f)
 	{
 		const double DecelTweaker = 0.9;
 		double speed = distanceToDestination / (DecelTweaker);
 		speed = speed < agent.maxSpeed? speed : agent.maxSpeed;
 		disiredVelocityX = agentToDestination.first * speed / distanceToDestination;
 		disiredVelocityY = agentToDestination.second * speed / distanceToDestination;
-
 	}
 
 	seekForce.first = disiredVelocityX - agent.velovityX;
@@ -51,9 +50,13 @@ std::pair<float, float> AI::ArriveBehavior::Calculate(Agent& agent)
 		//Draw disired velocity
 		DrawLine(agent.posX, agent.posY, agent.posX + disiredVelocityX, agent.posY + disiredVelocityY, YELLOW);
 
-		//
+		//Draw Current velocity
 		DrawLine(agent.posX, agent.posY, agent.posX + agent.velovityX, agent.posY + agent.velovityY, RED);
 	}
+
+	//acceleration = seekForce/mass;
+	//velocity = acceleration * time;
+	//position += velocity * time;
 
 	return seekForce;
 }

@@ -1,5 +1,4 @@
 #include "Spaceship.h"
-#include "TypeIds.h"
 
 
 namespace
@@ -36,28 +35,21 @@ Spaceship::Spaceship(AI::AIWorld& world):Agent(world, T_Spaceship)
 	}
 }
 
-void Spaceship::Load()
+void Spaceship::Load(const char* SpriteNameformat, SteeringType steeringType)
 {
 	//Inherited properties from Agent
 	maxSpeed = 300.0f;
 
 	//Load the steering behaviors
 	mSteeringModule = std::make_unique<AI::SteeringModule>(*this);
-	//mSeekBehavior = mSteeringModule->AddBehavior<AI::SeekBehavior>();//the week pointer caches whatever it returns
-	//mFleeBehavior = mSteeringModule->AddBehavior<AI::FleeBehavior>();//the week pointer caches whatever it returns
-	//mFleeBehavior->SetActive(true);
-	//mFleeBehavior->ShowDebug(true);
-
-	mArriveBehavior = mSteeringModule->AddBehavior<AI::ArriveBehavior>();//the week pointer caches whatever it returns
-	mArriveBehavior->SetActive(true);
-	mArriveBehavior->ShowDebug(true);
+	SetSteeringType(steeringType);
 
 	//load all sprites 
 	for (int i = 0; i < mTextures.size(); i++)
 	{
 		char spriteName[128];
 
-		sprintf_s(spriteName, "SpaceshipSprites\\spaceship_%02i.png", i+1);
+		sprintf_s(spriteName, SpriteNameformat, i+1);
 		std::string fullPath;
 		REng::ResourcesFullPath(spriteName, fullPath);
 		mTextures[i] = LoadTexture(fullPath.c_str());
@@ -142,4 +134,96 @@ void Spaceship::Render()
 	DrawTexture(mTextures[frame], positionX, positionY, WHITE);
 	//Draw Destination
 	DrawCircle(DestinationX, DestinationY, 5.0f, RED);
+}
+
+void Spaceship::SetSteeringType(SteeringType steeringType)
+{
+	mSteeringType = steeringType;
+
+
+	switch (mSteeringType)
+	{
+	case ST_Seek:
+
+		mSeekBehavior = mSteeringModule->AddBehavior<AI::SeekBehavior>();
+		mSeekBehavior->SetActive(true);
+		mSeekBehavior->ShowDebug(true);
+
+		break;
+	case ST_Flee:
+
+		mFleeBehavior = mSteeringModule->AddBehavior<AI::FleeBehavior>();
+		mFleeBehavior->SetActive(true);
+		mFleeBehavior->ShowDebug(true);
+
+		break;
+	case ST_Arrive:
+
+		mArriveBehavior = mSteeringModule->AddBehavior<AI::ArriveBehavior>();
+		mArriveBehavior->SetActive(true);
+		mArriveBehavior->ShowDebug(true);
+
+		break;
+	case ST_Pursuit:
+
+		mPursuitBehavior = mSteeringModule->AddBehavior<AI::PursuitBehavior>();
+		mPursuitBehavior->SetActive(true);
+		mPursuitBehavior->ShowDebug(true);
+
+		break;
+	case ST_Evade:
+
+		mEvadeBehavior = mSteeringModule->AddBehavior<AI::EvadeBehavior>();
+		mEvadeBehavior->SetActive(true);
+		mEvadeBehavior->ShowDebug(true);
+
+		break;
+	default:
+		break;
+	}
+
+}
+
+void Spaceship::DrawUI(ControllerType controllerType)
+{
+	std::string behaviorInAction;
+
+	switch (mSteeringType)
+	{
+	case ST_Seek:
+		behaviorInAction = "Seek Behavior";
+		break;
+	case ST_Flee:
+		behaviorInAction = "Flee Behavior";
+		break;
+	case ST_Arrive:
+		behaviorInAction = "Arrive Behavior";
+		break;
+	case ST_Pursuit:
+		behaviorInAction = "Pursuit Behavior";
+		break;
+	case ST_Evade:
+		behaviorInAction = "Evade Behavior";
+		break;
+	default:
+		break;
+	}
+
+	switch (controllerType)
+	{
+	case CT_Human:
+
+		behaviorInAction += " by player";
+		DrawText(behaviorInAction.c_str(), 10, 10, 22, YELLOW);
+
+		break;
+	case CT_AI:
+
+		behaviorInAction += " by AI controller";
+		DrawText(behaviorInAction.c_str(), 610, 10, 22, BLUE);
+
+		break;
+	default:
+		break;
+	}
 }
