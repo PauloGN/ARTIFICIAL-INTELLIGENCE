@@ -10,7 +10,7 @@ std::pair<float, float> AI::PursuitBehavior::Calculate(Agent& agent)
 
 	std::pair<float, float> agentToDestination;
 	std::pair<float, float> seekForce;
-	const float predictionPointMultplyer = 4.0f;
+	const float predictionPointMultplyer = 2.0f;
 
 	assert(agent.otherAgent != nullptr, "OtherAgent must be set");
 	//                             origem                 + velocidade                  * ponto futuro

@@ -9,49 +9,8 @@ using namespace AI;
 namespace
 {
 
-	void CheckDistance(const float distanceToTarget, Agent& agent)
-	{
+	enum Deceleration	{ slow = 3, normal = 2, fast =1	};
 
-		if (distanceToTarget >= 420.0f)
-		{
-			return;
-		}
-
-
-		if (distanceToTarget > 350.0f )
-		{
-			agent.maxSpeed = 250.0f;
-		}
-		else if (distanceToTarget > 300.0f)
-		{
-			agent.maxSpeed = 200.0f;
-		}
-		else if (distanceToTarget > 250.0f)
-		{
-			agent.maxSpeed = 150.0f;
-
-		}
-		else if (distanceToTarget > 200.0f)
-		{
-			agent.maxSpeed = 100.0f;
-		}
-		else if (distanceToTarget > 150.0f)
-		{
-			agent.maxSpeed = 70.0f;
-		}
-		else if (distanceToTarget > 100.0f)
-		{
-			agent.maxSpeed = 35.0f;
-		}
-		else if (distanceToTarget > 50.0f)
-		{
-			agent.maxSpeed = 22.0f;
-		}
-		else if (distanceToTarget <= 0.5f)
-		{
-			agent.maxSpeed = 0.02f;
-		}
-	}
 }
 
 
@@ -59,15 +18,13 @@ namespace
 std::pair<float, float> AI::ArriveBehavior::Calculate(Agent& agent)
 {
 
-	std::pair<float, float> agentToDestination;
+	std::pair<float, float> toTarget;
 	std::pair<float, float> seekForce;
 
+	toTarget.first = agent.DestinationX - agent.posX;
+	toTarget.second = agent.DestinationY - agent.posY;
 
-	agentToDestination.first = agent.DestinationX - agent.posX;
-	agentToDestination.second = agent.DestinationY - agent.posY;
-
-
-	const float distanceToDestination = SMagnitude(agentToDestination);
+	const float distanceToDestination = SMagnitude(toTarget);
 
 	if (distanceToDestination <= 0.0f)
 	{
@@ -76,25 +33,17 @@ std::pair<float, float> AI::ArriveBehavior::Calculate(Agent& agent)
 		return seekForce;
 	}
 
-	//calculate desired velocity
+	const double decelTweeker = 3.0f;
+	double speed = distanceToDestination / decelTweeker * (double)fast;
 
-	auto disiredVelocityX = (agentToDestination.first / distanceToDestination) * agent.maxSpeed;
-	auto disiredVelocityY = (agentToDestination.second / distanceToDestination) * agent.maxSpeed;
+	//get a velocity always lower than maxSpeed
+	speed = speed < agent.maxSpeed ? speed : agent.maxSpeed;
 
-
-	//getting closer -- Arriving condition
-	if (distanceToDestination <= 300.0f)
-	{
-		const double DecelTweaker = 0.9;
-		double speed = distanceToDestination / (DecelTweaker);
-		speed = speed < agent.maxSpeed? speed : agent.maxSpeed;
-		disiredVelocityX = agentToDestination.first * speed / distanceToDestination;
-		disiredVelocityY = agentToDestination.second * speed / distanceToDestination;
-	}
+	auto disiredVelocityX = toTarget.first * speed / distanceToDestination;
+	auto disiredVelocityY = toTarget.second * speed / distanceToDestination;
 
 	seekForce.first = disiredVelocityX - agent.velovityX;
 	seekForce.second = disiredVelocityY - agent.velovityY;
-
 
 	if (IsDebug())
 	{
@@ -108,7 +57,6 @@ std::pair<float, float> AI::ArriveBehavior::Calculate(Agent& agent)
 	//acceleration = seekForce/mass;
 	//velocity = acceleration * time;
 	//position += velocity * time;
-	CheckDistance(distanceToDestination, agent);
 
 	return seekForce;
 }

@@ -48,7 +48,7 @@ void GameInit()
 
 	//Spaceship
 	spaceship = std::make_unique<Spaceship>(*world.get());
-	spaceship->Load("SpaceshipSprites\\spaceship_%02i.png", ST_Seek);
+	spaceship->Load("SpaceshipSprites\\spaceship_%02i.png", ST_Arrive);
 	spaceship->posX = 100.0f;
 	spaceship->posY = 100.0f;
 
@@ -73,7 +73,7 @@ bool GameUpdate()
 
 	//Other Spaceship
 	otherSpaceship->Update(deltaTime);
-	otherSpaceship->Render();
+	//otherSpaceship->Render();
 	otherSpaceship->DrawUI(CT_AI);
 	SetDestination(*spaceship.get(), CT_AI);//move spaceship type controller
 
