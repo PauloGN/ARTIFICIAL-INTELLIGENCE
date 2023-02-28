@@ -18,7 +18,7 @@ std::pair<float, float> AI::FleeBehavior::Calculate(Agent& agent)
 	const float distanceToFleePoint = SMagnitude(agentToFleePoint);
 
 	//panic range
-	if (distanceToFleePoint >= 500.0f)
+	if (distanceToFleePoint >= mPanicRadius)
 	{
 		seekForce.first = 0.0f;
 		seekForce.second = 0.0f;
@@ -43,5 +43,17 @@ std::pair<float, float> AI::FleeBehavior::Calculate(Agent& agent)
 	}
 
 	return seekForce;
+}
+
+void AI::FleeBehavior::SetPanicRadius(const float panicRadius)
+{
+ 
+	if (panicRadius <= 0.0f)
+	{
+		mPanicRadius = 0.0f;
+		return;
+	}
+
+	mPanicRadius = panicRadius;
 }
 

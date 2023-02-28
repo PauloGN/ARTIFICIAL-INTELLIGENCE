@@ -11,6 +11,7 @@ namespace AI
 	public:
 
 		Agent* otherAgent = nullptr;
+		void SetTarget(Agent* otherA);
 
 		Agent(AIWorld& world, uint32_t typeId);
 		~Agent() override = default;

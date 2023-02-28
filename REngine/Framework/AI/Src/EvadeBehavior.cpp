@@ -9,16 +9,23 @@ using namespace AI;
 std::pair<float, float> AI::EvadeBehavior::Calculate(Agent& agent)
 {
 
-	std::pair<float, float> agentToFleePoint;
+	std::pair<float, float> agentToEvadePoint;
 	std::pair<float, float> seekForce;
+	const float predictionPointMultplyer = 4.0f;
 
-	agentToFleePoint.first = agent.DestinationX - agent.posX;
-	agentToFleePoint.second = agent.DestinationY - agent.posY;
+	assert(agent.otherAgent != nullptr, "OtherAgent must be set");
 
-	const float distanceToFleePoint = SMagnitude(agentToFleePoint);
+	float otherAgentDestinationX = agent.otherAgent->posX + agent.otherAgent->velovityX * predictionPointMultplyer; // future point prediction
+	float otherAgentDestinationY = agent.otherAgent->posY + agent.otherAgent->velovityY * predictionPointMultplyer;
+
+
+	agentToEvadePoint.first = otherAgentDestinationX - agent.posX;
+	agentToEvadePoint.second = otherAgentDestinationY - agent.posY;
+
+	const float distanceToFleePoint = SMagnitude(agentToEvadePoint);
 
 	//panic range
-	if (distanceToFleePoint >= 500.0f)
+	if (distanceToFleePoint >= 300.0f)
 	{
 		seekForce.first = 0.0f;
 		seekForce.second = 0.0f;
@@ -27,8 +34,8 @@ std::pair<float, float> AI::EvadeBehavior::Calculate(Agent& agent)
 
 	//calculate desired velocity
 
-	const auto disiredVelocityX = -((agentToFleePoint.first / distanceToFleePoint) * agent.maxSpeed);
-	const auto disiredVelocityY = -((agentToFleePoint.second / distanceToFleePoint) * agent.maxSpeed);
+	const auto disiredVelocityX = -((agentToEvadePoint.first / distanceToFleePoint) * agent.maxSpeed);
+	const auto disiredVelocityY = -((agentToEvadePoint.second / distanceToFleePoint) * agent.maxSpeed);
 
 	seekForce.first = disiredVelocityX - agent.velovityX;
 	seekForce.second = disiredVelocityY - agent.velovityY;

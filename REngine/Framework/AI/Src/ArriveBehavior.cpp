@@ -5,6 +5,57 @@
 
 using namespace AI;
 
+
+namespace
+{
+
+	void CheckDistance(const float distanceToTarget, Agent& agent)
+	{
+
+		if (distanceToTarget >= 420.0f)
+		{
+			return;
+		}
+
+
+		if (distanceToTarget > 350.0f )
+		{
+			agent.maxSpeed = 250.0f;
+		}
+		else if (distanceToTarget > 300.0f)
+		{
+			agent.maxSpeed = 200.0f;
+		}
+		else if (distanceToTarget > 250.0f)
+		{
+			agent.maxSpeed = 150.0f;
+
+		}
+		else if (distanceToTarget > 200.0f)
+		{
+			agent.maxSpeed = 100.0f;
+		}
+		else if (distanceToTarget > 150.0f)
+		{
+			agent.maxSpeed = 70.0f;
+		}
+		else if (distanceToTarget > 100.0f)
+		{
+			agent.maxSpeed = 35.0f;
+		}
+		else if (distanceToTarget > 50.0f)
+		{
+			agent.maxSpeed = 22.0f;
+		}
+		else if (distanceToTarget <= 0.5f)
+		{
+			agent.maxSpeed = 0.02f;
+		}
+	}
+}
+
+
+
 std::pair<float, float> AI::ArriveBehavior::Calculate(Agent& agent)
 {
 
@@ -57,6 +108,7 @@ std::pair<float, float> AI::ArriveBehavior::Calculate(Agent& agent)
 	//acceleration = seekForce/mass;
 	//velocity = acceleration * time;
 	//position += velocity * time;
+	CheckDistance(distanceToDestination, agent);
 
 	return seekForce;
 }

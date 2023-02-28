@@ -11,7 +11,7 @@ std::pair<float, float> AI::SeekBehavior::Calculate(Agent& agent)
 	std::pair<float, float> agentToDestination;
 	std::pair<float, float> seekForce;
 
-
+	//target pos
 	agentToDestination.first = agent.DestinationX - agent.posX;
 	agentToDestination.second = agent.DestinationY - agent.posY;
 

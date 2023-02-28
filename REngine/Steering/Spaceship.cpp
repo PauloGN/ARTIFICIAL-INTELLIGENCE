@@ -155,6 +155,7 @@ void Spaceship::SetSteeringType(SteeringType steeringType)
 		mFleeBehavior = mSteeringModule->AddBehavior<AI::FleeBehavior>();
 		mFleeBehavior->SetActive(true);
 		mFleeBehavior->ShowDebug(true);
+		mFleeBehavior->SetPanicRadius(500.0f);
 
 		break;
 	case ST_Arrive:
