@@ -56,6 +56,186 @@ void Spaceship::Load(const char* SpriteNameformat, SteeringType steeringType)
 	}
 }
 
+void Spaceship::LoadBehavior(SteeringType st_type , bool activate, bool debug)
+{
+
+	mSteeringType = st_type;
+
+	switch (mSteeringType)
+	{
+	case ST_Seek:
+
+		if (!mSeekBehavior)
+		{
+			mSeekBehavior = mSteeringModule->AddBehavior<AI::SeekBehavior>();
+		}
+
+		mSeekBehavior->SetActive(activate);
+		mSeekBehavior->ShowDebug(debug);
+
+		//Deactivate all other types
+
+		if (mFleeBehavior)
+		{
+			mFleeBehavior->SetActive(false);
+		}
+
+		if (mPursuitBehavior)
+		{
+			mPursuitBehavior->SetActive(false);
+		}
+
+		if (mEvadeBehavior)
+		{
+			mEvadeBehavior->SetActive(false);
+		}
+
+		if (mArriveBehavior)
+		{
+			mArriveBehavior->SetActive(false);
+		}
+
+
+		break;
+	case ST_Flee:
+
+		if (!mFleeBehavior)
+		{
+			mFleeBehavior = mSteeringModule->AddBehavior<AI::FleeBehavior>();
+		}
+
+		mFleeBehavior->SetActive(activate);
+		mFleeBehavior->ShowDebug(debug);
+		mFleeBehavior->SetPanicRadius(500.0f);
+
+		//Deactivate all other types
+
+		if (mSeekBehavior)
+		{
+			mSeekBehavior->SetActive(false);
+		}
+
+		if (mPursuitBehavior)
+		{
+			mPursuitBehavior->SetActive(false);
+		}
+
+		if (mEvadeBehavior)
+		{
+			mEvadeBehavior->SetActive(false);
+		}
+
+		if (mArriveBehavior)
+		{
+			mArriveBehavior->SetActive(false);
+		}
+
+
+		break;
+	case ST_Arrive:
+
+		if (!mArriveBehavior)
+		{
+			mArriveBehavior = mSteeringModule->AddBehavior<AI::ArriveBehavior>();
+		}
+
+		mArriveBehavior->SetActive(activate);
+		mArriveBehavior->ShowDebug(debug);
+
+		//Deactivate all other types
+
+		if (mSeekBehavior)
+		{
+			mSeekBehavior->SetActive(false);
+		}
+
+		if (mPursuitBehavior)
+		{
+			mPursuitBehavior->SetActive(false);
+		}
+
+		if (mEvadeBehavior)
+		{
+			mEvadeBehavior->SetActive(false);
+		}
+
+		if (mFleeBehavior)
+		{
+			mFleeBehavior->SetActive(false);
+		}
+
+		break;
+	case ST_Pursuit:
+
+		if (!mPursuitBehavior)
+		{
+			mPursuitBehavior = mSteeringModule->AddBehavior<AI::PursuitBehavior>();
+		}
+
+		mPursuitBehavior->SetActive(activate);
+		mPursuitBehavior->ShowDebug(debug);
+
+		//Deactivate all other types
+
+		if (mSeekBehavior)
+		{
+			mSeekBehavior->SetActive(false);
+		}
+
+		if (mArriveBehavior)
+		{
+			mArriveBehavior->SetActive(false);
+		}
+
+		if (mEvadeBehavior)
+		{
+			mEvadeBehavior->SetActive(false);
+		}
+
+		if (mFleeBehavior)
+		{
+			mFleeBehavior->SetActive(false);
+		}
+
+		break;
+	case ST_Evade:
+
+		if (!mEvadeBehavior)
+		{
+			mEvadeBehavior = mSteeringModule->AddBehavior<AI::EvadeBehavior>();
+		}
+
+		mEvadeBehavior->SetActive(activate);
+		mEvadeBehavior->ShowDebug(debug);
+
+		//Deactivate all other types
+
+		if (mSeekBehavior)
+		{
+			mSeekBehavior->SetActive(false);
+		}
+
+		if (mArriveBehavior)
+		{
+			mArriveBehavior->SetActive(false);
+		}
+
+		if (mPursuitBehavior)
+		{
+			mPursuitBehavior->SetActive(false);
+		}
+
+		if (mFleeBehavior)
+		{
+			mFleeBehavior->SetActive(false);
+		}
+
+		break;
+	default:
+		break;
+	}
+}
+
 void Spaceship::Unload()
 {
 	//
@@ -185,7 +365,16 @@ void Spaceship::SetSteeringType(SteeringType steeringType)
 
 }
 
-void Spaceship::DrawUI(ControllerType controllerType)
+//inner behaviors controll
+
+///////   FLEE    \\\\\\
+
+void Spaceship::SetPanicRadius(const float panicRadius)
+{
+	mFleeBehavior->SetPanicRadius(panicRadius);
+}
+
+void Spaceship::DrawUI(ControllerType controllerType, const Color& color)
 {
 	std::string behaviorInAction;
 
@@ -215,13 +404,13 @@ void Spaceship::DrawUI(ControllerType controllerType)
 	case CT_Human:
 
 		behaviorInAction += " by player";
-		DrawText(behaviorInAction.c_str(), 10, 10, 22, YELLOW);
+		DrawText(behaviorInAction.c_str(), posX, posY + 35, 18, color);
 
 		break;
 	case CT_AI:
 
 		behaviorInAction += " by AI controller";
-		DrawText(behaviorInAction.c_str(), 610, 10, 22, BLUE);
+		DrawText(behaviorInAction.c_str(), posX, posY + 35, 18, color);
 
 		break;
 	default:

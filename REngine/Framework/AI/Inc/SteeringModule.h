@@ -22,7 +22,16 @@ namespace AI
 
 		std::pair<float, float>Calculate();//<-vector 2 firt = X and second = Y
 
-		//const std::vector<std::unique_ptr<SteeringBehavior>> GetBehavior() const { return mBehaviors; }
+		SteeringBehavior* GetBehavior(int index)
+		{ 
+			
+			if (index < 0 || index > mBehaviors.size())
+			{
+				return mBehaviors[0].get();
+			}
+			return mBehaviors[index].get();
+		}
+
 
 	private:
 		Agent& mAgent;

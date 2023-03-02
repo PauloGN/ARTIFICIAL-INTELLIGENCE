@@ -22,6 +22,8 @@ namespace AI
 
 	public:
 
+
+
 		//HelperFunction
 		float SSqrt(float value) { return sqrtf(value); }
 		float SMagnitudeSqr(const std::pair<float, float>& v) { return (v.first * v.first) + (v.second * v.second); }

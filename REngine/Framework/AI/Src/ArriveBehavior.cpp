@@ -33,8 +33,10 @@ std::pair<float, float> AI::ArriveBehavior::Calculate(Agent& agent)
 		return seekForce;
 	}
 
-	const double decelTweeker = 3.0f;
+	const double decelTweeker = 2.0f;
 	double speed = distanceToDestination / decelTweeker * (double)fast;
+
+
 
 	//get a velocity always lower than maxSpeed
 	speed = speed < agent.maxSpeed ? speed : agent.maxSpeed;

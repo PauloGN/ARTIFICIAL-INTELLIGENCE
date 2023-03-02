@@ -23,10 +23,11 @@ public:
 	Spaceship(AI::AIWorld& world);
 
 	void Load(const char* SpriteNameformat, SteeringType steeringType);
+	void LoadBehavior(SteeringType st_type, bool activate, bool debug);
 	void Unload();
 	void Update(float deltaTime);
 	void Render();
-	void DrawUI(ControllerType controllerType);
+	void DrawUI(ControllerType controllerType, const Color& color);
 
 private:
 
@@ -44,5 +45,15 @@ private:
 	
 	SteeringType mSteeringType = ST_Seek;
 	void SetSteeringType(SteeringType steeringType);
+
+public:
+
+	//inner behaviors controll
+
+	///////   FLEE    \\\\\\
+	
+	void SetPanicRadius(const float panicRadius);
+	float panicRadius;
+
 
 };

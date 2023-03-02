@@ -14,12 +14,9 @@ namespace
 	std::unique_ptr<Spaceship> otherSpaceship;
 
 
-	void SetDestination(Spaceship& spaceship, ControllerType controller)
+	void SetDestination(Spaceship& spaceship)
 	{
 		spaceship.maxSpeed = 300.0f;
-		switch (controller)
-		{
-		case CT_Human:
 
 			if (IsMouseButtonDown(MouseButton::MOUSE_BUTTON_LEFT))
 			{
@@ -29,15 +26,115 @@ namespace
 				spaceship.DestinationX = mouseX;
 				spaceship.DestinationY = mouseY;
 			}
-			break;
+	}
 
-		case CT_AI:
+	//Debug UI
 
-			break;
-		default:
-			break;
+	bool bSelectYellowSpaceShip = false;
+	bool bSelectBlueSpaceShip = false;
+
+	bool bYSeek;
+	bool bYFlee;
+	bool bYArrive;
+	bool bYPursuit;
+	bool bYEvade;
+
+	bool bBSeek;
+	bool bBFlee;
+	bool bBArrive;
+	bool bBPursuit;
+	bool bBEvade;
+
+
+	void SetSteeringType(bool &seek, bool& flee, bool& arrive, bool& pursuit, bool& evade)
+	{
+
+		if (ImGui::Checkbox("Set Seek: ", &seek))
+		{
+			bYFlee = false;
+			bYArrive = false;
+			bYPursuit = false;
+			bYEvade = false;
+		}
+
+		if (ImGui::Checkbox("Set Flee: ", &flee))
+		{
+			bYSeek = false;
+			bYArrive = false;
+			bYPursuit = false;
+			bYEvade = false;
+		}
+
+		if (ImGui::Checkbox("Set Arrive: ", &arrive))
+		{
+			bYSeek = false;
+			bYFlee = false;
+			bYPursuit = false;
+			bYEvade = false;
+		}
+
+		if (ImGui::Checkbox("Set Pursuit: ", &pursuit))
+		{
+			bYSeek = false;
+			bYFlee = false;
+			bYArrive = false;
+			bYEvade = false;
+		}
+
+		if (ImGui::Checkbox("Set Evade: ", &evade))
+		{
+			bYSeek = false;
+			bYFlee = false;
+			bYArrive = false;
+			bYPursuit = false;
+		}
+		
+	}
+
+	void SetSteeringTypeB(bool& seek, bool& flee, bool& arrive, bool& pursuit, bool& evade)
+	{
+
+		if (ImGui::Checkbox("Set Seek: ", &seek))
+		{
+			bBFlee = false;
+			bBArrive = false;
+			bBPursuit = false;
+			bBEvade = false;
+		}
+
+		if (ImGui::Checkbox("Set Flee: ", &flee))
+		{
+			bBSeek = false;
+			bBArrive = false;
+			bBPursuit = false;
+			bBEvade = false;
+		}
+
+		if (ImGui::Checkbox("Set Arrive: ", &arrive))
+		{
+			bBSeek = false;
+			bBFlee = false;
+			bBPursuit = false;
+			bBEvade = false;
+		}
+
+		if (ImGui::Checkbox("Set Pursuit: ", &pursuit))
+		{
+			bBSeek = false;
+			bBFlee = false;
+			bBArrive = false;
+			bBEvade = false;
+		}
+
+		if (ImGui::Checkbox("Set Evade: ", &evade))
+		{
+			bBSeek = false;
+			bBFlee = false;
+			bBArrive = false;
+			bBPursuit = false;
 		}
 	}
+
 }
 
 
@@ -54,9 +151,12 @@ void GameInit()
 
 	//OtherSpaceship
 	otherSpaceship = std::make_unique<Spaceship>(*world.get());
-	otherSpaceship->Load("SpaceshipSprites\\spaceshipB_%02i.png", ST_Pursuit);
+	otherSpaceship->Load("SpaceshipSprites\\spaceshipB_%02i.png", ST_Seek);
 	otherSpaceship->posX = 500.0f;
 	otherSpaceship->posY = 800.0f;
+
+	//Targets
+	spaceship->SetTarget(otherSpaceship.get());
 	otherSpaceship->SetTarget(spaceship.get());
 
 }
@@ -65,17 +165,21 @@ bool GameUpdate()
 {
 	float deltaTime = GetFrameTime();
 	
-	//Spaceship
-	spaceship->Update(deltaTime);
-	spaceship->Render();
-	spaceship->DrawUI(CT_Human);
-	SetDestination(*spaceship.get(), CT_Human);//move spaceship type controller
+	if (bSelectYellowSpaceShip)
+	{
+		//Spaceship
+		spaceship->Update(deltaTime);
+		spaceship->Render();
+		SetDestination(*spaceship.get());//move spaceship type controller
+	}
 
-	//Other Spaceship
-	otherSpaceship->Update(deltaTime);
-	//otherSpaceship->Render();
-	otherSpaceship->DrawUI(CT_AI);
-	SetDestination(*spaceship.get(), CT_AI);//move spaceship type controller
+	if (bSelectBlueSpaceShip)
+	{
+		//Other Spaceship
+		otherSpaceship->Update(deltaTime);
+		otherSpaceship->Render();
+		SetDestination(*otherSpaceship.get());//move spaceship type controller
+	}
 
 	bool isStopped = IsKeyPressed(KeyboardKey::KEY_ESCAPE);
 	return isStopped;
@@ -88,6 +192,105 @@ void GameCleanup()
 
 void RenderDebugUI()
 {
+
+	ImGui::Begin("Yellow SpaceShip", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+
+
+
+	ImGui::Checkbox("Yellow SpaceShip", &bSelectYellowSpaceShip);
+	if (bSelectYellowSpaceShip)
+	{
+
+		SetSteeringType(bYSeek, bYFlee, bYArrive, bYPursuit, bYEvade);
+
+		if (bYSeek )
+		{
+			spaceship->LoadBehavior(ST_Seek, bYSeek, true);
+			spaceship->DrawUI(CT_Human, YELLOW);
+		}
+
+		if (bYFlee)
+		{
+			spaceship->LoadBehavior(ST_Flee, bYFlee, true);
+			spaceship->DrawUI(CT_Human, YELLOW);
+
+			ImGui::DragFloat("Panic Radiu", &spaceship->panicRadius);
+			spaceship->SetPanicRadius(spaceship->panicRadius);
+			DrawCircleLines(spaceship.get()->posX, spaceship.get()->posY, spaceship->panicRadius, YELLOW);
+
+		}
+
+		if (bYArrive)
+		{
+			spaceship->LoadBehavior(ST_Arrive, bYArrive, true);
+			spaceship->DrawUI(CT_Human, YELLOW);
+		}
+
+		if (bYPursuit)
+		{
+			spaceship->LoadBehavior(ST_Pursuit, bYPursuit, true);
+			spaceship->DrawUI(CT_AI, YELLOW);
+		}
+
+		if (bYEvade)
+		{	
+			spaceship->LoadBehavior(ST_Evade, bYEvade, true);
+			spaceship->DrawUI(CT_AI, YELLOW);
+		}
+	}
+
+	ImGui::End();
+
+	
+	//  **************************							Blue Spaceship							******************************************************   \\
+	
+	ImGui::Begin("Blue SpaceShip", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::Checkbox("Blue SpaceShip", &bSelectBlueSpaceShip);
+
+	if (bSelectBlueSpaceShip)
+	{
+
+		SetSteeringTypeB(bBSeek, bBFlee, bBArrive, bBPursuit, bBEvade);
+
+		if (bBSeek)
+		{
+			otherSpaceship->LoadBehavior(ST_Seek, bBSeek, true);
+			otherSpaceship->DrawUI(CT_Human, BLUE);
+		}
+
+		if (bBFlee)
+		{
+			otherSpaceship->LoadBehavior(ST_Flee, bBFlee, true);
+			otherSpaceship->DrawUI(CT_Human, BLUE);
+
+			ImGui::DragFloat("Panic Radiu", &otherSpaceship->panicRadius);
+			otherSpaceship->SetPanicRadius(otherSpaceship->panicRadius);
+			DrawCircleLines(otherSpaceship.get()->posX, otherSpaceship.get()->posY, otherSpaceship->panicRadius ,BLUE);
+
+		}
+
+		if (bBArrive)
+		{
+			otherSpaceship->LoadBehavior(ST_Arrive, bBArrive, true);
+			otherSpaceship->DrawUI(CT_Human, BLUE);
+		}
+
+		if (bBPursuit)
+		{
+			otherSpaceship->LoadBehavior(ST_Pursuit, bBPursuit, true);
+			otherSpaceship->DrawUI(CT_AI, BLUE);
+		}
+
+		if (bBEvade)
+		{
+			otherSpaceship->LoadBehavior(ST_Evade, bBEvade, true);
+			otherSpaceship->DrawUI(CT_AI, BLUE);
+		}
+
+	}
+
+	ImGui::End();
+
 }
 
 int main()

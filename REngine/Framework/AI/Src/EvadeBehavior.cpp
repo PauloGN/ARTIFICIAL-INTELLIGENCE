@@ -11,7 +11,7 @@ std::pair<float, float> AI::EvadeBehavior::Calculate(Agent& agent)
 
 	std::pair<float, float> agentToEvadePoint;
 	std::pair<float, float> seekForce;
-	const float predictionPointMultplyer = 4.0f;
+	const float predictionPointMultplyer = 1.0f;
 
 	assert(agent.otherAgent != nullptr, "OtherAgent must be set");
 
