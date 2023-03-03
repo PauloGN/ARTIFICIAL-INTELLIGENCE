@@ -214,7 +214,7 @@ void RenderDebugUI()
 			spaceship->LoadBehavior(ST_Flee, bYFlee, true);
 			spaceship->DrawUI(CT_Human, YELLOW);
 
-			ImGui::DragFloat("Panic Radiu", &spaceship->panicRadius);
+			ImGui::DragFloat("Panic Radius", &spaceship->panicRadius);
 			spaceship->SetPanicRadius(spaceship->panicRadius);
 			DrawCircleLines(spaceship.get()->posX, spaceship.get()->posY, spaceship->panicRadius, YELLOW);
 
@@ -230,12 +230,18 @@ void RenderDebugUI()
 		{
 			spaceship->LoadBehavior(ST_Pursuit, bYPursuit, true);
 			spaceship->DrawUI(CT_AI, YELLOW);
+
+			ImGui::DragFloat("Pursuit Y offset", &spaceship->pursuitOffSet);
+			spaceship->SetPursuitOffset(spaceship->pursuitOffSet);
 		}
 
 		if (bYEvade)
 		{	
 			spaceship->LoadBehavior(ST_Evade, bYEvade, true);
 			spaceship->DrawUI(CT_AI, YELLOW);
+
+			ImGui::DragFloat("Evade B offset", &spaceship->evadeOffSet);
+			spaceship->SetEvadeOffset(spaceship->evadeOffSet);
 		}
 	}
 
@@ -263,7 +269,7 @@ void RenderDebugUI()
 			otherSpaceship->LoadBehavior(ST_Flee, bBFlee, true);
 			otherSpaceship->DrawUI(CT_Human, BLUE);
 
-			ImGui::DragFloat("Panic Radiu", &otherSpaceship->panicRadius);
+			ImGui::DragFloat("Panic Radius", &otherSpaceship->panicRadius);
 			otherSpaceship->SetPanicRadius(otherSpaceship->panicRadius);
 			DrawCircleLines(otherSpaceship.get()->posX, otherSpaceship.get()->posY, otherSpaceship->panicRadius ,BLUE);
 
@@ -279,12 +285,19 @@ void RenderDebugUI()
 		{
 			otherSpaceship->LoadBehavior(ST_Pursuit, bBPursuit, true);
 			otherSpaceship->DrawUI(CT_AI, BLUE);
+
+			ImGui::DragFloat("Pursuit B offset", &otherSpaceship->pursuitOffSet);
+			otherSpaceship->SetPursuitOffset(otherSpaceship->pursuitOffSet);
+
 		}
 
 		if (bBEvade)
 		{
 			otherSpaceship->LoadBehavior(ST_Evade, bBEvade, true);
 			otherSpaceship->DrawUI(CT_AI, BLUE);
+
+			ImGui::DragFloat("Evade B offset", &otherSpaceship->evadeOffSet);
+			otherSpaceship->SetEvadeOffset(otherSpaceship->evadeOffSet);
 		}
 
 	}

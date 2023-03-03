@@ -55,5 +55,15 @@ public:
 	void SetPanicRadius(const float panicRadius);
 	float panicRadius;
 
+	/////  Pursuit \\\\\
+
+	float pursuitOffSet;
+	void SetPursuitOffset(const float offset);
+
+	/////  Evade \\\\\
+
+	float evadeOffSet;
+	void SetEvadeOffset(const float offset);
+
 
 };

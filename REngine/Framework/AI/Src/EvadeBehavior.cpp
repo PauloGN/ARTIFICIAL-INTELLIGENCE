@@ -11,12 +11,12 @@ std::pair<float, float> AI::EvadeBehavior::Calculate(Agent& agent)
 
 	std::pair<float, float> agentToEvadePoint;
 	std::pair<float, float> seekForce;
-	const float predictionPointMultplyer = 1.0f;
 
 	assert(agent.otherAgent != nullptr, "OtherAgent must be set");
 
-	float otherAgentDestinationX = agent.otherAgent->posX + agent.otherAgent->velovityX * predictionPointMultplyer; // future point prediction
-	float otherAgentDestinationY = agent.otherAgent->posY + agent.otherAgent->velovityY * predictionPointMultplyer;
+	//                             origem                 + velocidade                  * ponto futuro
+	float otherAgentDestinationX = agent.otherAgent->posX + agent.otherAgent->velovityX + predictionPoint; // future point prediction
+	float otherAgentDestinationY = agent.otherAgent->posY + agent.otherAgent->velovityY + predictionPoint;
 
 
 	agentToEvadePoint.first = otherAgentDestinationX - agent.posX;
@@ -50,5 +50,16 @@ std::pair<float, float> AI::EvadeBehavior::Calculate(Agent& agent)
 	}
 
 	return seekForce;
+}
+
+void AI::EvadeBehavior::SetPredictionPoint(const float prediction)
+{
+
+	if (predictionPoint < 0.0f)
+	{
+		predictionPoint = 0.0f;
+	}
+
+	predictionPoint = prediction;
 }
 

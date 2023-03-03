@@ -374,6 +374,16 @@ void Spaceship::SetPanicRadius(const float panicRadius)
 	mFleeBehavior->SetPanicRadius(panicRadius);
 }
 
+void Spaceship::SetPursuitOffset(const float offset)
+{
+	mPursuitBehavior->SetPredictionPoint(offset);
+}
+
+void Spaceship::SetEvadeOffset(const float offset)
+{
+	mEvadeBehavior->SetPredictionPoint(offset);
+}
+
 void Spaceship::DrawUI(ControllerType controllerType, const Color& color)
 {
 	std::string behaviorInAction;
