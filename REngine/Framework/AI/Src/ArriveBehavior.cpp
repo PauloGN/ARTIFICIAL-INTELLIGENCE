@@ -33,7 +33,14 @@ std::pair<float, float> AI::ArriveBehavior::Calculate(Agent& agent)
 		return seekForce;
 	}
 
-	const double decelTweeker = 2.0f;
+	 double decelTweeker = 0.3f;
+
+	if (distanceToDestination <= controlDecelRadius)
+	{
+		DrawCircleLines(agent.DestinationX, agent.DestinationY, controlDecelRadius, PURPLE);
+		decelTweeker = controlDecelTweker;
+	}
+
 	double speed = distanceToDestination / decelTweeker * (double)fast;
 
 
@@ -61,4 +68,10 @@ std::pair<float, float> AI::ArriveBehavior::Calculate(Agent& agent)
 	//position += velocity * time;
 
 	return seekForce;
+}
+
+void AI::ArriveBehavior::SetDecel(const float tweeker, const float radius)
+{
+	controlDecelTweker = tweeker;
+	controlDecelRadius = radius;
 }

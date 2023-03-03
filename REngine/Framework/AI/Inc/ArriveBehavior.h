@@ -9,5 +9,12 @@ namespace AI
 	public:
 
 		virtual std::pair<float, float> Calculate(Agent& agent) override;
+		void SetDecel(const float tweeker, const float radius);
+
+	private:
+
+		float controlDecelTweker;
+		float controlDecelRadius;
+
 	};
 }

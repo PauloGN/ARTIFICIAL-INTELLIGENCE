@@ -65,5 +65,18 @@ public:
 	float evadeOffSet;
 	void SetEvadeOffset(const float offset);
 
+	///// Arrive  \\\\
+
+	float tweeker;
+	float radiusDecel;
+	void SetDeceleration(const float tw,const float rd);
+
+	// Steering types as booleans
+
+	bool bSeek;
+	bool bFlee;
+	bool bArrive;
+	bool bPursuit;
+	bool bEvade;
 
 };

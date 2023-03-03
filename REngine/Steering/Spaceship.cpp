@@ -384,6 +384,11 @@ void Spaceship::SetEvadeOffset(const float offset)
 	mEvadeBehavior->SetPredictionPoint(offset);
 }
 
+void Spaceship::SetDeceleration(const float tw, const float rd)
+{
+	mArriveBehavior->SetDecel(tw, rd);
+}
+
 void Spaceship::DrawUI(ControllerType controllerType, const Color& color)
 {
 	std::string behaviorInAction;

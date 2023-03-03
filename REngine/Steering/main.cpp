@@ -16,9 +16,8 @@ namespace
 
 	void SetDestination(Spaceship& spaceship)
 	{
-		spaceship.maxSpeed = 300.0f;
-
-			if (IsMouseButtonDown(MouseButton::MOUSE_BUTTON_LEFT))
+		
+			if (IsMouseButtonDown(MouseButton::MOUSE_BUTTON_RIGHT))
 			{
 				const float mouseX = GetMousePosition().x;
 				const float mouseY = GetMousePosition().y;
@@ -33,106 +32,98 @@ namespace
 	bool bSelectYellowSpaceShip = false;
 	bool bSelectBlueSpaceShip = false;
 
-	bool bYSeek;
-	bool bYFlee;
-	bool bYArrive;
-	bool bYPursuit;
-	bool bYEvade;
-
-	bool bBSeek;
-	bool bBFlee;
-	bool bBArrive;
-	bool bBPursuit;
-	bool bBEvade;
-
-
-	void SetSteeringType(bool &seek, bool& flee, bool& arrive, bool& pursuit, bool& evade)
+	void SetSteeringType(bool &seek, bool& flee, bool& arrive, bool& pursuit, bool& evade, Spaceship& agent, const Color& color)
 	{
+		const float dragSpeed = 0.5f;
+
+		ImGui::DragFloat("MaxSpped: ", &agent.maxSpeed, dragSpeed);
+
 
 		if (ImGui::Checkbox("Set Seek: ", &seek))
 		{
-			bYFlee = false;
-			bYArrive = false;
-			bYPursuit = false;
-			bYEvade = false;
+			agent.bFlee = false;
+			agent.bArrive = false;
+			agent.bPursuit = false;
+			agent.bEvade = false;
 		}
 
 		if (ImGui::Checkbox("Set Flee: ", &flee))
 		{
-			bYSeek = false;
-			bYArrive = false;
-			bYPursuit = false;
-			bYEvade = false;
+			agent.bSeek = false;
+			agent.bArrive = false;
+			agent.bPursuit = false;
+			agent.bEvade = false;
 		}
 
 		if (ImGui::Checkbox("Set Arrive: ", &arrive))
 		{
-			bYSeek = false;
-			bYFlee = false;
-			bYPursuit = false;
-			bYEvade = false;
+			agent.bSeek = false;
+			agent.bFlee = false;
+			agent.bPursuit = false;
+			agent.bEvade = false;
 		}
 
 		if (ImGui::Checkbox("Set Pursuit: ", &pursuit))
 		{
-			bYSeek = false;
-			bYFlee = false;
-			bYArrive = false;
-			bYEvade = false;
+			agent.bSeek = false;
+			agent.bFlee = false;
+			agent.bArrive = false;
+			agent.bEvade = false;
 		}
 
 		if (ImGui::Checkbox("Set Evade: ", &evade))
 		{
-			bYSeek = false;
-			bYFlee = false;
-			bYArrive = false;
-			bYPursuit = false;
+			agent.bSeek = false;
+			agent.bFlee = false;
+			agent.bArrive = false;
+			agent.bPursuit = false;
 		}
-		
-	}
 
-	void SetSteeringTypeB(bool& seek, bool& flee, bool& arrive, bool& pursuit, bool& evade)
-	{
-
-		if (ImGui::Checkbox("Set Seek: ", &seek))
+		if (agent.bSeek)
 		{
-			bBFlee = false;
-			bBArrive = false;
-			bBPursuit = false;
-			bBEvade = false;
+			agent.LoadBehavior(ST_Seek, agent.bSeek, true);
+			agent.DrawUI(CT_Human, color);
 		}
 
-		if (ImGui::Checkbox("Set Flee: ", &flee))
+		if (agent.bFlee)
 		{
-			bBSeek = false;
-			bBArrive = false;
-			bBPursuit = false;
-			bBEvade = false;
+			agent.LoadBehavior(ST_Flee, agent.bFlee, true);
+			agent.DrawUI(CT_Human, color);
+
+			ImGui::DragFloat("Panic Radius", &agent.panicRadius, dragSpeed);
+			agent.SetPanicRadius(agent.panicRadius);
+			DrawCircleLines(agent.posX, agent.posY, agent.panicRadius, color);
+
 		}
 
-		if (ImGui::Checkbox("Set Arrive: ", &arrive))
+		if (agent.bArrive)
 		{
-			bBSeek = false;
-			bBFlee = false;
-			bBPursuit = false;
-			bBEvade = false;
+			agent.LoadBehavior(ST_Arrive, agent.bArrive, true);
+			agent.DrawUI(CT_Human, color);
+
+			ImGui::DragFloat("Decel Tweeker", &agent.tweeker, dragSpeed);
+			ImGui::DragFloat("Decel Radius", &agent.radiusDecel, dragSpeed);
+			agent.SetDeceleration(agent.tweeker, agent.radiusDecel);
 		}
 
-		if (ImGui::Checkbox("Set Pursuit: ", &pursuit))
+		if (agent.bPursuit)
 		{
-			bBSeek = false;
-			bBFlee = false;
-			bBArrive = false;
-			bBEvade = false;
+			agent.LoadBehavior(ST_Pursuit, agent.bPursuit, true);
+			agent.DrawUI(CT_AI, color);
+
+			ImGui::DragFloat("Pursuit Y offset", &agent.pursuitOffSet, dragSpeed);
+			agent.SetPursuitOffset(agent.pursuitOffSet);
 		}
 
-		if (ImGui::Checkbox("Set Evade: ", &evade))
+		if (agent.bEvade)
 		{
-			bBSeek = false;
-			bBFlee = false;
-			bBArrive = false;
-			bBPursuit = false;
+			agent.LoadBehavior(ST_Evade, agent.bEvade, true);
+			agent.DrawUI(CT_AI, color);
+
+			ImGui::DragFloat("Evade B offset", &agent.evadeOffSet, dragSpeed);
+			agent.SetEvadeOffset(agent.evadeOffSet);
 		}
+
 	}
 
 }
@@ -195,111 +186,24 @@ void RenderDebugUI()
 
 	ImGui::Begin("Yellow SpaceShip", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 
-
-
 	ImGui::Checkbox("Yellow SpaceShip", &bSelectYellowSpaceShip);
 	if (bSelectYellowSpaceShip)
 	{
-
-		SetSteeringType(bYSeek, bYFlee, bYArrive, bYPursuit, bYEvade);
-
-		if (bYSeek )
-		{
-			spaceship->LoadBehavior(ST_Seek, bYSeek, true);
-			spaceship->DrawUI(CT_Human, YELLOW);
-		}
-
-		if (bYFlee)
-		{
-			spaceship->LoadBehavior(ST_Flee, bYFlee, true);
-			spaceship->DrawUI(CT_Human, YELLOW);
-
-			ImGui::DragFloat("Panic Radius", &spaceship->panicRadius);
-			spaceship->SetPanicRadius(spaceship->panicRadius);
-			DrawCircleLines(spaceship.get()->posX, spaceship.get()->posY, spaceship->panicRadius, YELLOW);
-
-		}
-
-		if (bYArrive)
-		{
-			spaceship->LoadBehavior(ST_Arrive, bYArrive, true);
-			spaceship->DrawUI(CT_Human, YELLOW);
-		}
-
-		if (bYPursuit)
-		{
-			spaceship->LoadBehavior(ST_Pursuit, bYPursuit, true);
-			spaceship->DrawUI(CT_AI, YELLOW);
-
-			ImGui::DragFloat("Pursuit Y offset", &spaceship->pursuitOffSet);
-			spaceship->SetPursuitOffset(spaceship->pursuitOffSet);
-		}
-
-		if (bYEvade)
-		{	
-			spaceship->LoadBehavior(ST_Evade, bYEvade, true);
-			spaceship->DrawUI(CT_AI, YELLOW);
-
-			ImGui::DragFloat("Evade B offset", &spaceship->evadeOffSet);
-			spaceship->SetEvadeOffset(spaceship->evadeOffSet);
-		}
+		SetSteeringType(spaceship.get()->bSeek, spaceship.get()->bFlee, spaceship.get()->bArrive, spaceship.get()->bPursuit, spaceship.get()->bEvade, *spaceship.get(), YELLOW);
 	}
 
 	ImGui::End();
 
 	
-	//  **************************							Blue Spaceship							******************************************************   \\
+	//========================================				Blue Spaceship				======================================================\\
+	===========================================================================================================================================
 	
 	ImGui::Begin("Blue SpaceShip", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 	ImGui::Checkbox("Blue SpaceShip", &bSelectBlueSpaceShip);
 
 	if (bSelectBlueSpaceShip)
 	{
-
-		SetSteeringTypeB(bBSeek, bBFlee, bBArrive, bBPursuit, bBEvade);
-
-		if (bBSeek)
-		{
-			otherSpaceship->LoadBehavior(ST_Seek, bBSeek, true);
-			otherSpaceship->DrawUI(CT_Human, BLUE);
-		}
-
-		if (bBFlee)
-		{
-			otherSpaceship->LoadBehavior(ST_Flee, bBFlee, true);
-			otherSpaceship->DrawUI(CT_Human, BLUE);
-
-			ImGui::DragFloat("Panic Radius", &otherSpaceship->panicRadius);
-			otherSpaceship->SetPanicRadius(otherSpaceship->panicRadius);
-			DrawCircleLines(otherSpaceship.get()->posX, otherSpaceship.get()->posY, otherSpaceship->panicRadius ,BLUE);
-
-		}
-
-		if (bBArrive)
-		{
-			otherSpaceship->LoadBehavior(ST_Arrive, bBArrive, true);
-			otherSpaceship->DrawUI(CT_Human, BLUE);
-		}
-
-		if (bBPursuit)
-		{
-			otherSpaceship->LoadBehavior(ST_Pursuit, bBPursuit, true);
-			otherSpaceship->DrawUI(CT_AI, BLUE);
-
-			ImGui::DragFloat("Pursuit B offset", &otherSpaceship->pursuitOffSet);
-			otherSpaceship->SetPursuitOffset(otherSpaceship->pursuitOffSet);
-
-		}
-
-		if (bBEvade)
-		{
-			otherSpaceship->LoadBehavior(ST_Evade, bBEvade, true);
-			otherSpaceship->DrawUI(CT_AI, BLUE);
-
-			ImGui::DragFloat("Evade B offset", &otherSpaceship->evadeOffSet);
-			otherSpaceship->SetEvadeOffset(otherSpaceship->evadeOffSet);
-		}
-
+		SetSteeringType(otherSpaceship.get()->bSeek, otherSpaceship.get()->bFlee, otherSpaceship.get()->bArrive, otherSpaceship.get()->bPursuit, otherSpaceship.get()->bEvade, *otherSpaceship.get(), BLUE);
 	}
 
 	ImGui::End();
