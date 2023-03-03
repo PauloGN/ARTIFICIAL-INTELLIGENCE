@@ -24,9 +24,9 @@ std::pair<float, float> AI::FleeBehavior::Calculate(Agent& agent)
 		seekForce.second = 0.0f;
 		return seekForce;
 	}
-
+	
+	
 	//calculate desired velocity
-
 	const auto disiredVelocityX = -((agentToFleePoint.first / distanceToFleePoint) * agent.maxSpeed);
 	const auto disiredVelocityY = -((agentToFleePoint.second / distanceToFleePoint) * agent.maxSpeed);
 

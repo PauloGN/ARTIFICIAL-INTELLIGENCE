@@ -41,6 +41,7 @@ private:
 	AI::ArriveBehavior* mArriveBehavior = nullptr;
 	AI::PursuitBehavior* mPursuitBehavior = nullptr;
 	AI::EvadeBehavior* mEvadeBehavior = nullptr;
+	AI::WanderBehavior* mWanderBehavior = nullptr;
 
 	
 	SteeringType mSteeringType = ST_Seek;

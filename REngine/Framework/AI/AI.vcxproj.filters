@@ -28,6 +28,12 @@
     <Filter Include="Src\Steering">
       <UniqueIdentifier>{08d94a6e-d603-4379-bc4d-e00f4b7f0332}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Inc\Math">
+      <UniqueIdentifier>{d83748c5-4e37-4090-9437-10e3253a4fdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Math">
+      <UniqueIdentifier>{06091e1f-01d1-4f83-8121-b0ec1ade9753}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\AI.h">
@@ -96,6 +102,9 @@
     <ClInclude Include="Inc\WanderBehavior.h">
       <Filter>Inc\Steering</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\AIMath.h">
+      <Filter>Inc\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Precompiled.cpp">
@@ -151,6 +160,9 @@
     </ClCompile>
     <ClCompile Include="Src\WanderBehavior.cpp">
       <Filter>Src\Steering</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\AIMath.cpp">
+      <Filter>Src\Math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
