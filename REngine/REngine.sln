@@ -25,6 +25,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FSM_01", "FSM_01\FSM_01.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Steering", "Steering\Steering.vcxproj", "{36EEDE74-9AA0-4771-8441-0FD521B290C9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VGP", "VGP", "{34870822-71F8-4818-AF03-F678900AF610}"
+	ProjectSection(SolutionItems) = preProject
+		Week09.txt = Week09.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

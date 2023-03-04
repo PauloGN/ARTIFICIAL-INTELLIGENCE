@@ -15,9 +15,15 @@ namespace AI
 
 	private:
 
-		float mWanderRadius = 1.0f;
-		float mWanderDistance = 0.0f;
-		float mWanderJitter = 0.0f;
+		//{0.0f, 1.0f}
+		//target ahead the local position
+		AIMath::Vector2 mLocalWanderTarget = AIMath::Vector2::YAxis();
+
+		//radius surrounding the player
+		float mWanderRadius = 5.0f;
+		//how far is the center of the center from the local position
+		float mWanderDistance = 10.0f;
+		float mWanderJitter = 1.0f;
 
 	};
 }

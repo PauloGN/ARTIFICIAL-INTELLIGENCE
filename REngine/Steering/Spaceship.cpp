@@ -95,6 +95,10 @@ void Spaceship::LoadBehavior(SteeringType st_type , bool activate, bool debug)
 			mArriveBehavior->SetActive(false);
 		}
 
+		if (mWanderBehavior)
+		{
+			mWanderBehavior->SetActive(false);
+		}
 
 		break;
 	case ST_Flee:
@@ -130,6 +134,10 @@ void Spaceship::LoadBehavior(SteeringType st_type , bool activate, bool debug)
 			mArriveBehavior->SetActive(false);
 		}
 
+		if (mWanderBehavior)
+		{
+			mWanderBehavior->SetActive(false);
+		}
 
 		break;
 	case ST_Arrive:
@@ -162,6 +170,11 @@ void Spaceship::LoadBehavior(SteeringType st_type , bool activate, bool debug)
 		if (mFleeBehavior)
 		{
 			mFleeBehavior->SetActive(false);
+		}
+
+		if (mWanderBehavior)
+		{
+			mWanderBehavior->SetActive(false);
 		}
 
 		break;
@@ -197,6 +210,11 @@ void Spaceship::LoadBehavior(SteeringType st_type , bool activate, bool debug)
 			mFleeBehavior->SetActive(false);
 		}
 
+		if (mWanderBehavior)
+		{
+			mWanderBehavior->SetActive(false);
+		}
+
 		break;
 	case ST_Evade:
 
@@ -230,7 +248,52 @@ void Spaceship::LoadBehavior(SteeringType st_type , bool activate, bool debug)
 			mFleeBehavior->SetActive(false);
 		}
 
+		if (mWanderBehavior)
+		{
+			mWanderBehavior->SetActive(false);
+		}
+
 		break;
+
+	case ST_Wander:
+
+		if (!mWanderBehavior)
+		{
+			mWanderBehavior = mSteeringModule->AddBehavior<AI::WanderBehavior>();
+		}
+
+		mWanderBehavior->SetActive(activate);
+		mWanderBehavior->ShowDebug(debug);
+
+		//Deactivate all other types
+
+		if (mSeekBehavior)
+		{
+			mSeekBehavior->SetActive(false);
+		}
+
+		if (mArriveBehavior)
+		{
+			mArriveBehavior->SetActive(false);
+		}
+
+		if (mPursuitBehavior)
+		{
+			mPursuitBehavior->SetActive(false);
+		}
+
+		if (mFleeBehavior)
+		{
+			mFleeBehavior->SetActive(false);
+		}
+
+		if (mEvadeBehavior)
+		{
+			mEvadeBehavior->SetActive(false);
+		}
+
+		break;
+
 	default:
 		break;
 	}
@@ -359,6 +422,15 @@ void Spaceship::SetSteeringType(SteeringType steeringType)
 		mEvadeBehavior->ShowDebug(true);
 
 		break;
+
+	case ST_Wander:
+
+		mWanderBehavior = mSteeringModule->AddBehavior<AI::WanderBehavior>();
+		mWanderBehavior->SetActive(true);
+		mWanderBehavior->ShowDebug(true);
+
+		break;
+
 	default:
 		break;
 	}
@@ -374,19 +446,39 @@ void Spaceship::SetPanicRadius(const float panicRadius)
 	mFleeBehavior->SetPanicRadius(panicRadius);
 }
 
+///////   Pursuit    \\\\\\
+
 void Spaceship::SetPursuitOffset(const float offset)
 {
 	mPursuitBehavior->SetPredictionPoint(offset);
 }
+
+///////   Evade    \\\\\\
 
 void Spaceship::SetEvadeOffset(const float offset)
 {
 	mEvadeBehavior->SetPredictionPoint(offset);
 }
 
+///////   Arrive    \\\\\\
+
 void Spaceship::SetDeceleration(const float tw, const float rd)
 {
 	mArriveBehavior->SetDecel(tw, rd);
+}
+
+///////   Wander    \\\\\\
+
+void Spaceship::SetupWander(const float radius, const float distance, const float jitter)
+{
+
+	if (distance > 50.0f)
+	{
+		int a = distance * 2;
+	}
+
+	mWanderBehavior->Setup(radius, distance, jitter);
+
 }
 
 void Spaceship::DrawUI(ControllerType controllerType, const Color& color)
@@ -410,6 +502,12 @@ void Spaceship::DrawUI(ControllerType controllerType, const Color& color)
 	case ST_Evade:
 		behaviorInAction = "Evade Behavior";
 		break;
+
+	case ST_Wander:
+
+		behaviorInAction = "Wander Behavior";
+		break;
+
 	default:
 		break;
 	}

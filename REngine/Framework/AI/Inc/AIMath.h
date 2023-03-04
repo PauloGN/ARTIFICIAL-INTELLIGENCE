@@ -1,7 +1,9 @@
 #pragma once
+#include <cfloat>
+#include <cassert>
 namespace AI
 {
-	namespace Math
+	namespace AIMath
 	{
 		struct Vector2
 		{

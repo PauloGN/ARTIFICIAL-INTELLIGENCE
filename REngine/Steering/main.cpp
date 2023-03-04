@@ -17,14 +17,14 @@ namespace
 	void SetDestination(Spaceship& spaceship)
 	{
 		
-			if (IsMouseButtonDown(MouseButton::MOUSE_BUTTON_RIGHT))
-			{
-				const float mouseX = GetMousePosition().x;
-				const float mouseY = GetMousePosition().y;
+		if (IsMouseButtonDown(MouseButton::MOUSE_BUTTON_RIGHT))
+		{
+			const float mouseX = GetMousePosition().x;
+			const float mouseY = GetMousePosition().y;
 
-				spaceship.DestinationX = mouseX;
-				spaceship.DestinationY = mouseY;
-			}
+			spaceship.DestinationX = mouseX;
+			spaceship.DestinationY = mouseY;
+		}
 	}
 
 	//Debug UI
@@ -32,73 +32,92 @@ namespace
 	bool bSelectYellowSpaceShip = false;
 	bool bSelectBlueSpaceShip = false;
 
-	void SetSteeringType(bool &seek, bool& flee, bool& arrive, bool& pursuit, bool& evade, Spaceship& agent, const Color& color)
+	void SetSteeringType(Spaceship& agent, const Color& color)
 	{
 		const float dragSpeed = 0.5f;
 
 		ImGui::DragFloat("MaxSpped: ", &agent.maxSpeed, dragSpeed);
+		ImGui::Checkbox("Debug: ", &agent.bShowDebug);
 
-
-		if (ImGui::Checkbox("Set Seek: ", &seek))
+		if (ImGui::Checkbox("Set Seek: ", &agent.bSeek))
 		{
 			agent.bFlee = false;
 			agent.bArrive = false;
 			agent.bPursuit = false;
 			agent.bEvade = false;
+			agent.bWander = false;
 		}
 
-		if (ImGui::Checkbox("Set Flee: ", &flee))
+		if (ImGui::Checkbox("Set Flee: ", &agent.bFlee))
 		{
 			agent.bSeek = false;
 			agent.bArrive = false;
 			agent.bPursuit = false;
 			agent.bEvade = false;
+			agent.bWander = false;
 		}
 
-		if (ImGui::Checkbox("Set Arrive: ", &arrive))
+		if (ImGui::Checkbox("Set Arrive: ", &agent.bArrive))
 		{
 			agent.bSeek = false;
 			agent.bFlee = false;
 			agent.bPursuit = false;
 			agent.bEvade = false;
+			agent.bWander = false;
 		}
 
-		if (ImGui::Checkbox("Set Pursuit: ", &pursuit))
+		if (ImGui::Checkbox("Set Pursuit: ", &agent.bPursuit))
 		{
 			agent.bSeek = false;
 			agent.bFlee = false;
 			agent.bArrive = false;
 			agent.bEvade = false;
+			agent.bWander = false;
 		}
 
-		if (ImGui::Checkbox("Set Evade: ", &evade))
+		if (ImGui::Checkbox("Set Evade: ", &agent.bEvade))
 		{
 			agent.bSeek = false;
 			agent.bFlee = false;
 			agent.bArrive = false;
 			agent.bPursuit = false;
+			agent.bWander = false;
+		}
+
+		if (ImGui::Checkbox("Set Wander: ", &agent.bWander))
+		{
+			agent.bSeek = false;
+			agent.bFlee = false;
+			agent.bArrive = false;
+			agent.bPursuit = false;
+			agent.bEvade = false;
 		}
 
 		if (agent.bSeek)
 		{
-			agent.LoadBehavior(ST_Seek, agent.bSeek, true);
+			agent.LoadBehavior(ST_Seek, agent.bSeek, agent.bShowDebug);
 			agent.DrawUI(CT_Human, color);
 		}
 
 		if (agent.bFlee)
 		{
-			agent.LoadBehavior(ST_Flee, agent.bFlee, true);
+			agent.LoadBehavior(ST_Flee, agent.bFlee, agent.bShowDebug);
 			agent.DrawUI(CT_Human, color);
 
 			ImGui::DragFloat("Panic Radius", &agent.panicRadius, dragSpeed);
 			agent.SetPanicRadius(agent.panicRadius);
-			DrawCircleLines(agent.posX, agent.posY, agent.panicRadius, color);
+
+			if (agent.bShowDebug)
+			{
+				DrawCircleLines(agent.posX, agent.posY, agent.panicRadius, color);
+			}
+
 
 		}
 
 		if (agent.bArrive)
 		{
-			agent.LoadBehavior(ST_Arrive, agent.bArrive, true);
+			agent.LoadBehavior(ST_Arrive, agent.bArrive, agent.bShowDebug);
 			agent.DrawUI(CT_Human, color);
 
 			ImGui::DragFloat("Decel Tweeker", &agent.tweeker, dragSpeed);
@@ -108,7 +127,7 @@ namespace
 
 		if (agent.bPursuit)
 		{
-			agent.LoadBehavior(ST_Pursuit, agent.bPursuit, true);
+			agent.LoadBehavior(ST_Pursuit, agent.bPursuit, agent.bShowDebug);
 			agent.DrawUI(CT_AI, color);
 
 			ImGui::DragFloat("Pursuit Y offset", &agent.pursuitOffSet, dragSpeed);
@@ -117,15 +136,25 @@ namespace
 
 		if (agent.bEvade)
 		{
-			agent.LoadBehavior(ST_Evade, agent.bEvade, true);
+			agent.LoadBehavior(ST_Evade, agent.bEvade, agent.bShowDebug);
 			agent.DrawUI(CT_AI, color);
 
 			ImGui::DragFloat("Evade B offset", &agent.evadeOffSet, dragSpeed);
 			agent.SetEvadeOffset(agent.evadeOffSet);
 		}
 
-	}
+		if (agent.bWander)
+		{
+			agent.LoadBehavior(ST_Wander, agent.bWander, agent.bShowDebug);
+			agent.DrawUI(CT_AI, color);
 
+			ImGui::DragFloat("Wander Radius: ", &agent.wanderRadius, dragSpeed);
+			ImGui::DragFloat("Wander Distance: ", &agent.wanderDistance, dragSpeed);
+			ImGui::DragFloat("Wander Jitter: ", &agent.wanderJitter, dragSpeed);
+			agent.SetupWander(agent.wanderRadius, agent.wanderDistance, agent.wanderJitter);
+		}
+
+	}
 }
 
 
@@ -139,12 +168,14 @@ void GameInit()
 	spaceship->Load("SpaceshipSprites\\spaceship_%02i.png", ST_Arrive);
 	spaceship->posX = 100.0f;
 	spaceship->posY = 100.0f;
+	spaceship->bArrive = true;
 
 	//OtherSpaceship
 	otherSpaceship = std::make_unique<Spaceship>(*world.get());
-	otherSpaceship->Load("SpaceshipSprites\\spaceshipB_%02i.png", ST_Seek);
+	otherSpaceship->Load("SpaceshipSprites\\spaceshipB_%02i.png", ST_Wander);
 	otherSpaceship->posX = 500.0f;
 	otherSpaceship->posY = 800.0f;
+	otherSpaceship->bWander = true;
 
 	//Targets
 	spaceship->SetTarget(otherSpaceship.get());
@@ -189,7 +220,8 @@ void RenderDebugUI()
 	ImGui::Checkbox("Yellow SpaceShip", &bSelectYellowSpaceShip);
 	if (bSelectYellowSpaceShip)
 	{
-		SetSteeringType(spaceship.get()->bSeek, spaceship.get()->bFlee, spaceship.get()->bArrive, spaceship.get()->bPursuit, spaceship.get()->bEvade, *spaceship.get(), YELLOW);
+
+		SetSteeringType( *spaceship.get(), YELLOW);
 	}
 
 	ImGui::End();
@@ -199,11 +231,12 @@ void RenderDebugUI()
 	===========================================================================================================================================
 	
 	ImGui::Begin("Blue SpaceShip", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+
 	ImGui::Checkbox("Blue SpaceShip", &bSelectBlueSpaceShip);
 
 	if (bSelectBlueSpaceShip)
 	{
-		SetSteeringType(otherSpaceship.get()->bSeek, otherSpaceship.get()->bFlee, otherSpaceship.get()->bArrive, otherSpaceship.get()->bPursuit, otherSpaceship.get()->bEvade, *otherSpaceship.get(), BLUE);
+		SetSteeringType( *otherSpaceship.get(), BLUE);
 	}
 
 	ImGui::End();

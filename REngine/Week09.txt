@@ -1,0 +1,24 @@
+
+Unit circle is a radius with a normalized value from the center of the circle to the border
+after generate a ramdom point inside the circle, we normilize the value to snap it to the border
+
+
+the entire cauculation form wander behavior is goint to be in local space
+
+world transform
+----    ----	I
+| Rotation |	N
+|          |	D
+|          |	E
+----    ----	T
+Displaciment	i
+				T
+				Y
+SX SY 00
+Hx HY 00
+DX DY 01
+
+
+side is perpendicular
+
+

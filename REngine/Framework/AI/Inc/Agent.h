@@ -1,5 +1,6 @@
 #pragma once
 #include "Entity.h"
+#include <AIMath.h>
 
 namespace AI
 {
@@ -9,13 +10,14 @@ namespace AI
 	class Agent : public Entity
 	{
 	public:
-
-		Agent* otherAgent = nullptr;
-		void SetTarget(Agent* otherA);
-
 		Agent(AIWorld& world, uint32_t typeId);
 		~Agent() override = default;
 
+		void SetTarget(Agent* otherA);
+
+		AIMath::Matrix3 GetWorldTransform() const;
+
+		Agent* otherAgent = nullptr;
 		float velovityX = 0;
 		float velovityY = 0;
 		

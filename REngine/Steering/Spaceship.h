@@ -10,7 +10,8 @@
 		ST_Flee,
 		ST_Arrive,
 		ST_Pursuit,
-		ST_Evade
+		ST_Evade,
+		ST_Wander
 	};
 
 class Spaceship : public AI::Agent
@@ -49,7 +50,7 @@ private:
 
 public:
 
-	//inner behaviors controll
+	//inner behaviors control
 
 	///////   FLEE    \\\\\\
 	
@@ -72,12 +73,25 @@ public:
 	float radiusDecel;
 	void SetDeceleration(const float tw,const float rd);
 
+
+	///// Wander \\\\\
+
+	float wanderDistance = 10.0f;
+	float wanderRadius = 5.0f;
+	float wanderJitter = 1.0f;
+
+	void SetupWander(const float radius, const float distance, const float jitter);
+
+
 	// Steering types as booleans
+
+	bool bShowDebug = true;
 
 	bool bSeek;
 	bool bFlee;
 	bool bArrive;
 	bool bPursuit;
 	bool bEvade;
+	bool bWander;
 
 };

@@ -37,8 +37,14 @@ std::pair<float, float> AI::ArriveBehavior::Calculate(Agent& agent)
 
 	if (distanceToDestination <= controlDecelRadius)
 	{
-		DrawCircleLines(agent.DestinationX, agent.DestinationY, controlDecelRadius, PURPLE);
 		decelTweeker = controlDecelTweker;
+
+		if (IsDebug())
+		{
+			//Draw decel circle
+			DrawCircleLines(agent.DestinationX, agent.DestinationY, controlDecelRadius, PURPLE);
+
+		}
 	}
 
 	double speed = distanceToDestination / decelTweeker * (double)fast;
