@@ -10,12 +10,9 @@ namespace
 	//Spaceship
 	std::unique_ptr<Spaceship> spaceship;
 
-	//Other Spaceship
-	std::unique_ptr<Spaceship> otherSpaceship;
-
-	//Goupe of spaceships
-	std::vector<std::unique_ptr<Spaceship>> ships;
-
+	//Goup of spaceships
+	using shipsCollection = std::vector<std::unique_ptr<Spaceship>>;
+	shipsCollection ships;
 
 	void SetDestination(Spaceship& spaceship)
 	{
@@ -168,6 +165,181 @@ namespace
 
 	}
 
+
+	void SetSteeringTypeInGroup(shipsCollection& ships, const Color& color)
+	{
+		ImGui::Text("GROUP SECTION");
+		const float dragSpeed = 0.5f;
+		static float sMaxSpeed = 100.0f;
+
+		static bool sbShowDebug = true;
+
+		static bool sbSeek = false;
+		static bool sbFlee = false;
+		static bool sbArrive = false;
+		static bool sbPursuit = false;
+		static bool sbEvade = false;
+		static bool sbWander = true;
+
+
+
+		ImGui::DragFloat("G MaxSpped: ", &sMaxSpeed, dragSpeed);
+		ImGui::Checkbox("G Debug: ", &sbShowDebug);
+
+		for (auto& ship : ships)
+		{
+			ship->maxSpeed = sMaxSpeed;
+			ship->bShowDebug = sbShowDebug;
+		}
+
+
+		if (ImGui::Checkbox("G Set Seek: ", &sbSeek))
+		{
+			sbFlee = false;
+			sbArrive = false;
+			sbPursuit = false;
+			sbEvade = false;
+			sbWander = false;	
+		}
+
+		if (ImGui::Checkbox("G Set Flee: ", &sbFlee))
+		{
+			sbSeek = false;
+			sbArrive = false;
+			sbPursuit = false;
+			sbEvade = false;
+			sbWander = false;
+		}
+
+		if (ImGui::Checkbox("G Set Arrive: ", &sbArrive))
+		{
+
+			sbSeek = false;
+			sbFlee = false;
+			sbPursuit = false;
+			sbEvade = false;
+			sbWander = false;
+		}
+
+		if (ImGui::Checkbox("G Set Pursuit: ", &sbPursuit))
+		{
+
+			sbPursuit = sbPursuit;
+			sbSeek = false;
+			sbFlee = false;
+			sbArrive = false;
+			sbEvade = false;
+			sbWander = false;
+		}
+
+		if (ImGui::Checkbox("G Set Evade: ", &sbEvade))
+		{
+
+			sbSeek = false;
+			sbFlee = false;
+			sbArrive = false;
+			sbPursuit = false;
+			sbWander = false;
+
+		}
+
+		if (ImGui::Checkbox("G Set Wander: ", &sbWander))
+		{
+			sbSeek = false;
+			sbFlee = false;
+			sbArrive = false;
+			sbPursuit = false;
+			sbEvade = false;
+		}
+
+		for (auto& ship : ships)
+		{
+			ship->bSeek = sbSeek;
+			ship->bFlee = sbFlee;
+			ship->bArrive = sbArrive;
+			ship->bPursuit = sbPursuit;
+			ship->bEvade = sbEvade;
+			ship->bWander = sbWander;
+		}
+
+
+		for (auto& agent : ships)
+		{
+			if (agent->bSeek)
+			{
+				agent->LoadBehavior(ST_Seek, agent->bSeek, agent->bShowDebug);
+				agent->DrawUI(CT_Human, color);
+			}
+
+			if (agent->bFlee)
+			{
+				agent->LoadBehavior(ST_Flee, agent->bFlee, agent->bShowDebug);
+				agent->DrawUI(CT_Human, color);
+
+				ImGui::DragFloat("Panic Radius", &agent->panicRadius, dragSpeed);
+				agent->SetPanicRadius(agent->panicRadius);
+
+				if (agent->bShowDebug)
+				{
+					DrawCircleLines(agent->posX, agent->posY, agent->panicRadius, color);
+				}
+
+
+			}
+
+			if (agent->bArrive)
+			{
+				agent->LoadBehavior(ST_Arrive, agent->bArrive, agent->bShowDebug);
+				agent->DrawUI(CT_Human, color);
+
+				ImGui::DragFloat("Decel Tweeker", &agent->tweeker, dragSpeed);
+				ImGui::DragFloat("Decel Radius", &agent->radiusDecel, dragSpeed);
+				agent->SetDeceleration(agent->tweeker, agent->radiusDecel);
+			}
+
+			if (agent->bPursuit)
+			{
+				agent->LoadBehavior(ST_Pursuit, agent->bPursuit, agent->bShowDebug);
+				agent->DrawUI(CT_AI, color);
+
+				ImGui::DragFloat("Pursuit Y offset", &agent->pursuitOffSet, dragSpeed);
+				agent->SetPursuitOffset(agent->pursuitOffSet);
+			}
+
+			if (agent->bEvade)
+			{
+				agent->LoadBehavior(ST_Evade, agent->bEvade, agent->bShowDebug);
+				agent->DrawUI(CT_AI, color);
+
+				ImGui::DragFloat("Evade B offset", &agent->evadeOffSet, dragSpeed);
+				agent->SetEvadeOffset(agent->evadeOffSet);
+			}
+
+			if (agent->bWander)
+			{
+				agent->LoadBehavior(ST_Wander, agent->bWander, agent->bShowDebug);
+				agent->DrawUI(CT_AI, color);
+
+				ImGui::DragFloat("Wander Radius: ", &agent->wanderRadius, dragSpeed);
+				ImGui::DragFloat("Wander Distance: ", &agent->wanderDistance, dragSpeed);
+				ImGui::DragFloat("Wander Jitter: ", &agent->wanderJitter, dragSpeed);
+				agent->SetupWander(agent->wanderRadius, agent->wanderDistance, agent->wanderJitter);
+			}
+
+			if (agent->bShowDebug)
+			{
+				Color c = color;
+
+				c.a = 40.0f;
+				DrawCircleLines(agent->posX, agent->posY, agent->radius, c);
+			}
+
+
+		}
+
+
+	}
+
 	const uint32_t numOfSpaceShips = 10;
 }
 
@@ -184,16 +356,6 @@ void GameInit()
 	spaceship->posY = 100.0f;
 	spaceship->bArrive = true;
 
-	//OtherSpaceship
-	otherSpaceship = std::make_unique<Spaceship>(*world.get());
-	otherSpaceship->Load("SpaceshipSprites\\spaceshipB_%02i.png", ST_Wander);
-	otherSpaceship->posX = 500.0f;
-	otherSpaceship->posY = 800.0f;
-	otherSpaceship->bWander = true;
-
-	//Targets
-	spaceship->SetTarget(otherSpaceship.get());
-	otherSpaceship->SetTarget(spaceship.get());
 
 	//Initialize a banch of spaceships wander mode
 	for (size_t i = 0; i < numOfSpaceShips; i++)
@@ -203,37 +365,34 @@ void GameInit()
 		ship->posX = AI::AIMath::RandomFloat(32.0f, GetScreenWidth());
 		ship->posY = AI::AIMath::RandomFloat(32.0f, GetScreenHeight());;
 		ship->bWander = true;
+		ship->SetTarget(spaceship.get());
 	}
 
+	//Targets
+	spaceship->SetTarget(ships[0].get());
 }
 
 bool GameUpdate()
 {
 	float deltaTime = GetFrameTime();
 
+	//Spaceship
 	if (bSelectYellowSpaceShip)
 	{
-		//Spaceship
 		spaceship->Update(deltaTime);
 		spaceship->Render();
 		SetDestination(*spaceship.get());//move spaceship type controller
 	}
 
+	//Ships
 	if (bSelectBlueSpaceShip)
 	{
-		//Other Spaceship
-		otherSpaceship->Update(deltaTime);
-		otherSpaceship->Render();
-		SetDestination(*otherSpaceship.get());//move spaceship type controller
-	}
-
-	//Ships
-
-	for (auto& s :ships)
-	{
-		s->Update(deltaTime);
-		s->Render();
-		SetDestination(*s.get());//move spaceship type controller
+		for (auto& s : ships)
+		{
+			s->Update(deltaTime);
+			s->Render();
+			SetDestination(*s.get());//move spaceship type controller
+		}
 	}
 
 	bool isStopped = IsKeyPressed(KeyboardKey::KEY_ESCAPE);
@@ -260,7 +419,7 @@ void RenderDebugUI()
 	ImGui::End();
 
 
-	//========================================				Blue Spaceship				======================================================\\
+	//========================================				Blue Spaceships				======================================================\\
 	===========================================================================================================================================
 
 	ImGui::Begin("Blue SpaceShip", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
@@ -269,8 +428,9 @@ void RenderDebugUI()
 
 	if (bSelectBlueSpaceShip)
 	{
-		SetSteeringType(*otherSpaceship.get(), BLUE);
+		SetSteeringTypeInGroup(ships, GREEN);
 	}
+
 
 	ImGui::End();
 
