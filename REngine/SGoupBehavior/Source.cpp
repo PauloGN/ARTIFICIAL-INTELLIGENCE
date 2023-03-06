@@ -14,6 +14,21 @@ namespace
 	using shipsCollection = std::vector<std::unique_ptr<Spaceship>>;
 	shipsCollection ships;
 
+	//flee
+	static float sPanicRadius = 150.0f;
+	//arrive
+	static float sTweeker = 2.0f;
+	static float sRadiusDecel = 150.0f;
+	//Pursuit
+	static float sPursuitOffSet = 5.0f;
+	//Evade 
+	static float sEvadeOffSet = 10.0f;
+	//Wander
+	static float sWanderRadius = 50.0f;
+	static float sWanderDistance = 45.0f;
+	static float sWanderJitter = 3.0f;
+
+
 	void SetDestination(Spaceship& spaceship)
 	{
 
@@ -170,7 +185,7 @@ namespace
 	{
 		ImGui::Text("GROUP SECTION");
 		const float dragSpeed = 0.5f;
-		static float sMaxSpeed = 100.0f;
+		static float sMaxSpeed = 300.0f;
 
 		static bool sbShowDebug = true;
 
@@ -180,8 +195,6 @@ namespace
 		static bool sbPursuit = false;
 		static bool sbEvade = false;
 		static bool sbWander = true;
-
-
 
 		ImGui::DragFloat("G MaxSpped: ", &sMaxSpeed, dragSpeed);
 		ImGui::Checkbox("G Debug: ", &sbShowDebug);
@@ -263,6 +276,35 @@ namespace
 		}
 
 
+		if (sbFlee)
+		{
+			ImGui::DragFloat("Panic Radius", &sPanicRadius, dragSpeed);
+		}
+
+		if (sbArrive)
+		{
+			ImGui::DragFloat("Decel Tweeker", &sTweeker, dragSpeed);
+			ImGui::DragFloat("Decel Radius", &sRadiusDecel, dragSpeed);
+		}
+
+		if (sbPursuit)
+		{
+			ImGui::DragFloat("Pursuit Y offset", &sPursuitOffSet, dragSpeed);
+		}
+
+		if (sbEvade)
+		{
+			ImGui::DragFloat("Evade B offset", &sEvadeOffSet, dragSpeed);
+		}
+
+		if (sbWander)
+		{
+			ImGui::DragFloat("Wander Radius: ", &sWanderRadius, dragSpeed);
+			ImGui::DragFloat("Wander Distance: ", &sWanderDistance, dragSpeed);
+			ImGui::DragFloat("Wander Jitter: ", &sWanderJitter, dragSpeed);
+		}
+
+
 		for (auto& agent : ships)
 		{
 			if (agent->bSeek)
@@ -276,14 +318,14 @@ namespace
 				agent->LoadBehavior(ST_Flee, agent->bFlee, agent->bShowDebug);
 				agent->DrawUI(CT_Human, color);
 
-				ImGui::DragFloat("Panic Radius", &agent->panicRadius, dragSpeed);
+				agent->panicRadius = sPanicRadius;
+
 				agent->SetPanicRadius(agent->panicRadius);
 
 				if (agent->bShowDebug)
 				{
 					DrawCircleLines(agent->posX, agent->posY, agent->panicRadius, color);
 				}
-
 
 			}
 
@@ -292,8 +334,9 @@ namespace
 				agent->LoadBehavior(ST_Arrive, agent->bArrive, agent->bShowDebug);
 				agent->DrawUI(CT_Human, color);
 
-				ImGui::DragFloat("Decel Tweeker", &agent->tweeker, dragSpeed);
-				ImGui::DragFloat("Decel Radius", &agent->radiusDecel, dragSpeed);
+				agent->tweeker = sTweeker;
+				agent->radiusDecel = sRadiusDecel;
+
 				agent->SetDeceleration(agent->tweeker, agent->radiusDecel);
 			}
 
@@ -302,7 +345,7 @@ namespace
 				agent->LoadBehavior(ST_Pursuit, agent->bPursuit, agent->bShowDebug);
 				agent->DrawUI(CT_AI, color);
 
-				ImGui::DragFloat("Pursuit Y offset", &agent->pursuitOffSet, dragSpeed);
+				agent->pursuitOffSet = sPursuitOffSet;
 				agent->SetPursuitOffset(agent->pursuitOffSet);
 			}
 
@@ -311,7 +354,7 @@ namespace
 				agent->LoadBehavior(ST_Evade, agent->bEvade, agent->bShowDebug);
 				agent->DrawUI(CT_AI, color);
 
-				ImGui::DragFloat("Evade B offset", &agent->evadeOffSet, dragSpeed);
+				agent->evadeOffSet = sEvadeOffSet;
 				agent->SetEvadeOffset(agent->evadeOffSet);
 			}
 
@@ -320,9 +363,12 @@ namespace
 				agent->LoadBehavior(ST_Wander, agent->bWander, agent->bShowDebug);
 				agent->DrawUI(CT_AI, color);
 
-				ImGui::DragFloat("Wander Radius: ", &agent->wanderRadius, dragSpeed);
-				ImGui::DragFloat("Wander Distance: ", &agent->wanderDistance, dragSpeed);
-				ImGui::DragFloat("Wander Jitter: ", &agent->wanderJitter, dragSpeed);
+				//wander properties
+				
+				agent->wanderRadius = sWanderRadius;
+				agent->wanderDistance = sWanderDistance;
+				agent->wanderJitter = sWanderJitter;
+
 				agent->SetupWander(agent->wanderRadius, agent->wanderDistance, agent->wanderJitter);
 			}
 
@@ -334,9 +380,7 @@ namespace
 				DrawCircleLines(agent->posX, agent->posY, agent->radius, c);
 			}
 
-
 		}
-
 
 	}
 
