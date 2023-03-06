@@ -8,13 +8,13 @@ namespace
 	std::unique_ptr<AI::AIWorld> world;
 	
 	//Spaceship
-	std::unique_ptr<Spaceship> spaceship;
+	std::unique_ptr<GSpaceship> spaceship;
 
 	//Other Spaceship
-	std::unique_ptr<Spaceship> otherSpaceship;
+	std::unique_ptr<GSpaceship> otherSpaceship;
 
 
-	void SetDestination(Spaceship& spaceship)
+	void SetDestination(GSpaceship& spaceship)
 	{
 		
 		if (IsMouseButtonDown(MouseButton::MOUSE_BUTTON_RIGHT))
@@ -32,7 +32,7 @@ namespace
 	bool bSelectYellowSpaceShip = false;
 	bool bSelectBlueSpaceShip = false;
 
-	void SetSteeringType(Spaceship& agent, const Color& color)
+	void SetSteeringType(GSpaceship& agent, const Color& color)
 	{
 		const float dragSpeed = 0.5f;
 
@@ -173,14 +173,14 @@ void GameInit()
 	world = std::make_unique<AI::AIWorld>();
 
 	//Spaceship
-	spaceship = std::make_unique<Spaceship>(*world.get());
+	spaceship = std::make_unique<GSpaceship>(*world.get());
 	spaceship->Load("SpaceshipSprites\\spaceship_%02i.png", ST_Arrive);
 	spaceship->posX = 100.0f;
 	spaceship->posY = 100.0f;
 	spaceship->bArrive = true;
 
 	//OtherSpaceship
-	otherSpaceship = std::make_unique<Spaceship>(*world.get());
+	otherSpaceship = std::make_unique<GSpaceship>(*world.get());
 	otherSpaceship->Load("SpaceshipSprites\\spaceshipB_%02i.png", ST_Wander);
 	otherSpaceship->posX = 500.0f;
 	otherSpaceship->posY = 800.0f;
@@ -252,12 +252,12 @@ void RenderDebugUI()
 
 }
 
-int main()
-{
-	REng::Start("Steering");
-	GameInit();
-	REng::Run(GameUpdate, RenderDebugUI);
-	GameCleanup();
-	REng::Stop();
-	return 0;
-}
+//int main()
+//{
+//	REng::Start("Steering");
+//	GameInit();
+//	REng::Run(GameUpdate, RenderDebugUI);
+//	GameCleanup();
+//	REng::Stop();
+//	return 0;
+//}

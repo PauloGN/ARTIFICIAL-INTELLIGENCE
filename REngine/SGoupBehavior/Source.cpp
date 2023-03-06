@@ -6,17 +6,20 @@ namespace
 {
 	//World
 	std::unique_ptr<AI::AIWorld> world;
-	
+
 	//Spaceship
 	std::unique_ptr<Spaceship> spaceship;
 
 	//Other Spaceship
 	std::unique_ptr<Spaceship> otherSpaceship;
 
+	//Goupe of spaceships
+	std::vector<std::unique_ptr<Spaceship>> ships;
+
 
 	void SetDestination(Spaceship& spaceship)
 	{
-		
+
 		if (IsMouseButtonDown(MouseButton::MOUSE_BUTTON_RIGHT))
 		{
 			const float mouseX = GetMousePosition().x;
@@ -164,6 +167,8 @@ namespace
 
 
 	}
+
+	const uint32_t numOfSpaceShips = 10;
 }
 
 
@@ -190,12 +195,22 @@ void GameInit()
 	spaceship->SetTarget(otherSpaceship.get());
 	otherSpaceship->SetTarget(spaceship.get());
 
+	//Initialize a banch of spaceships wander mode
+	for (size_t i = 0; i < numOfSpaceShips; i++)
+	{
+		auto& ship = ships.emplace_back(std::make_unique<Spaceship>(*world.get()));
+		ship->Load("SpaceshipSprites\\spaceshipB_%02i.png", ST_Wander);
+		ship->posX = AI::AIMath::RandomFloat(32.0f, GetScreenWidth());
+		ship->posY = AI::AIMath::RandomFloat(32.0f, GetScreenHeight());;
+		ship->bWander = true;
+	}
+
 }
 
 bool GameUpdate()
 {
 	float deltaTime = GetFrameTime();
-	
+
 	if (bSelectYellowSpaceShip)
 	{
 		//Spaceship
@@ -210,6 +225,15 @@ bool GameUpdate()
 		otherSpaceship->Update(deltaTime);
 		otherSpaceship->Render();
 		SetDestination(*otherSpaceship.get());//move spaceship type controller
+	}
+
+	//Ships
+
+	for (auto& s :ships)
+	{
+		s->Update(deltaTime);
+		s->Render();
+		SetDestination(*s.get());//move spaceship type controller
 	}
 
 	bool isStopped = IsKeyPressed(KeyboardKey::KEY_ESCAPE);
@@ -230,22 +254,22 @@ void RenderDebugUI()
 	if (bSelectYellowSpaceShip)
 	{
 
-		SetSteeringType( *spaceship.get(), YELLOW);
+		SetSteeringType(*spaceship.get(), YELLOW);
 	}
 
 	ImGui::End();
 
-	
+
 	//========================================				Blue Spaceship				======================================================\\
 	===========================================================================================================================================
-	
+
 	ImGui::Begin("Blue SpaceShip", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 
 	ImGui::Checkbox("Blue SpaceShip", &bSelectBlueSpaceShip);
 
 	if (bSelectBlueSpaceShip)
 	{
-		SetSteeringType( *otherSpaceship.get(), BLUE);
+		SetSteeringType(*otherSpaceship.get(), BLUE);
 	}
 
 	ImGui::End();

@@ -26,5 +26,12 @@ namespace AI
 
 		float maxSpeed = 100.0f;
 		float mass = 1.0f;
+
+		//Group behavior
+		std::vector<Agent*> agentNeighbors;
+		float NeighborRadius = 150.0f;
+
+		//45min
+
 	};
 }
