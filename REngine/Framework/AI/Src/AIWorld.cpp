@@ -3,6 +3,15 @@
 
 #include "Entity.h"
 
+
+namespace
+{
+
+	const float sCellSize = 100.0f;
+
+}
+
+
 void AI::AIWorld::RegisterEntity(Entity* entity)
 {
 	assert((std::find(mEntities.begin(), mEntities.end(), entity)) == mEntities.end() && "Entity already Registered");
@@ -35,3 +44,4 @@ std::vector<AI::Entity*> AI::AIWorld::GetAllEntitiesOfType(uint32_t typeID)
 
 	return entities;
 }
+

@@ -7,6 +7,8 @@ namespace AI
 
 	//Entity has a reference of our wolrd the navegation system witch is the GridBased graph
 	class AIWorld;
+	class Entity;
+	using EntitiesPtrs = std::vector<Entity*>;
 
 	class Entity
 	{

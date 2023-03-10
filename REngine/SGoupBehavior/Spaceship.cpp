@@ -1,31 +1,6 @@
 #include "Spaceship.h"
 
 
-namespace
-{
-
-	//	const float agentToDestinationX = DestinationX - posX;
-	//	const float agentToDestinationY = DestinationY - posY;
-
-	//	const float distanceToDestination = REng::Math::Magnitude({ agentToDestinationX, agentToDestinationY });
-
-	//	if (distanceToDestination > 0.0f)
-	//	{
-	//		const float directionX = agentToDestinationX / distanceToDestination;
-	//		const float directionY = agentToDestinationY / distanceToDestination;
-
-	//		velovityX = directionX * maxSpeed;
-	//		velovityY = directionY * maxSpeed;
-
-	//		posX += velovityX * deltaTime;
-	//		posY += velovityY * deltaTime;
-
-	//		headingX = directionX;
-	//		headingY = directionY;
-	//	}
-
-}
-
 
 Spaceship::Spaceship(AI::AIWorld& world):Agent(world, T_Spaceship)
 {
@@ -45,6 +20,13 @@ void Spaceship::Load(const char* SpriteNameformat, SteeringType steeringType)
 	//Load the steering behaviors
 	mSteeringModule = std::make_unique<AI::SteeringModule>(*this);
 	SetSteeringType(steeringType);
+
+	//Group Beravior
+	mSeparationBehavior = mSteeringModule->AddBehavior<AI::SeparationBehavior>();
+	mSeparationBehavior->SetActive(true);
+
+	mAlignmentBehavior = mSteeringModule->AddBehavior<AI::AlignmentBehavior>();
+	mAlignmentBehavior->SetActive(true);
 
 	//load all sprites 
 	for (int i = 0; i < mTextures.size(); i++)
@@ -482,6 +464,47 @@ void Spaceship::SetupWander(const float radius, const float distance, const floa
 	mWanderBehavior->Setup(radius, distance, jitter);
 
 }
+
+
+///// Separation \\\\\\\
+
+
+void Spaceship::SetSeparation(bool separation)
+{
+
+	if (mSeparationBehavior)
+	{
+		mSeparationBehavior->SetActive(separation);
+	}
+
+}
+
+
+void  Spaceship::SetSeparationForcePercentage(const float percent)
+{
+	if (mSeparationBehavior)
+	{
+		mSeparationBehavior->SetSeparationForce(percent);
+	}
+}
+
+//////  Alignment  \\\\\\\\
+
+void Spaceship::SetAlignment(bool alignm)
+{
+	if (mAlignmentBehavior)
+	{
+		mAlignmentBehavior->SetActive(alignm);
+	}
+}
+void Spaceship::SetAlignmentForcePercentage(const float percent)
+{
+	if (mAlignmentBehavior)
+	{
+		mAlignmentBehavior->SetAlignmentForce(percent);
+	}
+}
+
 
 void Spaceship::DrawUI(ControllerType controllerType, const Color& color)
 {

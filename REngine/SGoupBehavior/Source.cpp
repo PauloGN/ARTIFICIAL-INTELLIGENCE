@@ -14,19 +14,39 @@ namespace
 	using shipsCollection = std::vector<std::unique_ptr<Spaceship>>;
 	shipsCollection ships;
 
+	//Seek
+	static bool sbSeek = false;
+
 	//flee
+	static bool sbFlee = false;
 	static float sPanicRadius = 150.0f;
 	//arrive
+	static bool sbArrive = false;
 	static float sTweeker = 2.0f;
 	static float sRadiusDecel = 150.0f;
 	//Pursuit
 	static float sPursuitOffSet = 5.0f;
+	static bool sbPursuit = false;
 	//Evade 
+	static bool sbEvade = false;
 	static float sEvadeOffSet = 10.0f;
 	//Wander
+	static bool sbWander = true;
 	static float sWanderRadius = 50.0f;
 	static float sWanderDistance = 45.0f;
 	static float sWanderJitter = 3.0f;
+	//Separation
+	static bool sbSeparation = false;
+	static float sPercentOfSeparation = 0.0f;
+	//Separation
+	static bool sbAlignment = false;
+	static float sPercentOfAlignment = 0.0f;
+
+	//General properties
+	static float sMaxSpeed = 300.0f;
+	static bool sbShowDebug = true;
+
+
 
 
 	void SetDestination(Spaceship& spaceship)
@@ -185,24 +205,33 @@ namespace
 	{
 		ImGui::Text("GROUP SECTION");
 		const float dragSpeed = 0.5f;
-		static float sMaxSpeed = 300.0f;
-
-		static bool sbShowDebug = true;
-
-		static bool sbSeek = false;
-		static bool sbFlee = false;
-		static bool sbArrive = false;
-		static bool sbPursuit = false;
-		static bool sbEvade = false;
-		static bool sbWander = true;
 
 		ImGui::DragFloat("G MaxSpped: ", &sMaxSpeed, dragSpeed);
 		ImGui::Checkbox("G Debug: ", &sbShowDebug);
+		ImGui::Text("FLOCKING");
+		ImGui::Checkbox("G Separation: ", &sbSeparation);
+		//*********************          Separation
+		if (sbSeparation)
+		{
+			ImGui::DragFloat("Separation Percentage: ", &sPercentOfSeparation, dragSpeed);
+		}
+		//*******************			Alignment
+		ImGui::Checkbox("G Alignment: ", &sbAlignment);
+		if (sbAlignment)
+		{
+			ImGui::DragFloat("Alignment Percentage: ", &sPercentOfAlignment, dragSpeed);
+		}
+
+		ImGui::Text("\nBehaviors");
 
 		for (auto& ship : ships)
 		{
 			ship->maxSpeed = sMaxSpeed;
 			ship->bShowDebug = sbShowDebug;
+			ship->SetSeparation(sbSeparation);
+			ship->SetSeparationForcePercentage(sPercentOfSeparation);
+			ship->SetAlignment(sbAlignment);
+			ship->SetAlignmentForcePercentage(sPercentOfAlignment);
 		}
 
 
@@ -392,6 +421,7 @@ void GameInit()
 {
 	//World
 	world = std::make_unique<AI::AIWorld>();
+	//world->Initialize((uint32_t)800, (uint32_t)900);
 
 	//Spaceship
 	spaceship = std::make_unique<Spaceship>(*world.get());
@@ -420,6 +450,8 @@ bool GameUpdate()
 {
 	float deltaTime = GetFrameTime();
 
+	//world->UpdateGrid();
+
 	//Spaceship
 	if (bSelectYellowSpaceShip)
 	{
@@ -438,6 +470,71 @@ bool GameUpdate()
 			SetDestination(*s.get());//move spaceship type controller
 		}
 	}
+
+
+	//Check Separation status
+	if (sbSeparation || sbAlignment)
+	{
+		
+		//Ships neigbors add
+		for (size_t c = 0; c < ships.size(); c++)
+		{
+			for (size_t n = c + 1; n < ships.size(); n++)
+			{
+
+				auto& me = ships[c];
+				auto& other = ships[n];
+
+				const REng::Math::Vector2 agentPos({ me->posX, me->posY });
+				const REng::Math::Vector2 entityPos({ other->posX, other->posY });
+
+				float distanceSqr = REng::Math::MagnitudeSqr(agentPos - entityPos);
+				if (distanceSqr < me->neighborRadius)
+				{
+
+					if (me->agentNeighbors.empty())
+					{
+						me->agentNeighbors.push_back(static_cast<Spaceship*>(ships[n].get()));
+					}
+					else
+					{
+						auto position = std::find(me->agentNeighbors.begin(), me->agentNeighbors.end(), other.get());
+						if (position != me->agentNeighbors.end())
+						{
+							me->agentNeighbors.push_back(other.get());
+						}
+
+					}
+				}
+			}
+		}
+
+		//Ships neigbors delete
+		for (size_t c = 0; c < ships.size(); c++)
+		{
+			for (size_t n = c + 1; n < ships.size(); n++)
+			{
+
+				auto& me = ships[c];
+				auto& other = ships[n];
+
+				const REng::Math::Vector2 agentPos({ me->posX, me->posY });
+				const REng::Math::Vector2 entityPos({ other->posX, other->posY });
+
+				float distanceSqr = REng::Math::MagnitudeSqr(agentPos - entityPos);
+				if (distanceSqr > me->neighborRadius)
+				{
+
+					auto position = std::find(me->agentNeighbors.begin(), me->agentNeighbors.end(), other.get());
+					if (position != me->agentNeighbors.end())
+						me->agentNeighbors.erase(position);
+
+				}
+			}
+		}
+
+	}
+
 
 	bool isStopped = IsKeyPressed(KeyboardKey::KEY_ESCAPE);
 	return isStopped;

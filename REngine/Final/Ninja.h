@@ -1,21 +1,11 @@
 #pragma once
-#include<REngine.h>
-#include<iostream>
 #include <AI.h>
+#include <REngine.h>
 
+class Monster;
 
-class Enemy : public AI::Agent
+class Ninja : public AI::Agent
 {
-
-public:
-
-	enum State
-	{
-		S_Idle,
-		S_Walk,
-		S_Attac
-	};
-
 	struct SpriteInfo
 	{
 
@@ -51,50 +41,72 @@ public:
 		}
 
 	};
+	struct NinjaAtributes
+	{
+		int goldAtTheBank = 0.0f;
+		int goldInSaddlebag = 0.0f;
+		int tiredness = 0.0f;
 
+		//Saddlebage
+		void IncreaseSaddlebagGold() { goldInSaddlebag += 12; }
+		//void DecreaseSaddlebagGold();
+		//
+		////Bank
+		void IncreaseBankGold() { goldAtTheBank += goldInSaddlebag; goldInSaddlebag = 0.0f; }
+		void DecreaseBankGold(){}
+		//
+		////Life
+		void GettingRest() { tiredness -= 5; if (tiredness <= 0) { tiredness = 0; } };
+		void GettingTired(int lifeDmg) { tiredness += lifeDmg; }
 
-	Enemy(AI::AIWorld world);
+	};
+
+public:
+
+	enum NinjaState
+	{
+		NS_Idle,
+		NS_GoHuting,
+		NS_Attack,
+		NS_GoBank,
+		NS_GoShelter
+	};
+
+	Ninja(AI::AIWorld& _world);
 
 	void Load(const char* spriteName, const float initialSpeed, float spritXoffset, float spritYoffset, unsigned short IdleColumn, unsigned short WalkRightColumn, unsigned short WalkLeftColumn, unsigned short WalkUpColumn, unsigned short WalkDownColumn, unsigned short AttackColumn, unsigned short IdleNumberOfSprites, unsigned short WalkNumberOfsprites, unsigned short AttackNumberOfsprites);
 
 	void Unload();
 	void Update(float deltaTime);
 	void Render();
+	void ChangeState(NinjaState state);//state machine
 
+	NinjaAtributes ninjaAtribultes;
 
-	const REng::Math::Vector2 GetPlayerPos() const {  return REng::Math::Vector2(posX, posY); }
+	//State functions
+	void Idle(float deltaTime);
+	void NinjaMovement(float deltaTime);
+
+	void Attack(float deltaTime);
+	void SetCurrentTarget(Monster* target) { mCurrentTarget = target; }
+	Monster* GetCurrentTarget() {return mCurrentTarget; }
+
+	bool bRender;
 
 private:
+
+	//States
+	std::unique_ptr<AI::StateMachine<Ninja>> mStateMachine;
+	Monster* mCurrentTarget = nullptr;
 
 	//Sprites
 	Rectangle mRecSprite;
-	Texture2D mEnemySpritesheet;
+	Texture2D mNinjaSpritesheet;
 	SpriteInfo mSpriteInfo;
 
-
-	float mMoveSpeed = 0.0f;
-	
-
 	//Animation
-	bool bIsMoving;
 	float mAnimCurrentTime;
 	int mCurrentSprite;
 	const float mFrameDuration = .2f;
-
-	//Brain
-	std::unique_ptr<AI::StateMachine<Enemy>> mStateMachine;
-	float mHunger = 0.0f;
-private:
-
-	void UpdateRecSprite(bool isMoving, const float recX, const float recY);
-
-public:
-
-	//Brain
-	void ChangeState(State state);
-	void PlayerMovement(float deltaTime, int heading);
-	void Idle(float deltaTime);
-	void Attack();
-
+	void UpdateRecSprite(const float recX, const float recY);
 };
-

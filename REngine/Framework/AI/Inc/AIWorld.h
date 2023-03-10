@@ -21,9 +21,13 @@ Decision Module
 
 */
 
+#include "AI.h"
+
 namespace AI
 {
 	class Entity;
+
+
 	using EntityPtrs = std::vector<Entity*>;
 
 	class AIWorld
@@ -46,5 +50,7 @@ namespace AI
 
 		EntityPtrs mEntities;
 		mutable uint32_t mNextID = 0;
+		//PartitionGrid<Entity> mGrid;
+
 	};
 }

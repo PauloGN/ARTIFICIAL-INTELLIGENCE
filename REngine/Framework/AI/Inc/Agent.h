@@ -28,8 +28,8 @@ namespace AI
 		float mass = 1.0f;
 
 		//Group behavior
-		std::vector<Agent*> agentNeighbors;
-		float NeighborRadius = 150.0f;
+		AgentPtrs agentNeighbors;
+		float neighborRadius = 200.0f;
 
 		//45min
 

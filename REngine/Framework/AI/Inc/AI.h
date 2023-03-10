@@ -37,3 +37,5 @@ Every cpp file in AI project must include precompiled.h
 #include "SeekBehavior.h"
 //Week 09
 #include "WanderBehavior.h"
+#include "SeparationBehavior.h"
+#include "AlignmentBehavior.h"

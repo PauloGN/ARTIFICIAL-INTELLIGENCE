@@ -44,6 +44,10 @@ private:
 	AI::EvadeBehavior* mEvadeBehavior = nullptr;
 	AI::WanderBehavior* mWanderBehavior = nullptr;
 
+	//Group Behavior
+	AI::SeparationBehavior* mSeparationBehavior;
+	AI::AlignmentBehavior* mAlignmentBehavior;
+
 	
 	SteeringType mSteeringType = ST_Seek;
 	void SetSteeringType(SteeringType steeringType);
@@ -82,6 +86,15 @@ public:
 
 	void SetupWander(const float radius, const float distance, const float jitter);
 
+	//// FLOCKING   \\\\
+
+
+	void SetSeparation(bool separation);
+	void SetSeparationForcePercentage(const float percent);
+
+
+	void SetAlignment(bool alignm);
+	void SetAlignmentForcePercentage(const float percent);
 
 	// Steering types as booleans
 
