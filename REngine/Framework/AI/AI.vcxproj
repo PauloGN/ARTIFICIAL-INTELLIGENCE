@@ -151,6 +151,7 @@
     <ClInclude Include="Inc\ArriveBehavior.h" />
     <ClInclude Include="Inc\AStar.h" />
     <ClInclude Include="Inc\BFS.h" />
+    <ClInclude Include="Inc\CohesionBehavior.h" />
     <ClInclude Include="Inc\Common.h" />
     <ClInclude Include="Inc\DFS.h" />
     <ClInclude Include="Inc\Dijkstra.h" />
@@ -177,6 +178,7 @@
     <ClCompile Include="Src\ArriveBehavior.cpp" />
     <ClCompile Include="Src\AStar.cpp" />
     <ClCompile Include="Src\BFS.cpp" />
+    <ClCompile Include="Src\CohesionBehavior.cpp" />
     <ClCompile Include="Src\DFS.cpp" />
     <ClCompile Include="Src\Dijkstra.cpp" />
     <ClCompile Include="Src\Entity.cpp" />

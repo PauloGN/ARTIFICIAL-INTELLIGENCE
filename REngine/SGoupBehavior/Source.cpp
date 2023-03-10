@@ -38,9 +38,12 @@ namespace
 	//Separation
 	static bool sbSeparation = false;
 	static float sPercentOfSeparation = 0.0f;
-	//Separation
+	//Alignment
 	static bool sbAlignment = false;
 	static float sPercentOfAlignment = 0.0f;
+	//Alignment
+	static bool sbCohesion = false;
+	static float sPercentOfCohesion = 0.0f;
 
 	//General properties
 	static float sMaxSpeed = 300.0f;
@@ -221,6 +224,12 @@ namespace
 		{
 			ImGui::DragFloat("Alignment Percentage: ", &sPercentOfAlignment, dragSpeed);
 		}
+		//******************			Cohesion
+		ImGui::Checkbox("G Cohesion: ", &sbCohesion);
+		if (sbCohesion)
+		{
+			ImGui::DragFloat("Cohesion Percentage: ", &sPercentOfCohesion, dragSpeed);
+		}
 
 		ImGui::Text("\nBehaviors");
 
@@ -232,6 +241,8 @@ namespace
 			ship->SetSeparationForcePercentage(sPercentOfSeparation);
 			ship->SetAlignment(sbAlignment);
 			ship->SetAlignmentForcePercentage(sPercentOfAlignment);
+			ship->SetCohesion(sbCohesion);
+			ship->SetCohesionForcePercentage(sPercentOfCohesion);
 		}
 
 
@@ -473,12 +484,13 @@ bool GameUpdate()
 
 
 	//Check Separation status
-	if (sbSeparation || sbAlignment)
+	if (sbSeparation || sbAlignment || sbCohesion)
 	{
 		
 		//Ships neigbors add
 		for (size_t c = 0; c < ships.size(); c++)
 		{
+			ships[c]->agentNeighbors.clear();
 			for (size_t n = c + 1; n < ships.size(); n++)
 			{
 
@@ -492,46 +504,46 @@ bool GameUpdate()
 				if (distanceSqr < me->neighborRadius)
 				{
 
-					if (me->agentNeighbors.empty())
+					//if (me->agentNeighbors.empty())
 					{
 						me->agentNeighbors.push_back(static_cast<Spaceship*>(ships[n].get()));
 					}
-					else
-					{
-						auto position = std::find(me->agentNeighbors.begin(), me->agentNeighbors.end(), other.get());
-						if (position != me->agentNeighbors.end())
-						{
-							me->agentNeighbors.push_back(other.get());
-						}
+					//else
+					//{
+					//	auto position = std::find(me->agentNeighbors.begin(), me->agentNeighbors.end(), other.get());
+					//	if (position != me->agentNeighbors.end())
+					//	{
+					//		me->agentNeighbors.push_back(other.get());
+					//	}
 
-					}
+					//}
 				}
 			}
 		}
 
-		//Ships neigbors delete
-		for (size_t c = 0; c < ships.size(); c++)
-		{
-			for (size_t n = c + 1; n < ships.size(); n++)
-			{
+		////Ships neigbors delete
+		//for (size_t c = 0; c < ships.size(); c++)
+		//{
+		//	for (size_t n = c + 1; n < ships.size(); n++)
+		//	{
 
-				auto& me = ships[c];
-				auto& other = ships[n];
+		//		auto& me = ships[c];
+		//		auto& other = ships[n];
 
-				const REng::Math::Vector2 agentPos({ me->posX, me->posY });
-				const REng::Math::Vector2 entityPos({ other->posX, other->posY });
+		//		const REng::Math::Vector2 agentPos({ me->posX, me->posY });
+		//		const REng::Math::Vector2 entityPos({ other->posX, other->posY });
 
-				float distanceSqr = REng::Math::MagnitudeSqr(agentPos - entityPos);
-				if (distanceSqr > me->neighborRadius)
-				{
+		//		float distanceSqr = REng::Math::MagnitudeSqr(agentPos - entityPos);
+		//		if (distanceSqr > me->neighborRadius)
+		//		{
 
-					auto position = std::find(me->agentNeighbors.begin(), me->agentNeighbors.end(), other.get());
-					if (position != me->agentNeighbors.end())
-						me->agentNeighbors.erase(position);
+		//			auto position = std::find(me->agentNeighbors.begin(), me->agentNeighbors.end(), other.get());
+		//			if (position != me->agentNeighbors.end())
+		//				me->agentNeighbors.erase(position);
 
-				}
-			}
-		}
+		//		}
+		//	}
+		//}
 
 	}
 

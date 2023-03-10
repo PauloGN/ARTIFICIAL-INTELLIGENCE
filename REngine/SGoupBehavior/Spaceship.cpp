@@ -28,6 +28,9 @@ void Spaceship::Load(const char* SpriteNameformat, SteeringType steeringType)
 	mAlignmentBehavior = mSteeringModule->AddBehavior<AI::AlignmentBehavior>();
 	mAlignmentBehavior->SetActive(true);
 
+	mCohesionBehavior = mSteeringModule->AddBehavior<AI::CohesionBehavior>();
+	mCohesionBehavior->SetActive(true);
+
 	//load all sprites 
 	for (int i = 0; i < mTextures.size(); i++)
 	{
@@ -502,6 +505,24 @@ void Spaceship::SetAlignmentForcePercentage(const float percent)
 	if (mAlignmentBehavior)
 	{
 		mAlignmentBehavior->SetAlignmentForce(percent);
+	}
+}
+
+/////  Cohesion    \\\\\\\
+
+
+void  Spaceship::SetCohesion(bool cohesion)
+{
+	if (mCohesionBehavior)
+	{
+		mCohesionBehavior->SetActive(cohesion);
+	}
+}
+void  Spaceship::SetCohesionForcePercentage(const float percent)
+{
+	if (mCohesionBehavior)
+	{
+		mCohesionBehavior->SetCohesionForce(percent);
 	}
 }
 
