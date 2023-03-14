@@ -35,8 +35,10 @@ std::pair<float, float> AI::SeparationBehavior::Calculate(Agent& agent)
 
 	}
 
-	separationForce.first = separationCouter.x * percentOfForce;
-	separationForce.second = separationCouter.y * percentOfForce;
+	separationCouter *= percentOfForce;
+
+	separationForce.first = separationCouter.x;
+	separationForce.second = separationCouter.y;
 
 	return separationForce;
 }

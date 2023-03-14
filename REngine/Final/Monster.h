@@ -2,7 +2,7 @@
 #include "AI.h"
 #include "REngine.h"
 
-class Monster: public AI::Entity
+class Monster: public AI::Agent
 {
 public:
 
@@ -32,4 +32,15 @@ private:
 
 	void UpdateAnimation(float deltaTime);
 
+
+	//Steering
+	std::unique_ptr<AI::SteeringModule> mSteeringModule;
+	AI::WanderBehavior* mWanderBehavior = nullptr;
+	AI::EvadeBehavior* mEvadeBehavior = nullptr;
+
+public:
+
+	void SetWander(bool isActive);
+	void SetEvade(bool isActive);
+	void SetMaxSpeed(const float maxSpeed);
 };

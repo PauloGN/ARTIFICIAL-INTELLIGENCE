@@ -48,7 +48,7 @@ class Ninja : public AI::Agent
 		int tiredness = 0.0f;
 
 		//Saddlebage
-		void IncreaseSaddlebagGold() { goldInSaddlebag += 12; }
+		void IncreaseSaddlebagGold() { goldInSaddlebag += 15; }
 		//void DecreaseSaddlebagGold();
 		//
 		////Bank
@@ -56,8 +56,8 @@ class Ninja : public AI::Agent
 		void DecreaseBankGold(){}
 		//
 		////Life
-		void GettingRest() { tiredness -= 5; if (tiredness <= 0) { tiredness = 0; } };
-		void GettingTired(int lifeDmg) { tiredness += lifeDmg; }
+		void GettingRest() { tiredness -= 15; if (tiredness <= 0) { tiredness = 0; } };
+		void GettingTired(int lifeDmg) { tiredness += lifeDmg + 2; }
 
 	};
 

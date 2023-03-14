@@ -37,6 +37,8 @@ Ninja::Ninja(AI::AIWorld& _world):Agent(_world, Types::T_NinjaChar)
 void Ninja::Load(const char* spriteName, const float initialSpeed, float spritXoffset, float spritYoffset, unsigned short IdleColumn, unsigned short WalkRightColumn, unsigned short WalkLeftColumn, unsigned short WalkUpColumn, unsigned short WalkDownColumn, unsigned short AttackColumn, unsigned short IdleNumberOfSprites, unsigned short WalkNumberOfsprites, unsigned short AttackNumberOfsprites)
 {
 
+	maxSpeed = 1.0f;
+
 	//Set up states
 	mStateMachine = std::make_unique<AI::StateMachine<Ninja>>(*this);
 	mStateMachine->AddState<NinjaIdle>();
@@ -147,8 +149,8 @@ void Ninja::NinjaMovement(float deltaTime)
 			velovityX = directionX * 100.0f;
 			velovityY = directionY * 50.0f;
 
-			posX += velovityX * deltaTime;
-			posY += velovityY * deltaTime;
+			posX += velovityX * deltaTime * maxSpeed;
+			posY += velovityY * deltaTime * maxSpeed;
 
 			//check update animation
 			if (posX > DestinationX)//go Left
@@ -167,7 +169,7 @@ void Ninja::NinjaMovement(float deltaTime)
 			velovityX = directionX * 50.0f;
 			velovityY = directionY * 100.0f;
 
-			posY += velovityY * deltaTime;
+			posY += velovityY * deltaTime * maxSpeed;
 			if (posY > DestinationY)//go Up
 			{
 				heading =  2;

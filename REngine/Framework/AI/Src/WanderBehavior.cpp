@@ -47,12 +47,6 @@ std::pair<float, float> AI::WanderBehavior::Calculate(Agent& agent)
 	wanderForce.first = disiredVelocityX - agent.velovityX;
 	wanderForce.second = disiredVelocityY - agent.velovityY;
 
-	if (mWanderDistance > 100.0f)
-	{
-		mWanderDistance *= 1;
-	}
-
-
 	if (IsDebug())
 	{
 		const auto wanderCenter = AIMath::TransformCoord({ 0.0f, mWanderDistance }, WorldTransform);

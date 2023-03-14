@@ -48,6 +48,8 @@ namespace
 	//General properties
 	static float sMaxSpeed = 300.0f;
 	static bool sbShowDebug = true;
+	static float sAgentNeighborRadius = 200.0f;
+	static float sAlpha = 15.0f;
 
 
 
@@ -231,6 +233,15 @@ namespace
 			ImGui::DragFloat("Cohesion Percentage: ", &sPercentOfCohesion, dragSpeed);
 		}
 
+		//Radius and alpha
+		if (sbSeparation || sbAlignment || sbCohesion)
+		{
+			ImGui::DragFloat("Neighbor detection radius: ", &sAgentNeighborRadius, dragSpeed);
+			ImGui::DragFloat("Color transparency: ", &sAlpha, dragSpeed);
+
+		}
+
+
 		ImGui::Text("\nBehaviors");
 
 		for (auto& ship : ships)
@@ -243,6 +254,16 @@ namespace
 			ship->SetAlignmentForcePercentage(sPercentOfAlignment);
 			ship->SetCohesion(sbCohesion);
 			ship->SetCohesionForcePercentage(sPercentOfCohesion);
+			ship->neighborRadius = sAgentNeighborRadius;
+
+
+			if (ship->bShowDebug && (sbSeparation || sbAlignment || sbCohesion))
+			{
+				Color c = color;
+				c.a = sAlpha;
+				DrawCircle(ship->posX, ship->posY, ship->neighborRadius,c );
+			}
+
 		}
 
 
@@ -486,15 +507,14 @@ bool GameUpdate()
 	//Check Separation status
 	if (sbSeparation || sbAlignment || sbCohesion)
 	{
-		
 		//Ships neigbors add
 		for (size_t c = 0; c < ships.size(); c++)
 		{
-			ships[c]->agentNeighbors.clear();
+			auto& me = ships[c];
+			//me->agentNeighbors.clear();
+			//ships[c]->agentNeighbors.clear();
 			for (size_t n = c + 1; n < ships.size(); n++)
 			{
-
-				auto& me = ships[c];
 				auto& other = ships[n];
 
 				const REng::Math::Vector2 agentPos({ me->posX, me->posY });
@@ -504,20 +524,26 @@ bool GameUpdate()
 				if (distanceSqr < me->neighborRadius)
 				{
 
-					//if (me->agentNeighbors.empty())
+					if (me->agentNeighbors.size() < 22)
 					{
 						me->agentNeighbors.push_back(static_cast<Spaceship*>(ships[n].get()));
 					}
 					//else
 					//{
 					//	auto position = std::find(me->agentNeighbors.begin(), me->agentNeighbors.end(), other.get());
-					//	if (position != me->agentNeighbors.end())
+					//	if (position == me->agentNeighbors.end())// isn't there
 					//	{
 					//		me->agentNeighbors.push_back(other.get());
 					//	}
 
 					//}
 				}
+				//else if (distanceSqr >= me->neighborRadius)
+				//{
+				//	auto position = std::find(me->agentNeighbors.begin(), me->agentNeighbors.end(), other.get());
+				//	if (position != me->agentNeighbors.end())//is there
+				//		me->agentNeighbors.erase(position);
+				//}
 			}
 		}
 
@@ -536,11 +562,9 @@ bool GameUpdate()
 		//		float distanceSqr = REng::Math::MagnitudeSqr(agentPos - entityPos);
 		//		if (distanceSqr > me->neighborRadius)
 		//		{
-
 		//			auto position = std::find(me->agentNeighbors.begin(), me->agentNeighbors.end(), other.get());
 		//			if (position != me->agentNeighbors.end())
 		//				me->agentNeighbors.erase(position);
-
 		//		}
 		//	}
 		//}

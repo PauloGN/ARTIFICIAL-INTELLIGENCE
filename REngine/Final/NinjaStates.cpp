@@ -31,7 +31,7 @@ namespace
 
 void NinjaIdle::Enter(Ninja& agent)
 {
-	mWaitTime = 3.0f;
+	mWaitTime = 1.5f;
 }
 
 void NinjaIdle::Update(Ninja& agent, float deltaTime)
@@ -72,7 +72,7 @@ void NinjaIdle::Exit(Ninja& agent)
 
 void NinjaHunting::Enter(Ninja& agent)
 {
-
+	agent.maxSpeed = 2.0f;//***************
 	std::vector<AI::Entity*> entities = agent.world.GetAllEntitiesOfType(Types::T_Monster);
 	float minDistance = FLT_MAX;
 
@@ -96,6 +96,10 @@ void NinjaHunting::Update(Ninja& agent, float deltaTime)
 
 	if (mTarget)
 	{
+		Color p = PURPLE;
+		p.a = 45.0f;
+		DrawCircle(mTarget->posX, mTarget->posY, 45.0f, p);
+
 		//Vector
 		const REng::Math::Vector2 agentPos({ agent.posX, agent.posY });
 		const REng::Math::Vector2 targetPos({ mTarget->posX, mTarget->posY });
@@ -106,7 +110,7 @@ void NinjaHunting::Update(Ninja& agent, float deltaTime)
 		const auto agentToTarget = targetPos - agentPos;
 		const float distance = REng::Math::Magnitude(agentToTarget);
 
-		if (distance > 6.0f)
+		if (distance > 5.0f)
 		{
 			const auto direction = agentToTarget / distance;
 			
@@ -116,6 +120,10 @@ void NinjaHunting::Update(Ninja& agent, float deltaTime)
 
 			//Movement & Animation
 			agent.NinjaMovement(deltaTime);
+
+			mTarget->SetMaxSpeed(107);//*****************
+			mTarget->SetTarget(&agent);
+			mTarget->SetEvade(true);
 		}
 		else
 		{
@@ -123,6 +131,14 @@ void NinjaHunting::Update(Ninja& agent, float deltaTime)
 			agent.ninjaAtribultes.GettingTired(4);
 			agent.SetCurrentTarget(mTarget);
 			agent.ChangeState(Ninja::NS_Attack);
+
+			//Steering
+
+			mTarget->SetWander(true);
+			mTarget->SetMaxSpeed(3);
+			//mTarget->SetEvade(true);
+
+			
 		}
 	}
 
@@ -132,6 +148,7 @@ void NinjaHunting::Update(Ninja& agent, float deltaTime)
 
 void NinjaHunting::Exit(Ninja& agent)
 {
+	agent.maxSpeed = 1.0f;
 }
 
 
