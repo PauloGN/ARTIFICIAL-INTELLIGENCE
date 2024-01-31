@@ -109,6 +109,4 @@ private:
 	std::string mHeuristicsText = "Heuristics: ManHanttan";;
 	void RenderUI();
 	int8_t mModuleID = 0;
-
 };
-

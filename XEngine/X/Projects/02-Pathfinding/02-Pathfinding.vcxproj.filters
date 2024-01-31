@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Character">
+      <UniqueIdentifier>{0260da04-f2ac-4279-ae28-2a343273db56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Character\Base">
+      <UniqueIdentifier>{77d48cf9-9e2e-4f66-8759-bc2be508f9ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Character\Player">
+      <UniqueIdentifier>{bf620263-b099-4a63-8390-479f0f0b566b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationComponent.cpp">
+      <Filter>Character\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterBase.cpp">
+      <Filter>Character\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Nija.cpp">
+      <Filter>Character\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Character\Base</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationComponent.h">
+      <Filter>Character\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterBase.h">
+      <Filter>Character\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Ninja.h">
+      <Filter>Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Character\Base</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

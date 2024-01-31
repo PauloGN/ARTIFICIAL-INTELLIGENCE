@@ -200,8 +200,7 @@ void Character::Idle(float deltaTime)
 
 	mAnimCurrentTime += deltaTime;
 	if (mAnimCurrentTime >= animationMaxTime)
-	{
-		
+	{	
 		xRecPos = mSpriteInfo.mSpritXoffset * (mCurrentSprite % maxNumbersOfSprites);
 		mCurrentSprite++;
 		UpdateRecSprite(false, xRecPos, yRecPos);

@@ -49,7 +49,7 @@ namespace
 	static float sMaxSpeed = 300.0f;
 	static bool sbShowDebug = true;
 	static float sAgentNeighborRadius = 200.0f;
-	static float sAlpha = 15.0f;
+	static float sAlpha = 1.0f;
 
 
 
@@ -524,7 +524,7 @@ bool GameUpdate()
 				if (distanceSqr < me->neighborRadius)
 				{
 
-					if (me->agentNeighbors.size() < 22)
+					//if (me->agentNeighbors.size() < 22)
 					{
 						me->agentNeighbors.push_back(static_cast<Spaceship*>(ships[n].get()));
 					}
@@ -538,12 +538,12 @@ bool GameUpdate()
 
 					//}
 				}
-				//else if (distanceSqr >= me->neighborRadius)
-				//{
-				//	auto position = std::find(me->agentNeighbors.begin(), me->agentNeighbors.end(), other.get());
-				//	if (position != me->agentNeighbors.end())//is there
-				//		me->agentNeighbors.erase(position);
-				//}
+				else if (distanceSqr >= me->neighborRadius)
+				{
+					//auto position = std::find(me->agentNeighbors.begin(), me->agentNeighbors.end(), other.get());
+					//if (position != me->agentNeighbors.end())//is there
+					//	me->agentNeighbors.erase(position);
+				}
 			}
 		}
 

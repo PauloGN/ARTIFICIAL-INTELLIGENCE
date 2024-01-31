@@ -1,0 +1,18 @@
+#pragma once
+#include "CharacterBase.h"
+
+class GameManager
+{
+private:
+
+
+
+public:
+
+	void Initialize();
+	void Render();
+	bool Update(const float& deltaTime);
+	void CleanUp();
+	void DebugUI();
+
+};
