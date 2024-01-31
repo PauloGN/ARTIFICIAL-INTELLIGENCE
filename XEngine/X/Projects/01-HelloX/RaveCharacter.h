@@ -8,6 +8,7 @@ private:
 	X::TextureId charSprite = 0;
 	X::Math::Vector2 charPosition = 0;
 	X::Math::Vector2 charDir = 0;
+	X::Math::Vector2 autoCharDir = 0;
 	float speed = 100.0f;
 
 public:
@@ -24,5 +25,4 @@ public:
 	void CharAutoMove(const float& deltaTime);
 
 	void ScreenBoundsControl(bool bManualControl);
-
 };
