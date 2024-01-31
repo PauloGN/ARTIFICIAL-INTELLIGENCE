@@ -40,11 +40,21 @@ void RaveCharacter::Initialize()
 	screenHeight = X::GetScreenHeight();
 	halfSpriteWidth = X::GetSpriteWidth(charSprite) * .5f;;
 	halfSpriteHeight = X::GetSpriteHeight(charSprite) * .5f;
-
 }
 
 void RaveCharacter::Update(const float& deltaTime)
 {
+	// Movement
+	if (bManualControl)
+	{
+		Movement(deltaTime);
+	}
+	else
+	{
+		CharAutoMove(deltaTime);
+	}
+
+	ScreenBoundsControl();
 }
 
 void RaveCharacter::Movement(const float& deltaTime)
@@ -73,7 +83,7 @@ void RaveCharacter::CharAutoMove(const float& deltaTime)
 	charPosition.y += (deltaTime * autoCharDir.y * speed);
 }
 
-void RaveCharacter::ScreenBoundsControl(bool bManualControl)
+void RaveCharacter::ScreenBoundsControl()
 {
 	//Right side of screen
 	if (charPosition.x > screenWidth - halfSpriteWidth)
@@ -95,7 +105,7 @@ void RaveCharacter::ScreenBoundsControl(bool bManualControl)
 		}
 	}
 
-	//Top side of screen
+	//Bottom side of screen
 	if (charPosition.y > screenHeight - halfSpriteHeight)
 	{
 		charPosition.y = screenHeight - halfSpriteHeight;
@@ -105,7 +115,7 @@ void RaveCharacter::ScreenBoundsControl(bool bManualControl)
 		}
 	}
 
-	//Bottom side of screen
+	//Top side of screen
 	if (charPosition.y < halfSpriteHeight)
 	{
 		charPosition.y = halfSpriteHeight;
@@ -114,4 +124,9 @@ void RaveCharacter::ScreenBoundsControl(bool bManualControl)
 			autoCharDir.y *= -1;
 		}
 	}
+}
+
+void RaveCharacter::SetbManualControl(const bool cond)
+{
+	bManualControl = cond;
 }

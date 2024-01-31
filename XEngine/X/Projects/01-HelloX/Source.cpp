@@ -13,35 +13,25 @@ void CheckInput()
 	if (X::IsKeyPressed(X::Keys::SPACE))
 	{
 		bManualControl = !bManualControl;
+		rave.SetbManualControl(bManualControl);
 	}
 }
 
 bool GameLoop(float deltaTime)
 {
+	CheckInput();
+
+	//class calls
+	rave.Update(deltaTime);
 	rave.Render();
 
-	CheckInput();
-	// Movement
-	if (bManualControl)
-	{
-		rave.Movement(deltaTime);
-	}
-	else
-	{
-		rave.CharAutoMove(deltaTime);
-	}
-
-	rave.Update(deltaTime);
-	rave.ScreenBoundsControl(bManualControl);
-
 	//Exit condition
-	const bool bExit = X::IsKeyPressed(X::Keys::ESCAPE);
-	return bExit;
+	return X::IsKeyPressed(X::Keys::ESCAPE);
 }
 
 void GameCleanup()
 {
-
+	rave.CleanUp();
 }
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
