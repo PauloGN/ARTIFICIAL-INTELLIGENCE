@@ -1,14 +1,5 @@
 #include "RaveCharacter.h"
 
-namespace
-{
-	//Screen Bounds
-	uint32_t screenWidth ;
-	uint32_t screenHeight;
-	float halfSpriteWidth;
-	float halfSpriteHeight;
-}
-
 RaveCharacter::RaveCharacter()
 {
 	
@@ -29,9 +20,10 @@ void RaveCharacter::CleanUp()
 	
 }
 
-void RaveCharacter::Initialize()
+void RaveCharacter::Initialize(const char* path, const float speed)
 {
-	charSprite = X::LoadTexture("R_Walk_05.png");
+	charSprite = X::LoadTexture(path);
+	this->speed = speed;
 	charPosition = { 300.f, 400.f };
 	charDir = { 1.f, 1.f };
 	autoCharDir = { 1.f, 1.f };

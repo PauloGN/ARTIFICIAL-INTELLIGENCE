@@ -16,6 +16,12 @@ private:
 	void CharAutoMove(const float& deltaTime);
 	void ScreenBoundsControl();
 
+	//Screen Bounds
+	uint32_t screenWidth;
+	uint32_t screenHeight;
+	float halfSpriteWidth;
+	float halfSpriteHeight;
+
 public:
 
 	RaveCharacter();
@@ -23,7 +29,7 @@ public:
 
 	void Render();
 	void CleanUp();
-	void Initialize();
+	void Initialize(const char* path, const float speed);
 	void Update(const float& deltaTime);
 
 	void SetbManualControl(const bool cond);
