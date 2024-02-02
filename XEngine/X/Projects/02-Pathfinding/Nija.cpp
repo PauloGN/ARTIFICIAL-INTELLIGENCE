@@ -9,20 +9,14 @@ Ninja::~Ninja()
 
 void Ninja::Initialize()
 {
-	spriteSheet = X::LoadTexture("Ninja.png");
-	spriteOffset.x = 64;
-	spriteOffset.y = 64;
+	animationManager->LoadAnimation("Config/Animation.ini");
 	
 	baseRect.min.x = 0;
 	baseRect.min.y = 0;
 	baseRect.max.x = 64;
 	baseRect.max.y = 64;
 
-	Animation* idle = new Animation(8, .2f, 0);
-	Animation* up = new Animation(8, .1f, 6);
-	animationManager->AddAnimation("Idle", idle);
-	animationManager->AddAnimation("Up", up);
-
+	speed = 200;
 }
 
 void Ninja::Cleanup()
@@ -32,16 +26,52 @@ void Ninja::Cleanup()
 
 void Ninja::Update(const float& _dt)
 {
-	
+	Move(_dt);
 	animationManager->UpdateAnimation(_dt);
+}
 
-	if (X::IsKeyPressed(X::Keys::W))
+void Ninja::Move(const float& deltaTime)
+{
+	
+	// Store the initial position for later comparison
+	X::Math::Vector2 initialPos = pos;
+
+	//Move right
+	if (X::IsKeyDown(X::Keys::D))
 	{
+		dir.x = 1.0f;
+		pos.x += deltaTime * speed * dir.x;
+		animationManager->ChangeAnimation("Right");
+	}
+
+	//Move Left
+	if (X::IsKeyDown(X::Keys::A))
+	{
+		dir.x = -1.0f;
+		pos.x += deltaTime * speed * dir.x;
+		animationManager->ChangeAnimation("Left");
+	}
+
+	//Move Up
+	if (X::IsKeyDown(X::Keys::W))
+	{
+		dir.y = -1.0f;
+		pos.y += deltaTime * speed * dir.y;
 		animationManager->ChangeAnimation("Up");
 	}
 
-	if (X::IsKeyPressed(X::Keys::SPACE))
+	//Move Down
+	if (X::IsKeyDown(X::Keys::S))
 	{
+		dir.y = 1.0f;
+		pos.y += deltaTime * speed * dir.y;
+		animationManager->ChangeAnimation("Down");
+	}
+
+	// Check if the position has changed, indicating movement
+	if (initialPos == pos)
+	{
+		// Call Idle animation or perform any other idle-related tasks
 		animationManager->ChangeAnimation("Idle");
 	}
 }

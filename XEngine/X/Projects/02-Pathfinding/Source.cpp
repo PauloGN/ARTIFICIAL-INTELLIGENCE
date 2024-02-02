@@ -1,4 +1,3 @@
-#include "XEngine.h"
 #include "GameManager.h"
 
 GameManager gm;

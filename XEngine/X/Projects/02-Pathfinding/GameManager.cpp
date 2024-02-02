@@ -8,7 +8,6 @@ void GameManager::Initialize()
 	nj.Initialize();
 	nj.pos.x = 150;
 	nj.pos.y = 150;
-
 }
 
 void GameManager::Render()
@@ -18,7 +17,6 @@ void GameManager::Render()
 
 bool GameManager::Update(const float& deltaTime)
 {
-
 	nj.Update(deltaTime);
 
 	//Exit condition

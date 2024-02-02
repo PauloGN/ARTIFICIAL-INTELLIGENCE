@@ -14,13 +14,13 @@ public:
 	void Render();
 
 	X::Math::Rect baseRect;
-	X::TextureId spriteSheet;
+	X::TextureId spriteSheet = 0;
 	X::Math::Vector2 spriteOffset;
 
 	//Movement
 	X::Math::Vector2 pos;
-	X::Math::Vector2 Dir;
-	float speed;
+	X::Math::Vector2 dir;
+	float speed = 0;
 
 	AnimationComponent* animationManager;
 

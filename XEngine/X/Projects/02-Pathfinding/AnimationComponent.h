@@ -19,6 +19,8 @@ public:
 
 	void CleanUp();
 
+	void LoadAnimation(const char* filePath);
+
 protected:
 
 	std::map<std::string, Animation*> animations;

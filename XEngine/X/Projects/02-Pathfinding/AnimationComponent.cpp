@@ -6,8 +6,8 @@ AnimationComponent::AnimationComponent(CharacterBase* _charBase_ptr) :
 	charBase_ptr(_charBase_ptr),
 	currentAnimation (nullptr)
 {
-	float currentTime = 0;
-	int currentSprite = 0;
+	currentTime = 0;
+	currentSprite = 0;
 	//~ Set initial frame position for x and y
 	charBase_ptr->baseRect.top = 0;
 	charBase_ptr->baseRect.bottom = charBase_ptr->spriteOffset.y;
@@ -92,4 +92,32 @@ void AnimationComponent::CleanUp()
 
 	// Clear the map
 	animations.clear();
+}
+
+void AnimationComponent::LoadAnimation(const char* filePath)
+{
+
+	std::ifstream readFile(filePath);
+	std::string spritSheet;
+
+	std::string animationName;
+	int numOfFrames;
+	float animSpeed;
+	int anim_Y_Row;
+	
+
+	if (readFile.is_open())
+	{
+		readFile >> spritSheet;
+		readFile >> charBase_ptr->spriteOffset.x;
+		readFile >> charBase_ptr->spriteOffset.y;
+
+		while (readFile>> animationName >> numOfFrames >> animSpeed >> anim_Y_Row)
+		{
+			AddAnimation(animationName.c_str(), new Animation(numOfFrames, animSpeed, anim_Y_Row));
+		}
+	}
+	readFile.close();
+	charBase_ptr->spriteSheet = X::LoadTexture(spritSheet.c_str());
+
 }
