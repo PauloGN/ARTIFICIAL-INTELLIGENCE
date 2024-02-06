@@ -1,7 +1,5 @@
 #pragma once
 
-class CharacterBase;
-
 class Animation
 {
 public:

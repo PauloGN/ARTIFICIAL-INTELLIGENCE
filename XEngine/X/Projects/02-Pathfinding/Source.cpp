@@ -4,10 +4,11 @@ GameManager gm;
 
 bool Update(const float dt)
 {
-	gm.Render();
 	gm.DebugUI();
-
-	return gm.Update(dt);
+	
+	const bool close = gm.Update(dt);
+	gm.Render();
+	return close;
 }
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)

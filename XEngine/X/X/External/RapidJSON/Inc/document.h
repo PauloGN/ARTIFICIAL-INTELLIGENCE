@@ -14,7 +14,7 @@
 
 #ifndef RAPIDJSON_DOCUMENT_H_
 #define RAPIDJSON_DOCUMENT_H_
-
+#pragma warning(disable: 4996)
 /*! \file document.h */
 
 #include "reader.h"

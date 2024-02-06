@@ -5,18 +5,21 @@ Ninja nj;
 
 void GameManager::Initialize()
 {
-	nj.Initialize();
-	nj.pos.x = 150;
-	nj.pos.y = 150;
+	X::TileMapCreator::StaticInitialize();
+	nj.Initialize({200.0f, 150.0f});
+
+	X::TileMapCreator::Get().Load("Config/Level_A.txt", "Config/TileSet.txt" );
 }
 
 void GameManager::Render()
 {
+	X::TileMapCreator::Get().Render();
 	nj.Render();
 }
 
 bool GameManager::Update(const float& deltaTime)
 {
+	X::TileMapCreator::Get().Update(deltaTime);
 	nj.Update(deltaTime);
 
 	//Exit condition
@@ -27,6 +30,8 @@ bool GameManager::Update(const float& deltaTime)
 void GameManager::CleanUp()
 {
 	nj.Cleanup();
+	X::TileMapCreator::Get().Unload();
+	X::TileMapCreator::StaticTerminate();
 }
 
 void GameManager::DebugUI()

@@ -10,6 +10,7 @@
 #include "XColors.h"
 #include "XMath.h"
 #include "XTypes.h"
+#include "TileMapCreator.h"
 
 namespace X {
 

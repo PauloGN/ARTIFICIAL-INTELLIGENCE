@@ -8,6 +8,7 @@ CharacterBase::CharacterBase()
 
 CharacterBase::~CharacterBase()
 {
+    animationManager->CleanUp();
     delete animationManager;
 }
 

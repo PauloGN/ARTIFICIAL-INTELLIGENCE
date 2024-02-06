@@ -3,8 +3,8 @@
 #include "Animation.h"
 
 AnimationComponent::AnimationComponent(CharacterBase* _charBase_ptr) :
-	charBase_ptr(_charBase_ptr),
-	currentAnimation (nullptr)
+	currentAnimation (nullptr),
+	charBase_ptr(_charBase_ptr)
 {
 	currentTime = 0;
 	currentSprite = 0;
@@ -13,22 +13,23 @@ AnimationComponent::AnimationComponent(CharacterBase* _charBase_ptr) :
 	charBase_ptr->baseRect.bottom = charBase_ptr->spriteOffset.y;
 	charBase_ptr->baseRect.left = 0;
 	charBase_ptr->baseRect.right = charBase_ptr->spriteOffset.x;
+
 }
 
 void AnimationComponent::UpdateAnimation(const float& _dt)
 {
-	_ASSERT(charBase_ptr != nullptr, "CharBase_ptr can not be null");
+	_ASSERT(charBase_ptr != nullptr && currentAnimation != nullptr, "CharBase_ptr can not be null");
 
 	////
-
+	
 	float xRecPos = 0.f;
-	const int yRecPos = currentAnimation->yFrameRow * charBase_ptr->spriteOffset.y;
+	const float yRecPos = currentAnimation->yFrameRow * charBase_ptr->spriteOffset.y;
 	const int maxNumbersOfSprites = currentAnimation->numOfFrames;
 
 	currentTime += _dt;
 	if (currentTime >= currentAnimation->animFrameRate)
 	{
-		xRecPos = charBase_ptr->spriteOffset.x * (currentSprite % maxNumbersOfSprites);
+		xRecPos = charBase_ptr->spriteOffset.x * static_cast<float>(currentSprite % maxNumbersOfSprites);
 		currentSprite++;
 		charBase_ptr->baseRect.left = xRecPos;
 		charBase_ptr->baseRect.right = xRecPos + charBase_ptr->spriteOffset.x;
@@ -52,7 +53,21 @@ void AnimationComponent::ChangeAnimation(const char* animName)
 		return;
 	}
 
+	if(currentAnimation == animations[animName])
+	{
+		return;
+	}
+
 	currentAnimation = animations[animName];
+
+	float xRecPos = 0.f;
+	const float yRecPos = currentAnimation->yFrameRow * charBase_ptr->spriteOffset.y;
+
+	charBase_ptr->baseRect.left = xRecPos;
+	charBase_ptr->baseRect.right = xRecPos + charBase_ptr->spriteOffset.x;
+	charBase_ptr->baseRect.top = yRecPos;
+	charBase_ptr->baseRect.bottom = yRecPos + charBase_ptr->spriteOffset.y;
+	currentSprite++;
 }
 
 bool AnimationComponent::DoesAnimationExist(const char* animName)
@@ -119,5 +134,4 @@ void AnimationComponent::LoadAnimation(const char* filePath)
 	}
 	readFile.close();
 	charBase_ptr->spriteSheet = X::LoadTexture(spritSheet.c_str());
-
 }

@@ -18,6 +18,12 @@
     <Filter Include="Character\Player">
       <UniqueIdentifier>{bf620263-b099-4a63-8390-479f0f0b566b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tilemap">
+      <UniqueIdentifier>{0400338b-9757-4dec-926a-282f26a7b4fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{bea11fc2-a550-4bd9-b869-614ea90c6c33}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -55,5 +61,13 @@
     <ClInclude Include="Animation.h">
       <Filter>Character\Base</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Config\TileSet.txt">
+      <Filter>Assets</Filter>
+    </Text>
+    <Text Include="Config\Level_A.txt">
+      <Filter>Assets</Filter>
+    </Text>
   </ItemGroup>
 </Project>

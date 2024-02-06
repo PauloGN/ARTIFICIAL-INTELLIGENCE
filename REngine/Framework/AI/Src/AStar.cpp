@@ -46,7 +46,6 @@ bool AI::AStar::Run(GridBasedGraph& graph, int startX, int startY, int endX, int
 				{
 					nbr->bOpened = true;
 					nbr->parent = currentNode;
-					//TODO
 					//Set the cost g
 					nbr->g = currentNode->g + getCostFunc(nbr);
 					nbr->h = getHeuristicsFunc(nbr, endNode);

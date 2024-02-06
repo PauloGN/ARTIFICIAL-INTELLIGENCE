@@ -150,6 +150,10 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Ninja.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Config\Level_A.txt" />
+    <Text Include="Config\TileSet.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

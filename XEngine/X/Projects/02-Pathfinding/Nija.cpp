@@ -7,7 +7,7 @@ Ninja::~Ninja()
 	Cleanup();
 }
 
-void Ninja::Initialize()
+void Ninja::Initialize(const X::Math::Vector2 position)
 {
 	animationManager->LoadAnimation("Config/Animation.ini");
 	
@@ -17,55 +17,56 @@ void Ninja::Initialize()
 	baseRect.max.y = 64;
 
 	speed = 200;
+	this->pos = position;
 }
 
 void Ninja::Cleanup()
 {
-	animationManager->CleanUp();
+	
 }
 
 void Ninja::Update(const float& _dt)
 {
-	Move(_dt);
 	animationManager->UpdateAnimation(_dt);
+	Move(_dt);
 }
 
 void Ninja::Move(const float& deltaTime)
 {
 	
 	// Store the initial position for later comparison
-	X::Math::Vector2 initialPos = pos;
+	const X::Math::Vector2 initialPos = pos;
 
 	//Move right
 	if (X::IsKeyDown(X::Keys::D))
 	{
+		animationManager->ChangeAnimation("Right");
 		dir.x = 1.0f;
 		pos.x += deltaTime * speed * dir.x;
-		animationManager->ChangeAnimation("Right");
 	}
 
 	//Move Left
 	if (X::IsKeyDown(X::Keys::A))
 	{
+		animationManager->ChangeAnimation("Left");
 		dir.x = -1.0f;
 		pos.x += deltaTime * speed * dir.x;
-		animationManager->ChangeAnimation("Left");
 	}
 
 	//Move Up
 	if (X::IsKeyDown(X::Keys::W))
 	{
+		animationManager->ChangeAnimation("Up");
 		dir.y = -1.0f;
 		pos.y += deltaTime * speed * dir.y;
-		animationManager->ChangeAnimation("Up");
 	}
 
 	//Move Down
 	if (X::IsKeyDown(X::Keys::S))
 	{
+		animationManager->ChangeAnimation("Down");
 		dir.y = 1.0f;
 		pos.y += deltaTime * speed * dir.y;
-		animationManager->ChangeAnimation("Down");
 	}
 
 	// Check if the position has changed, indicating movement

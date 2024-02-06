@@ -341,7 +341,7 @@ struct Rect
 		X::Math::Vector2 max;
 	};
 	#pragma warning(pop)
-
+	
 	constexpr Rect() : Rect{ 0.0f, 0.0f, 1.0f, 1.0f } {}
 	constexpr Rect(float left, float top, float right, float bottom) : left{ left }, top{ top }, right{ right }, bottom{ bottom } {}
 };

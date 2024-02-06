@@ -90,6 +90,9 @@
     <ClInclude Include="Inc\XTypes.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\TileMapCreator.h">
+      <Filter>Inc\TileMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Camera.cpp">
@@ -154,6 +157,9 @@
     </ClCompile>
     <ClCompile Include="Src\SoundEffectManager.cpp">
       <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\TileMapCreator.cpp">
+      <Filter>Src\TileMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

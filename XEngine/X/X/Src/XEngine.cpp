@@ -3,6 +3,7 @@
 // Created by:	Peter Chan
 //====================================================================================================
 
+
 #include "Precompiled.h"
 #include "XEngine.h"
 
@@ -21,6 +22,7 @@
 #include "Timer.h"
 
 #pragma comment(lib, "FW1FontWrapper.lib")
+//#pragma warning(disable: 4996)
 
 using namespace X;
 
@@ -137,8 +139,8 @@ void Start(const char* configFileName)
 	
 	HINSTANCE instance = GetModuleHandleA(nullptr);
 	const char* appName = Config::Get()->GetString("AppName", "X");
-	const int clientWidth = Config::Get()->GetInt("WinWidth", 1280);
-	const int clientHeight = Config::Get()->GetInt("WinHeight", 720);
+	const int clientWidth = Config::Get()->GetInt("WinWidth", 1600);
+	const int clientHeight = Config::Get()->GetInt("WinHeight", 896);
 	
 	// Every Windows Window requires at least oen window object. Three things are involved:
 	// 1)	Register a window class.
@@ -637,11 +639,23 @@ void DrawScreenDiamond(float x, float y, float size, const Color& color)
 
 //----------------------------------------------------------------------------------------------------
 
+//void DrawScreenText(const char* str, float x, float y, float size, const Color& color)
+//{
+//	XASSERT(initialized, "[XEngine] Engine not started.");
+//	static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+//	myTextCommands.emplace_back(converter.from_bytes(str), size, x, y, ToColor(color));
+//}
+
 void DrawScreenText(const char* str, float x, float y, float size, const Color& color)
 {
 	XASSERT(initialized, "[XEngine] Engine not started.");
-	static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-	myTextCommands.emplace_back(converter.from_bytes(str), size, x, y, ToColor(color));
+
+	// Convert UTF-8 to UTF-16 (wide string)
+	const auto wideStrSize = MultiByteToWideChar(CP_UTF8, 0, str, -1, nullptr, 0);
+	std::vector<wchar_t> wideStr(wideStrSize);
+	MultiByteToWideChar(CP_UTF8, 0, str, -1, wideStr.data(), wideStrSize);
+
+	myTextCommands.emplace_back(wideStr.data(), size, x, y, ToColor(color));
 }
 
 //----------------------------------------------------------------------------------------------------

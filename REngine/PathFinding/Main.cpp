@@ -12,9 +12,7 @@ void GameInit()
 	//Main Character
 	Character::StaticInitialize();
 	Character::Get().Load("CharHero4.png", 100.f, 64, 64, 0, 5, 7, 6, 4, 8, 8, 8, 8);
-
 	//Character::Get().Load("CharHero.png", 100.f, 64, 64, 0, 5, 7, 6, 4, 8, 8, 8, 8);
-
 }
 
 
