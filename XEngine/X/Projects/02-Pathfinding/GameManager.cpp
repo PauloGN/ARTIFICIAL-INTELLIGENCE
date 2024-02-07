@@ -24,6 +24,11 @@ bool GameManager::Update(const float& deltaTime)
 
 	//Exit condition
 	const bool bExit = X::IsKeyPressed(X::Keys::ESCAPE);
+	if(X::IsKeyPressed(X::Keys::P))
+	{
+		X::TileMapCreator::Get().Unload();
+	}
+
 	return bExit;
 }
 

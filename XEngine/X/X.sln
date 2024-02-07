@@ -23,6 +23,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01-HelloX", "Projects\01-He
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02-Pathfinding", "Projects\02-Pathfinding\02-Pathfinding.vcxproj", "{47E3C89E-33FC-44F2-94AB-BE185B6D54E0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03-HelloSpaceShooter", "Projects\03-HelloSpaceShooter\03-HelloSpaceShooter.vcxproj", "{33D891FB-5AA7-4472-AE1E-BA162B45D0CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -87,6 +89,14 @@ Global
 		{47E3C89E-33FC-44F2-94AB-BE185B6D54E0}.Release|x64.Build.0 = Release|x64
 		{47E3C89E-33FC-44F2-94AB-BE185B6D54E0}.Release|x86.ActiveCfg = Release|Win32
 		{47E3C89E-33FC-44F2-94AB-BE185B6D54E0}.Release|x86.Build.0 = Release|Win32
+		{33D891FB-5AA7-4472-AE1E-BA162B45D0CA}.Debug|x64.ActiveCfg = Debug|x64
+		{33D891FB-5AA7-4472-AE1E-BA162B45D0CA}.Debug|x64.Build.0 = Debug|x64
+		{33D891FB-5AA7-4472-AE1E-BA162B45D0CA}.Debug|x86.ActiveCfg = Debug|Win32
+		{33D891FB-5AA7-4472-AE1E-BA162B45D0CA}.Debug|x86.Build.0 = Debug|Win32
+		{33D891FB-5AA7-4472-AE1E-BA162B45D0CA}.Release|x64.ActiveCfg = Release|x64
+		{33D891FB-5AA7-4472-AE1E-BA162B45D0CA}.Release|x64.Build.0 = Release|x64
+		{33D891FB-5AA7-4472-AE1E-BA162B45D0CA}.Release|x86.ActiveCfg = Release|Win32
+		{33D891FB-5AA7-4472-AE1E-BA162B45D0CA}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +109,7 @@ Global
 		{0D034612-14E2-44E7-993A-72344A2CA7BD} = {856ED680-E9A4-400F-ADFF-D3C492DCA608}
 		{0BAF1F01-F46B-4C90-A2E7-2EAB4F4C9D53} = {2D5E2C7C-A18D-473C-95F4-99C6D5426B17}
 		{47E3C89E-33FC-44F2-94AB-BE185B6D54E0} = {2D5E2C7C-A18D-473C-95F4-99C6D5426B17}
+		{33D891FB-5AA7-4472-AE1E-BA162B45D0CA} = {2D5E2C7C-A18D-473C-95F4-99C6D5426B17}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2D84BED7-7031-4090-B4D3-57A9E4C0998B}

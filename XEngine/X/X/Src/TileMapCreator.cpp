@@ -18,24 +18,29 @@ void TileMapCreator::LoadMap(const std::filesystem::path& MapName)
 		mMap.reset();
 	}
 
-	FILE* file = nullptr;//create the file
-	fopen_s(&file, MapName.u8string().c_str(), "r"); // open the file through the file name, converte to u8string and character chain, "r" read
+	//create the file
+	FILE* file = nullptr;
+	// open the file through the file name, convert to u8string and character chain, "r" read
+	fopen_s(&file, MapName.u8string().c_str(), "r"); 
+	// Inside the file get the value based on the str token and assign into the variable
+	fscanf_s(file, "Columns: %d\n", &mColumns);
+	fscanf_s(file, "Rows: %d\n", &mRows); 
 
-	fscanf_s(file, "Columns: %d\n", &mColumns); // inside the file get the value based on the token and assign into the variable
-	fscanf_s(file, "Rows: %d\n", &mRows); // inside the file get the value based on the token and assign into the variable
-
-	// now we have the size of columns and rows we can create the array map that will be rendered on screen
+	// Now we have the size of columns and rows we can create the array map that will be rendered on screen
 	mMap = std::make_unique<int[]>(mColumns * mRows);
 
 	for (int y = 0; y < mRows; y++)
 	{
 		for (int x = 0; x < mColumns; x++)
-		{										// first iteration          0 + (0 * 30)
-			const int index = GetIndex(x, y);	// function GetTndex returns x + (y * mColumns);
-												//  second iteration         1 + (0 * 30);
+		{
+			// first iteration           0 + (0 * mColumns);
+			// second iteration         1 + (0 * mColumns);
+			// function GetTndex returns x + (y * mColumns);
+			const int index = GetIndex(x, y);	
+												
 			mMap[index] = fgetc(file) - '0';
 			/*
-				representation of number in character regarding Ascci table is
+				representation of number in character regarding Ascii table is
 
 				(0 = 48, 1 = 49, 2 = 50,..... 9 = 57)
 
@@ -44,7 +49,7 @@ void TileMapCreator::LoadMap(const std::filesystem::path& MapName)
 			*/
 		}
 
-		fgetc(file);//read and jump to the next line
+		fgetc(file);//read '/n' and jump to the next row
 	}
 
 	fclose(file);
@@ -52,16 +57,17 @@ void TileMapCreator::LoadMap(const std::filesystem::path& MapName)
 
 void TileMapCreator::LoadTextures(const std::filesystem::path& TextureName)
 {
-	mTiles.clear();//prevents to get an old vector full of information
+	//prevents to get an old vector full of information
+	mTiles.clear();
 
 	FILE* file = nullptr;
 	fopen_s(&file, TextureName.u8string().c_str(), "r");
-
-	int count = 0;// range of the loop
+	// range of the loop
+	unsigned count = 0;
 
 	fscanf_s(file, "Count: %d\n", &count);
 
-	for (int i = 0; i < count; i++)
+	for (unsigned i = 0; i < count; ++i)
 	{
 		char buffer[256];
 		fscanf_s(file, "%s\n", buffer, static_cast<int>(std::size(buffer)));
@@ -107,9 +113,9 @@ void TileMapCreator::Render()
 			const X::TextureId textureId = mTiles.at(tileIndex);// tileIndex got the number of the object that will be rendered on screen
 
 			const X::Math::Vector2 worldPosition = { x * tileSize, y * tileSize };
-			//const X::Math::Vector2 screenPosition = XCamera::Get().ConverteToScreenPosition(worldPosition);
+			//const X::Math::Vector2 screenPosition = XCamera::Get().ConvertToScreenPosition(worldPosition);
 
-			X::DrawSprite(textureId, worldPosition, X::Pivot::TopLeft);
+			X::DrawSprite(textureId, worldPosition, X::Pivot::Left);
 		}
 	}
 }
@@ -138,19 +144,19 @@ X::Math::Rect TileMapCreator::GetBounds() const
 void TileMapCreator::StaticInitialize()
 {
 	//prevent more than one initialization
-	XASSERT(tileMapInstance == nullptr, "WRONG!!!Inicialize the object already exists");
+	XASSERT(tileMapInstance == nullptr, "WRONG!!! Tile map has already been initialized");
 	tileMapInstance = std::make_unique<TileMapCreator>();//instantiate the object
 }
 
 void TileMapCreator::StaticTerminate()
 {
-	//reset the unique pointer that points to the object of the class
+	//Resets unique pointer that points to the object of the class
 	tileMapInstance.reset();
 }
 
 TileMapCreator& TileMapCreator::Get()
 {
-	//prevent to get an empty object
+	//Prevent to get an empty object
 	XASSERT(tileMapInstance != nullptr, "WRONG!!! objec not initialized yet...");
 	//return a pointer to the object internally instantiated
 	return *tileMapInstance;

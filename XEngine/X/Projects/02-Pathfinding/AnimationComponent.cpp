@@ -13,7 +13,6 @@ AnimationComponent::AnimationComponent(CharacterBase* _charBase_ptr) :
 	charBase_ptr->baseRect.bottom = charBase_ptr->spriteOffset.y;
 	charBase_ptr->baseRect.left = 0;
 	charBase_ptr->baseRect.right = charBase_ptr->spriteOffset.x;
-
 }
 
 void AnimationComponent::UpdateAnimation(const float& _dt)

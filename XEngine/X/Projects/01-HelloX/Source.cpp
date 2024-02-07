@@ -24,11 +24,12 @@ bool GameLoop(float deltaTime)
 {
 	CheckInput();
 
-	//class calls
+	//obj function call
 	rave.Update(deltaTime);
 	rave.Render();
 	rave02.Update(deltaTime);
 	rave02.Render();
+
 	//Exit condition
 	return X::IsKeyPressed(X::Keys::ESCAPE);
 }

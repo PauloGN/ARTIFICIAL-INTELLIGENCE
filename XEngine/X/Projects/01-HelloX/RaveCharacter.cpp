@@ -71,8 +71,7 @@ void RaveCharacter::Movement(const float& deltaTime)
 
 void RaveCharacter::CharAutoMove(const float& deltaTime)
 {
-	charPosition.x += (deltaTime * autoCharDir.x * speed);
-	charPosition.y += (deltaTime * autoCharDir.y * speed);
+	charPosition += autoCharDir * deltaTime * speed;
 }
 
 void RaveCharacter::ScreenBoundsControl()
