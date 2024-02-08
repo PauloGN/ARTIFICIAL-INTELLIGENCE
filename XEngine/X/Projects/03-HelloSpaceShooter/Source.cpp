@@ -1,33 +1,24 @@
-#include "XEngine.h"
+#include "GameManager.h"
 
+GameManager gm;
 
-void GameInit()
+bool Update(const float dt)
 {
+	gm.DebugUI();
 
-}
-
-
-bool GameLoop(float deltaTime)
-{
-
-
-	//Exit condition
-	return X::IsKeyPressed(X::Keys::ESCAPE);
-}
-
-void GameCleanup()
-{
-
+	const bool close = gm.Update(dt);
+	gm.Render();
+	return close;
 }
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 	X::Start();
-	GameInit();
+	gm.Initialize();
 
-	X::Run(GameLoop);
+	X::Run(Update);
 
-	GameCleanup();
+	gm.CleanUp();
 	X::Stop();
 
 	return 0;
