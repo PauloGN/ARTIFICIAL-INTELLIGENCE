@@ -1,3 +1,4 @@
+#include "Bullet.h"
 #include "GameManager.h"
 
 GameManager gm;
@@ -6,9 +7,12 @@ bool Update(const float dt)
 {
 	gm.DebugUI();
 
-	const bool close = gm.Update(dt);
+	//Exit condition
+	gm.Update(dt);
 	gm.Render();
-	return close;
+
+	const bool bExit = X::IsKeyPressed(X::Keys::ESCAPE);
+	return bExit;
 }
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)

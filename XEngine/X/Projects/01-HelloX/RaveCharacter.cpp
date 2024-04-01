@@ -30,7 +30,7 @@ void RaveCharacter::Initialize(const char* path, const float speed)
 
 	screenWidth = X::GetScreenWidth();
 	screenHeight = X::GetScreenHeight();
-	halfSpriteWidth = X::GetSpriteWidth(charSprite) * .5f;;
+	halfSpriteWidth = X::GetSpriteWidth(charSprite) * .5f;
 	halfSpriteHeight = X::GetSpriteHeight(charSprite) * .5f;
 }
 
@@ -53,7 +53,7 @@ void RaveCharacter::Movement(const float& deltaTime)
 {
 	if (X::IsKeyDown(X::Keys::W))
 	{
-		charPosition.y -= deltaTime * charDir.y* speed;
+		charPosition.y -= deltaTime * charDir.y * speed;
 	}								
 	if (X::IsKeyDown(X::Keys::A))	
 	{								

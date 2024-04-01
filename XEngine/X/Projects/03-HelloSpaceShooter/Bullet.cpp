@@ -20,12 +20,12 @@ void Bullet::Update(const float& deltaTime)
 	if(mActive)
 	{
 		Move(deltaTime);
-		const float gScreemWidth = static_cast<float>(X::GetScreenWidth());
-		const float gScreenHeight = static_cast<float>(X::GetScreenHeight());
+		const float screemWidth = static_cast<float>(X::GetScreenWidth());
+		const float screenHeight = static_cast<float>(X::GetScreenHeight());
 
-		if (mPosition.x > gScreemWidth
+		if (mPosition.x > screemWidth
 			|| mPosition.x < 0
-			|| mPosition.y > gScreenHeight
+			|| mPosition.y > screenHeight
 			|| mPosition.y < 0)
 		{
 			Deactivate();

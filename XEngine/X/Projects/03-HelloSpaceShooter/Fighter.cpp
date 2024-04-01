@@ -5,9 +5,9 @@ void Fighter::Load(const char* assetName, const float moveSpeed)
 	mTextureId = X::LoadTexture(assetName);
 	mMoveSpeed = moveSpeed;
 
+	//se initial position to the middle o screen
 	float x = static_cast<float>(X::GetScreenWidth())  * 0.5f;
 	float y = static_cast<float>(X::GetScreenHeight()) * 0.5f;
-
 	mPosition = {x, y};
 }
 
