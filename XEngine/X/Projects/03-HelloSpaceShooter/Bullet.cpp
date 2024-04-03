@@ -4,7 +4,7 @@ void Bullet::Load(const char* assetName, const float moveSpeed)
 {
 	mTextureId = X::LoadTexture(assetName);
 	mMoveSpeed = moveSpeed;
-
+	bulletSound = X::LoadSound("shootlaser1.wav");
 	mSpriteHeight = static_cast<float>(X::GetSpriteHeight(mTextureId));
 	mSpriteWidth =  static_cast<float>(X::GetSpriteWidth(mTextureId));
 	mDirection = {0, -1};
@@ -55,5 +55,5 @@ void Bullet::Deactivate()
 
 void Bullet::Move(const float& deltaTime)
 {
-	mPosition += mDirection * deltaTime * mMoveSpeed;
+	mPosition += Normalize(mDirection) * deltaTime * mMoveSpeed;
 }

@@ -27,14 +27,14 @@ void GameManager::Update(const float& deltaTime)
 {
 	ft.Update(deltaTime);
 
+	//Bullets
 	for (auto& bullet : Bullets)
 	{
 		bullet.Update(deltaTime);
 		bullet.Render();
 	}
-
 	//Check keyboard and joystick input
-	if (X::IsKeyPressed(X::Keys::P) || X::IsAPressed(0))
+	if (X::IsKeyPressed(X::Keys::SPACE) || X::IsAPressed(0))
 	{
 		if(!Bullets[index % maxBullets].IsActive())
 		{
@@ -43,6 +43,8 @@ void GameManager::Update(const float& deltaTime)
 			Bullets[index++ % maxBullets].Fire(position, { .3f, -1 });
 			Bullets[index++ % maxBullets].Fire(position, { 0, -1 });
 			Bullets[index++ % maxBullets].Fire(position, {-.3f, -1});
+
+			X::PlaySoundOneShot(Bullets[index % maxBullets].bulletSound);
 		}
 	}
 }

@@ -203,7 +203,7 @@ void Start(const char* configFileName)
 	InputSystem::StaticInitialize(myWindow);
 	SimpleDraw::Initialize(1024 * 1024);
 	SpriteRenderer::StaticInitialize();
-	SoundEffectManager::StaticInitialize(Config::Get()->GetString("SoundPath", "../Assets/Sounds"));
+	SoundEffectManager::StaticInitialize(Config::Get()->GetString("SoundPath", "../../Assets/Sounds"));
 	TextureManager::StaticInitialize(Config::Get()->GetString("TexturePath", "../../Assets/Images"));
 	Gui::Initialize(myWindow);
 

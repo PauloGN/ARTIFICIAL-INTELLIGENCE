@@ -14,10 +14,12 @@ public:
 	void Deactivate();
 
 	bool IsActive() const { return mActive; }
+	void SetVelocity(const float speed) { mMoveSpeed = speed;}
+	X::SoundId bulletSound = 0;
 
 private:
 
-	X::TextureId mTextureId;
+	X::TextureId mTextureId = 0;
 	X::Math::Vector2 mPosition;
 	X::Math::Vector2 mDirection;
 	float mMoveSpeed = 0.0f;
